@@ -40,4 +40,37 @@ public class Parse {
 
             return term;
     }
+
+    public String Price(String term){
+        if(term.contains("$")){
+            term = term.replace("$", "");
+            term = term + " Dollars";
+        }
+
+        if(term.contains("U.S.")){
+            term = term.replace("U.S.", "");
+        }
+
+        int indexAfterDot;
+        float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
+        if(term.contains(".")){
+            String numberInTermStr = numberInTerm + "";
+            indexAfterDot = numberInTermStr.length() - (numberInTermStr.indexOf(".") + 1);
+            numberInTerm = numberInTerm/(float)Math.pow(10, indexAfterDot);
+        }
+
+        if(numberInTerm >= 1000000){
+            return numberInTerm/1000000 + " M" + " Dollars";
+        }
+
+        if(term.contains("million") || term.contains("m ")){
+            return numberInTerm + " M" + " Dollars";
+        }
+
+        if(term.contains("billion") || term.contains("bn ")){
+            return numberInTerm * 1000 + " M" + " Dollars";
+        }
+
+        return term;
+    }
 }
