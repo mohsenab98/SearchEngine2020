@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 
 public class ReadFile {
 
-    Map<String, String> mapFilesNumberContent;
-
     public void FilesSeparator(String path){
         File files = new File(path);
 
@@ -24,7 +22,7 @@ public class ReadFile {
                 else{
                     String fileString = FileIntoString(file);
                     String parentDirectoryPath = file.getParent();
-                    mapFilesNumberContent = SeparatedFilesToStringMap(fileString);
+                    Map<String, String> mapFilesNumberContent = SeparatedFilesToStringMap(fileString);
 
                     SplitFiles( mapFilesNumberContent, parentDirectoryPath );
                 }
@@ -33,7 +31,12 @@ public class ReadFile {
 
     }
 
-    // Create string from File
+    /**
+     * Create string from all content of a file
+     *
+     * @param file
+     * @return strFile
+     */
     private String FileIntoString(File file){
         String strFile = "";
 
@@ -47,6 +50,12 @@ public class ReadFile {
         return strFile;
     }
 
+    /**
+     * Separate articles from all content string to dictionary(HashMap).
+     * Key: number(id) of article; Value: content of article
+     * @param fileString
+     * @return mapFilesNumberContent
+     */
     private Map<String, String> SeparatedFilesToStringMap(String fileString){
         Map<String, String> mapFilesNumberContent = new HashMap<>();
         Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
@@ -61,6 +70,11 @@ public class ReadFile {
         return mapFilesNumberContent;
     }
 
+    /**
+     * Create article files from the dictionary to every article in the directory of a source file
+     * @param mapFiles
+     * @param parentPath
+     */
     private void SplitFiles(Map<String, String> mapFiles, String parentPath){
         Iterator<Map.Entry<String, String>> itr = mapFiles.entrySet().iterator();
 
@@ -70,7 +84,7 @@ public class ReadFile {
                 OutputStream os = new FileOutputStream( new File(parentPath + "/" + entry.getKey()) );
 
                 /////
-                Parser(entry.getKey(), entry.getValue());
+               // Parser(entry.getKey(), entry.getValue());
                 /////
 
                 os.write(entry.getValue().getBytes(), 0, entry.getValue().length());
@@ -82,8 +96,10 @@ public class ReadFile {
     }
 
     /**
+     * What to do:
      * Send 'text' to parse class and create terms from the 'text', we have to save the term in a file in the corpus.
      * Need to create some data structure for terms
+     * Create 'term' as field in ReadFile and Parse
      * @param fileName
      * @param content
      */
