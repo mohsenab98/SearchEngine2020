@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+            <state relative-caret-position="455">
+              <caret line="141" column="38" selection-start-line="141" selection-start-column="38" selection-end-line="141" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#362#363#0" expanded="true" />
@@ -39,16 +39,18 @@
                 <element signature="e#4302#4303#0" expanded="true" />
                 <element signature="e#4342#4343#0" expanded="true" />
                 <element signature="e#4374#4375#0" expanded="true" />
+                <element signature="e#4428#4429#0" expanded="true" />
+                <element signature="e#4461#4462#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="10" lean-forward="true" selection-start-column="10" selection-end-column="10" />
+            <state relative-caret-position="276">
+              <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -71,8 +73,8 @@
       <list>
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Parse.java" />
-        <option value="$PROJECT_DIR$/src/main.java" />
         <option value="$PROJECT_DIR$/src/ReadFile.java" />
+        <option value="$PROJECT_DIR$/src/main.java" />
       </list>
     </option>
   </component>
@@ -110,7 +112,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574210252909" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574210887791" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
@@ -151,7 +153,7 @@
       <option name="presentableId" value="Default" />
       <updated>1573567014823</updated>
       <workItem from="1573567018419" duration="240000" />
-      <workItem from="1574180309386" duration="19495000" />
+      <workItem from="1574180309386" duration="20085000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -174,11 +176,18 @@
       <option name="project" value="LOCAL" />
       <updated>1574204260676</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ReadFile class: &#10;+ field &quot;path&quot;&#10;+ Constructor for path&#10;+ envelope func for FileSeparator&#10;+ getter and setter for path">
+      <created>1574210427705</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1574210427705</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26506000" />
+    <option name="totallyTimeSpent" value="27096000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -270,7 +279,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Price" />
     <MESSAGE value="ReadFile class" />
-    <option name="LAST_COMMIT_MESSAGE" value="ReadFile class" />
+    <MESSAGE value="ReadFile class: &#10;+ field &quot;path&quot;&#10;+ Constructor for path&#10;+ envelope func for FileSeparator&#10;+ getter and setter for path" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReadFile class: &#10;+ field &quot;path&quot;&#10;+ Constructor for path&#10;+ envelope func for FileSeparator&#10;+ getter and setter for path" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -330,17 +340,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="10" lean-forward="true" selection-start-column="10" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+        <state relative-caret-position="455">
+          <caret line="141" column="38" selection-start-line="141" selection-start-column="38" selection-end-line="141" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#362#363#0" expanded="true" />
@@ -351,7 +354,16 @@
             <element signature="e#4302#4303#0" expanded="true" />
             <element signature="e#4342#4343#0" expanded="true" />
             <element signature="e#4374#4375#0" expanded="true" />
+            <element signature="e#4428#4429#0" expanded="true" />
+            <element signature="e#4461#4462#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
         </state>
       </provider>
     </entry>

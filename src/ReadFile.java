@@ -21,28 +21,28 @@ public class ReadFile {
     /**
      * Envelope function for FilesSeparator(String path)
      */
-    public void FilesSeparator(){
-        FilesSeparator(this.path);
+    public void filesSeparator(){
+        filesSeparator(this.path);
     }
 
     /**
      * Separate files and parse terms(?)
      * @param path
      */
-    private void FilesSeparator(String path){
+    private void filesSeparator(String path){
         File files = new File(path);
 
         if(files.listFiles() != null) {
             for (File file : files.listFiles()) {
                 if(file.isDirectory()){
-                    FilesSeparator(file.getPath());
+                    filesSeparator(file.getPath());
                 }
                 else{
-                    String fileString = FileIntoString(file);
+                    String fileString = fileIntoString(file);
                     String parentDirectoryPath = file.getParent();
-                    Map<String, String> mapFilesNumberContent = SeparatedFilesToStringMap(fileString);
+                    Map<String, String> mapFilesNumberContent = separatedFilesToStringMap(fileString);
 
-                    SplitFiles( mapFilesNumberContent, parentDirectoryPath );
+                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
                 }
             }
         }
@@ -55,7 +55,7 @@ public class ReadFile {
      * @param file
      * @return strFile
      */
-    private String FileIntoString(File file){
+    private String fileIntoString(File file){
         String strFile = "";
 
         try{
@@ -74,7 +74,7 @@ public class ReadFile {
      * @param fileString
      * @return mapFilesNumberContent
      */
-    private Map<String, String> SeparatedFilesToStringMap(String fileString){
+    private Map<String, String> separatedFilesToStringMap(String fileString){
         Map<String, String> mapFilesNumberContent = new HashMap<>();
         Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileNumber = patternFileNumber.matcher(fileString);
@@ -93,7 +93,7 @@ public class ReadFile {
      * @param mapFiles
      * @param parentPath
      */
-    private void SplitFiles(Map<String, String> mapFiles, String parentPath){
+    private void splitFiles(Map<String, String> mapFiles, String parentPath){
         Iterator<Map.Entry<String, String>> itr = mapFiles.entrySet().iterator();
 
         while(itr.hasNext()) {
@@ -122,7 +122,7 @@ public class ReadFile {
      * @param fileName
      * @param content
      */
-    private void Parser(String fileName, String content){
+    private void parser(String fileName, String content){
         Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherText = patternText.matcher(content);
         String text = matcherText.group(1);
@@ -136,6 +136,10 @@ public class ReadFile {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public void printPath(){
+        System.out.println(this.path);
     }
 
 
