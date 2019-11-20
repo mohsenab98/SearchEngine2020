@@ -1,8 +1,13 @@
 public class main {
     //ddddddddddddddd evgenyyyyyy
     public static void main(String[] args){
-        ReadFile rd = new ReadFile();
-        rd.FilesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
+        String path = "Jackpot!";
+
+        ReadFile rd = new ReadFile(path);
+        System.out.println(rd.getPath());
+        rd.setPath("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
+        System.out.println(rd.getPath());
+        rd.FilesSeparator();
 
         //Parse p = new Parse();
 

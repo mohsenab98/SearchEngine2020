@@ -10,8 +10,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReadFile {
+    // Fields
+    private String path;
 
-    public void FilesSeparator(String path){
+    // Constructor
+    public ReadFile(String path){
+        this.path = path;
+    }
+
+    /**
+     * Envelope function for FilesSeparator(String path)
+     */
+    public void FilesSeparator(){
+        FilesSeparator(this.path);
+    }
+
+    /**
+     * Separate files and parse terms(?)
+     * @param path
+     */
+    private void FilesSeparator(String path){
         File files = new File(path);
 
         if(files.listFiles() != null) {
@@ -100,6 +118,7 @@ public class ReadFile {
      * Send 'text' to parse class and create terms from the 'text', we have to save the term in a file in the corpus.
      * Need to create some data structure for terms
      * Create 'term' as field in ReadFile and Parse
+     * Add tag <TERM></TERM> into the files
      * @param fileName
      * @param content
      */
@@ -110,5 +129,14 @@ public class ReadFile {
 
         Parse parse = new Parse();
     }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
 
 }
