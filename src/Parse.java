@@ -1,13 +1,56 @@
+import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parse {
 
     // fields
     private Map<String, String> allDocs;
+    private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+    // field set //
 
     //Constructor
     public Parse(Map<String, String> allDocs){
         this.allDocs = allDocs;
+    }
+
+    public void Parser(){
+        Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
+        String fullText ="";
+        while(itr.hasNext()) {
+            Map.Entry<String, String> entry = itr.next();
+
+            Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", reOptions);
+            Matcher matcherText = patternText.matcher(entry.getValue());
+            while (matcherText.find()){
+                fullText = matcherText.group(1);
+            }
+
+            fullText = removePunctuationAndSpaces(fullText);
+
+        }
+    }
+
+    private String removePunctuationAndSpaces(String fullText){
+        // Clean punctuation
+        fullText = fullText.replace("\n", " ");
+        fullText = fullText.replace("\r", " ");
+
+        Pattern patternPunctuation = Pattern.compile("[,.:;()?!{}\\[\\]\"\']", reOptions);
+        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
+        while (matcherPunctuation.find()) {
+            fullText = matcherPunctuation.replaceAll("");
+        }
+
+        // Remove spaces to one space only
+        Pattern patternSpaces = Pattern.compile("\\s+|/", reOptions);
+        Matcher matcherSpaces = patternSpaces.matcher(fullText);
+        while (matcherSpaces.find()) {
+            fullText = matcherSpaces.replaceAll(" ");
+        }
+
+        return fullText;
     }
 
     public String NumWithoutUnits(String term){
