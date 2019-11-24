@@ -12,10 +12,12 @@ import java.util.regex.Pattern;
 public class ReadFile {
     // Fields
     private String path;
+    private Map<String, String> allFiles;
 
     // Constructor
     public ReadFile(String path){
         this.path = path;
+        allFiles = new HashMap<>();
     }
 
     /**
@@ -41,6 +43,8 @@ public class ReadFile {
                     String fileString = fileIntoString(file);
                     String parentDirectoryPath = file.getParent();
                     Map<String, String> mapFilesNumberContent = separatedFilesToStringMap(fileString);
+                    // Map with all docs in
+                    allFiles.putAll(mapFilesNumberContent);
 
                     splitFiles( mapFilesNumberContent, parentDirectoryPath );
                 }
@@ -76,9 +80,12 @@ public class ReadFile {
      */
     private Map<String, String> separatedFilesToStringMap(String fileString){
         Map<String, String> mapFilesNumberContent = new HashMap<>();
-        Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+        // Names
+        Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", reOptions);
         Matcher matcherFileNumber = patternFileNumber.matcher(fileString);
-        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        // Content
+        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", reOptions);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
 
         while (matcherFileNumber.find() && matcherFileContent.find()){
@@ -102,7 +109,7 @@ public class ReadFile {
                 OutputStream os = new FileOutputStream( new File(parentPath + "/" + entry.getKey()) );
 
                 /////
-               // Parser(entry.getKey(), entry.getValue());
+                // Parser(entry.getKey(), entry.getValue());
                 /////
 
                 os.write(entry.getValue().getBytes(), 0, entry.getValue().length());
@@ -132,6 +139,10 @@ public class ReadFile {
 
     public String getPath() {
         return path;
+    }
+
+    public Map<String, String> getMapAllDocs() {
+        return allFiles;
     }
 
     public void setPath(String path) {

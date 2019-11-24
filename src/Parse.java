@@ -1,4 +1,14 @@
+import java.util.Map;
+
 public class Parse {
+
+    // fields
+    private Map<String, String> allDocs;
+
+    //Constructor
+    public Parse(Map<String, String> allDocs){
+        this.allDocs = allDocs;
+    }
 
     public String NumWithoutUnits(String term){
             int indexAfterDot;
