@@ -37,20 +37,28 @@ public class Parse {
         fullText = fullText.replace("\n", " ");
         fullText = fullText.replace("\r", " ");
 
-        Pattern patternPunctuation = Pattern.compile("[,.:;()?!{}\\[\\]\"\']", reOptions);
+        Pattern patternPunctuation = Pattern.compile("[,:;()?!{}\\[\\]\"\']", reOptions);
         Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
         while (matcherPunctuation.find()) {
             fullText = matcherPunctuation.replaceAll("");
         }
 
         // Remove spaces to one space only
-        Pattern patternSpaces = Pattern.compile("\\s+|/", reOptions);
+        Pattern patternSpaces = Pattern.compile("\\s+|/|--", reOptions);
         Matcher matcherSpaces = patternSpaces.matcher(fullText);
         while (matcherSpaces.find()) {
             fullText = matcherSpaces.replaceAll(" ");
         }
 
-        return fullText;
+        Pattern patternHyphen = Pattern.compile("-(\\s+?)\\w", reOptions);
+        Matcher matcherHyphen = patternHyphen.matcher(fullText);
+        while (matcherHyphen.find()) {
+            fullText = matcherHyphen.replaceAll("-");
+        }
+
+
+
+        return fullText.trim();
     }
 
     public String NumWithoutUnits(String term){
