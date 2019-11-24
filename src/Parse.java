@@ -7,13 +7,18 @@ import java.util.regex.Pattern;
 public class Parse {
 
     // fields
+    private String stopWordsPath;
     private Map<String, String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+    //well contain the docName and set of terms
+    private Map<String, Set<String>> termsInDocs;
     // field set //
 
     //Constructor
-    public Parse(Map<String, String> allDocs){
+    public Parse(Map<String, String> allDocs, String stopWordsPath){
+        this.termsInDocs = new HashMap<>();
         this.allDocs = allDocs;
+        this.stopWordsPath = stopWordsPath;
     }
 
     public void Parser(){
@@ -29,6 +34,8 @@ public class Parse {
             }
 
             fullText = removePunctuationAndSpaces(fullText);
+            Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
+            termsInDocs.put(entry.getKey(), s);
 
         }
     }
