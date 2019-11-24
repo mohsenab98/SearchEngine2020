@@ -29,6 +29,30 @@ public class Parse {
 
             fullText = removePunctuationAndSpaces(fullText);
 
+    /**
+     * DELETE StopWords
+     * Creating two Sets of strings and delete fro the set of text the set of stopWords
+     * @param path of the StopWords file & fullText that represent the text of the Doc We are parsing
+     * @return setStringText that doesnt have stop words
+     */
+    public Set deleteStopWords(String path, String fullText) {
+        Set<String> setStringText = stringToSetOfString(fullText);
+        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
+        // Need to check terms rules before deleting stopWords
+        setStringText.removeAll(setStringStopWords);
+        return setStringText;
+    }
+//ll
+    /**
+     *
+     * @param fullText
+     * @return setString that represent the strings of the text
+     */
+    public Set stringToSetOfString(String fullText){
+        Scanner sc2 = new Scanner(fullText).useDelimiter(" ");
+        Set<String> setString = new HashSet<String>();
+        while(sc2.hasNext()){
+            setString.add(sc2.next());
         }
     }
 
