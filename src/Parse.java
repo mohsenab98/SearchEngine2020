@@ -1,9 +1,6 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
@@ -17,51 +14,43 @@ public class Parse {
     public Parse(Map<String, String> allDocs){
         this.allDocs = allDocs;
     }
-    /**
-     * DELETE StopWords
-     * Creating two Sets of strings and delete fro the set of text the set of stopWords
-     * @param path of the StopWords file & fullText that represent the text of the Doc We are parsing
-     * @return setStringText that doesnt have stop words
-     */
-    public Set deleteStopWords(String path, String fullText) {
-        Set<String> setStringText = stringToSetOfString(fullText);
-        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
-        // Need to check terms rules before deleting stopWords
-        setStringText.removeAll(setStringStopWords);
-        return setStringText;
+
+    public void Parser(){
+        Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
+        String fullText ="";
+        while(itr.hasNext()) {
+            Map.Entry<String, String> entry = itr.next();
+
+            Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", reOptions);
+            Matcher matcherText = patternText.matcher(entry.getValue());
+            while (matcherText.find()){
+                fullText = matcherText.group(1);
+            }
+
+            fullText = removePunctuationAndSpaces(fullText);
+
+        }
     }
 
-    /**
-     *
-     * @param fullText
-     * @return setString that represent the strings of the text
-     */
-    public Set stringToSetOfString(String fullText){
-        Scanner sc2 = new Scanner(fullText).useDelimiter(" ");
-        Set<String> setString = new HashSet<String>();
-        while(sc2.hasNext()){
-            setString.add(sc2.next());
-        }
-        return setString;
-    }
+    private String removePunctuationAndSpaces(String fullText){
+        // Clean punctuation
+        fullText = fullText.replace("\n", " ");
+        fullText = fullText.replace("\r", " ");
 
-    /**
-     *
-     * @param path
-     * @return setString that represent the stopWords from the text in the path was given
-     */
-    public Set pathOfStopWordsToSetOfStrings(String path){
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(new File(path));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        Pattern patternPunctuation = Pattern.compile("[,.:;()?!{}\\[\\]\"\']", reOptions);
+        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
+        while (matcherPunctuation.find()) {
+            fullText = matcherPunctuation.replaceAll("");
         }
-        Set<String> setString = new HashSet<String>();
-        while (scanner.hasNextLine()) {
-            setString.add(scanner.nextLine());
+
+        // Remove spaces to one space only
+        Pattern patternSpaces = Pattern.compile("\\s+|/", reOptions);
+        Matcher matcherSpaces = patternSpaces.matcher(fullText);
+        while (matcherSpaces.find()) {
+            fullText = matcherSpaces.replaceAll(" ");
         }
-        return setString;
+
+        return fullText;
     }
 
     public String NumWithoutUnits(String term){
