@@ -21,6 +21,9 @@ public class Parse {
         this.stopWordsPath = stopWordsPath;
     }
 
+    /**
+     * The main function
+     */
     public void Parser(){
         Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
         String fullText ="";
@@ -40,32 +43,63 @@ public class Parse {
         }
     }
 
+    /**
+     * Remove all punctuation chars, dots, &amp, spaces and /
+     * @param fullText
+     * @return full text: words separated by space
+     */
     private String removePunctuationAndSpaces(String fullText){
-        // Clean punctuation
+        // Clean new lines
         fullText = fullText.replace("\n", " ");
         fullText = fullText.replace("\r", " ");
 
-        Pattern patternPunctuation = Pattern.compile("[,:;()?!{}\\[\\]\"\']", reOptions);
+        // Clean punctuations
+        Pattern patternPunctuation = Pattern.compile("[,:;()?!{}\\[\\]\"\'\*]", reOptions);
         Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
         while (matcherPunctuation.find()) {
             fullText = matcherPunctuation.replaceAll("");
         }
 
-        // Remove spaces to one space only
-        Pattern patternSpaces = Pattern.compile("\\s+|/|--", reOptions);
+        // CLean &amp
+        Pattern patternAmpersand = Pattern.compile("&amp", reOptions);
+        Matcher matcherAmpersand = patternAmpersand.matcher(fullText);
+        while (matcherAmpersand.find()) {
+            fullText = matcherAmpersand.replaceAll("&");
+        }
+
+        // Remove / and spaces between --
+        Pattern patternOther = Pattern.compile("/|-\\s*-", reOptions);
+        Matcher matcherOther = patternOther.matcher(fullText);
+        while (matcherOther.find()) {
+            fullText = matcherOther.replaceAll(" ");
+        }
+
+        // Remove spaces between -word
+        Pattern patternHyphen = Pattern.compile("-\\s+?(\\w)", reOptions);
+        Matcher matcherHyphen = patternHyphen.matcher(fullText);
+        while (matcherHyphen.find()) {
+            fullText = matcherHyphen.replaceAll("-" + matcherHyphen.group(1));
+        }
+
+        // Replace . to , in numbers
+        Pattern patternDotsLetters = Pattern.compile("(\\d+?)\\.(\\d+?)", reOptions);
+        Matcher matcherDotsLetters = patternDotsLetters.matcher(fullText);
+        while (matcherDotsLetters.find()) {
+            fullText = matcherDotsLetters.replaceFirst(matcherDotsLetters.group(1) + "," + matcherDotsLetters.group(2));
+            matcherDotsLetters = patternDotsLetters.matcher(fullText);
+        }
+
+        // Remove dots
+        fullText = fullText.replaceAll("\\.", "");
+        // Replace , to . in numbers
+        fullText = fullText.replaceAll(",", ".");
+
+        // Removes spaces
+        Pattern patternSpaces = Pattern.compile("\\s{2,}", reOptions);
         Matcher matcherSpaces = patternSpaces.matcher(fullText);
         while (matcherSpaces.find()) {
             fullText = matcherSpaces.replaceAll(" ");
         }
-
-        Pattern patternHyphen = Pattern.compile("-(\\s+?)\\w", reOptions);
-        Matcher matcherHyphen = patternHyphen.matcher(fullText);
-        while (matcherHyphen.find()) {
-            fullText = matcherHyphen.replaceAll("-");
-        }
-
-
-
 
         return fullText.trim();
     }
@@ -90,7 +124,8 @@ public class Parse {
      * @return setString that represent the strings of the text
      */
     public Set stringToSetOfString(String fullText){
-        Scanner sc2 = new Scanner(fullText).useDelimiter(" ");
+        Pattern pattern = Pattern.compile("\\s+", reOptions);
+        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new HashSet<String>();
         while(sc2.hasNext()){
             setString.add(sc2.next());
