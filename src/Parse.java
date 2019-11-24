@@ -1,5 +1,6 @@
-import java.util.Iterator;
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,39 @@ public class Parse {
 
             fullText = removePunctuationAndSpaces(fullText);
 
+        }
+    }
+
+    private String removePunctuationAndSpaces(String fullText){
+        // Clean punctuation
+        fullText = fullText.replace("\n", " ");
+        fullText = fullText.replace("\r", " ");
+
+        Pattern patternPunctuation = Pattern.compile("[,:;()?!{}\\[\\]\"\']", reOptions);
+        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
+        while (matcherPunctuation.find()) {
+            fullText = matcherPunctuation.replaceAll("");
+        }
+
+        // Remove spaces to one space only
+        Pattern patternSpaces = Pattern.compile("\\s+|/|--", reOptions);
+        Matcher matcherSpaces = patternSpaces.matcher(fullText);
+        while (matcherSpaces.find()) {
+            fullText = matcherSpaces.replaceAll(" ");
+        }
+
+        Pattern patternHyphen = Pattern.compile("-(\\s+?)\\w", reOptions);
+        Matcher matcherHyphen = patternHyphen.matcher(fullText);
+        while (matcherHyphen.find()) {
+            fullText = matcherHyphen.replaceAll("-");
+        }
+
+
+
+
+        return fullText.trim();
+    }
+
     /**
      * DELETE StopWords
      * Creating two Sets of strings and delete fro the set of text the set of stopWords
@@ -54,68 +88,67 @@ public class Parse {
         while(sc2.hasNext()){
             setString.add(sc2.next());
         }
+        return setString;
     }
 
-    private String removePunctuationAndSpaces(String fullText){
-        // Clean punctuation
-        fullText = fullText.replace("\n", " ");
-        fullText = fullText.replace("\r", " ");
-
-        Pattern patternPunctuation = Pattern.compile("[,.:;()?!{}\\[\\]\"\']", reOptions);
-        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
-        while (matcherPunctuation.find()) {
-            fullText = matcherPunctuation.replaceAll("");
+    /**
+     *
+     * @param path
+     * @return setString that represent the stopWords from the text in the path was given
+     */
+    public Set pathOfStopWordsToSetOfStrings(String path){
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-
-        // Remove spaces to one space only
-        Pattern patternSpaces = Pattern.compile("\\s+|/", reOptions);
-        Matcher matcherSpaces = patternSpaces.matcher(fullText);
-        while (matcherSpaces.find()) {
-            fullText = matcherSpaces.replaceAll(" ");
+        Set<String> setString = new HashSet<>();
+        while (scanner.hasNextLine()) {
+            setString.add(scanner.nextLine());
         }
-
-        return fullText;
+        return setString;
     }
 
     public String NumWithoutUnits(String term){
-            int indexAfterDot;
-            float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
-            if(term.contains(".")){
-                indexAfterDot = term.length() - (term.indexOf(".") + 1);
-                numberInTerm = numberInTerm/(float)Math.pow(10, indexAfterDot);
-            }
+        int indexAfterDot;
+        float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
+        if(term.contains(".")){
+            indexAfterDot = term.length() - (term.indexOf(".") + 1);
+            numberInTerm = numberInTerm/(float)Math.pow(10, indexAfterDot);
+        }
 
-            int range = 0;
-            if((numberInTerm >= 1000 && numberInTerm < 1000000)){
-                range = 1;
-            }else if((numberInTerm >= 1000000 && numberInTerm < 1000000000)){
-                range = 2;
-            }else if(numberInTerm >= 1000000000 ){
-                range = 3;
-            }else if(term.contains("Thousand")){
-                range = 4;
-            }else if( term.contains("Million")){
-                range = 5;
-            }else if(term.contains("Billion")){
-                range = 6;
-            }
+        int range = 0;
+        if((numberInTerm >= 1000 && numberInTerm < 1000000)){
+            range = 1;
+        }else if((numberInTerm >= 1000000 && numberInTerm < 1000000000)){
+            range = 2;
+        }else if(numberInTerm >= 1000000000 ){
+            range = 3;
+        }else if(term.contains("Thousand")){
+            range = 4;
+        }else if( term.contains("Million")){
+            range = 5;
+        }else if(term.contains("Billion")){
+            range = 6;
+        }
 
-            switch (range){
-                case 1:
-                    return String.format("%.03f",numberInTerm/1000) +"K";
-                case 2:
-                    return String.format("%.03f", numberInTerm/1000000) +"M";
-                case 3:
-                    return String.format("%.03f",numberInTerm/1000000000) +"B";
-                case 4:
-                    return numberInTerm +"K";
-                case 5:
-                    return numberInTerm +"M";
-                case 6:
-                    return numberInTerm +"B";
-            }
+        switch (range){
+            case 1:
+                return String.format("%.03f",numberInTerm/1000) +"K";
+            case 2:
+                return String.format("%.03f", numberInTerm/1000000) +"M";
+            case 3:
+                return String.format("%.03f",numberInTerm/1000000000) +"B";
+            case 4:
+                return numberInTerm +"K";
+            case 5:
+                return numberInTerm +"M";
+            case 6:
+                return numberInTerm +"B";
+        }
 
-            return term;
+        return term;
     }
 
     public String NumWithPercent(String term){
