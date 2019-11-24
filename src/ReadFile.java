@@ -129,13 +129,14 @@ public class ReadFile {
      * @param fileName
      * @param content
      */
+
     private void parser(String fileName, String content){
         Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherText = patternText.matcher(content);
         String text = matcherText.group(1);
 
-        Parse parse = new Parse();
     }
+
 
     public String getPath() {
         return path;
