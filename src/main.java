@@ -12,7 +12,7 @@ public class main {
         System.out.println(rd.getPath());
         rd.printPath();
         rd.filesSeparator();
-
+//l
     /////// Parse tests ///////
         Parse p = new Parse(rd.getMapAllDocs());
         //System.out.println(p.NumWithoutUnits("1010.56"));

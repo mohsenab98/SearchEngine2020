@@ -30,7 +30,7 @@ public class Parse {
         setStringText.removeAll(setStringStopWords);
         return setStringText;
     }
-
+//ll
     /**
      *
      * @param fullText
