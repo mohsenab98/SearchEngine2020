@@ -1,13 +1,67 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class Parse {
 
     // fields
     private Map<String, String> allDocs;
+    private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+    // field set //
 
     //Constructor
     public Parse(Map<String, String> allDocs){
         this.allDocs = allDocs;
+    }
+    /**
+     * DELETE StopWords
+     * Creating two Sets of strings and delete fro the set of text the set of stopWords
+     * @param path of the StopWords file & fullText that represent the text of the Doc We are parsing
+     * @return setStringText that doesnt have stop words
+     */
+    public Set deleteStopWords(String path, String fullText) {
+        Set<String> setStringText = stringToSetOfString(fullText);
+        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
+        // Need to check terms rules before deleting stopWords
+        setStringText.removeAll(setStringStopWords);
+        return setStringText;
+    }
+
+    /**
+     *
+     * @param fullText
+     * @return setString that represent the strings of the text
+     */
+    public Set stringToSetOfString(String fullText){
+        Scanner sc2 = new Scanner(fullText).useDelimiter(" ");
+        Set<String> setString = new HashSet<String>();
+        while(sc2.hasNext()){
+            setString.add(sc2.next());
+        }
+        return setString;
+    }
+
+    /**
+     *
+     * @param path
+     * @return setString that represent the stopWords from the text in the path was given
+     */
+    public Set pathOfStopWordsToSetOfStrings(String path){
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Set<String> setString = new HashSet<String>();
+        while (scanner.hasNextLine()) {
+            setString.add(scanner.nextLine());
+        }
+        return setString;
     }
 
     public String NumWithoutUnits(String term){
