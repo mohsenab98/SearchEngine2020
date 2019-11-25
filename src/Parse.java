@@ -6,15 +6,20 @@ import java.util.regex.Pattern;
 
 public class Parse {
 
-    // fields
+    private String stopWordsPath;
     private Map<String, String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+    //well contain the docName and set of terms
+    private Map<String, Set<String>> termsInDocs;
     // field set //
 
     //Constructor
-    public Parse(Map<String, String> allDocs){
-        this.allDocs = allDocs;
-    }
+    public Parse(Map<String, String> allDocs, String stopWordsPath){
+            this.termsInDocs = new HashMap<>();
+            this.allDocs = allDocs;
+            this.stopWordsPath = stopWordsPath;
+        }
+
 
     /**
      * The main function
@@ -29,6 +34,8 @@ public class Parse {
             Matcher matcherText = patternText.matcher(entry.getValue());
             while (matcherText.find()){
                 fullText = matcherText.group(1);
+                Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
+                termsInDocs.put(entry.getKey(), s);
             }
 
             fullText = removePunctuationAndSpaces(fullText);
