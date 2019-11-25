@@ -40,6 +40,7 @@ public class Parse {
             fullText = removePunctuationAndSpaces(fullText);
             Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
             termsInDocs.put(entry.getKey(), s);
+            //// hello ///
 
         }
     }
