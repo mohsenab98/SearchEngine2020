@@ -14,7 +14,7 @@ public class main {
         rd.filesSeparator();
 //l
     /////// Parse tests ///////
-        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest\\stopWords.txt");
+        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
         p.Parser();
         //System.out.println(p.NumWithoutUnits("1010.56"));
         //System.out.println(p.NumWithPercent("15 percent"));
