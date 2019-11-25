@@ -18,6 +18,7 @@ public class Parse {
             this.termsInDocs = new HashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
+
         }
 
 
@@ -39,6 +40,7 @@ public class Parse {
             fullText = removePunctuationAndSpaces(fullText);
             Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
             termsInDocs.put(entry.getKey(), s);
+            //// hello ///
 
         }
     }
