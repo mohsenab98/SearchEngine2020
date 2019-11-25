@@ -34,11 +34,11 @@ public class Parse {
             Matcher matcherText = patternText.matcher(entry.getValue());
             while (matcherText.find()){
                 fullText = matcherText.group(1);
-                Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
-                termsInDocs.put(entry.getKey(), s);
             }
 
             fullText = removePunctuationAndSpaces(fullText);
+            Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
+            termsInDocs.put(entry.getKey(), s);
 
         }
     }
