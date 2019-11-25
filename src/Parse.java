@@ -18,6 +18,7 @@ public class Parse {
             this.termsInDocs = new HashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
+
         }
 
 
