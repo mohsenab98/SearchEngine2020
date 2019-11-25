@@ -41,6 +41,7 @@ public class Parse {
             Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
             termsInDocs.put(entry.getKey(), s);
             //// hello ///
+            /// Hello 2 ///
 
         }
     }
