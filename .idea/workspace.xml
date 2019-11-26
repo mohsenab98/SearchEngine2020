@@ -6,7 +6,9 @@
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReadFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -24,30 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
-              <folding>
-                <element signature="e#128#129#0" expanded="true" />
-                <element signature="e#178#179#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Indexer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="13" selection-start-column="13" selection-end-column="13" />
+            <state relative-caret-position="195">
+              <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -55,8 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="58" column="22" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
+            <state relative-caret-position="92">
+              <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
               <folding>
                 <element signature="e#612#613#0" expanded="true" />
                 <element signature="e#653#654#0" expanded="true" />
@@ -72,11 +52,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
-              <caret line="45" selection-start-line="45" selection-end-line="45" />
+            <state relative-caret-position="2346">
+              <caret line="207" column="4" selection-start-line="207" selection-start-column="4" selection-end-line="207" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
+                <element signature="method#deleteStopWords#0;class#Parse#0" />
+                <element signature="method#stemFulltext#0;class#Parse#0" />
+                <element signature="method#stringToSetOfString#0;class#Parse#0" />
+                <element signature="e#7673#7681#0" expanded="true" />
+                <element signature="method#pathOfStopWordsToSetOfStrings#0;class#Parse#0" />
+                <element signature="method#numWithoutUnits#0;class#Parse#0" />
+                <element signature="method#numWithPercent#0;class#Parse#0" />
+                <element signature="method#NumWithDates#0;class#Parse#0" />
                 <element signature="method#monthContains#0;class#Parse#0" />
+                <element signature="method#Price#0;class#Parse#0" />
               </folding>
             </state>
           </provider>
@@ -97,6 +87,11 @@
       <find>5000</find>
       <find>500000</find>
       <find>500</find>
+      <find>map</find>
+      <find>HashMap</find>
+      <find>90</find>
+      <find>70</find>
+      <find>per</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -125,18 +120,18 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/Main.java" />
-        <option value="$PROJECT_DIR$/src/ReadFile.java" />
         <option value="$PROJECT_DIR$/src/Stemmer.java" />
+        <option value="$PROJECT_DIR$/src/ReadFile.java" />
         <option value="$PROJECT_DIR$/src/main.java" />
         <option value="$PROJECT_DIR$/src/Parse.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
-    <option name="width" value="980" />
-    <option name="height" value="1050" />
+    <option name="x" value="-7" />
+    <option name="y" value="-7" />
+    <option name="width" value="781" />
+    <option name="height" value="830" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -146,6 +141,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -162,18 +159,51 @@
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
+              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
+              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
+              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="snowball" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
+              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="snowball" type="462c0819:PsiDirectoryNode" />
+              <item name="ext" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574782597909" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574798282183" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -292,7 +322,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55383000" />
+    <option name="totallyTimeSpent" value="64825000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -304,9 +334,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20121029" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15724947" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -316,14 +347,14 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4919463" weight="0.34369886" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.9054463" visible="true" weight="0.62356794" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.62633264" visible="true" weight="0.26568627" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.09455371" side_tool="true" visible="true" weight="0.62356794" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.3736674" side_tool="true" visible="true" weight="0.26568627" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4966443" weight="0.32650074" />
       <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49463087" weight="0.32650074" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -426,70 +457,83 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main.java</url>
-          <line>21</line>
+          <url>file://$PROJECT_DIR$/src/Parse.java</url>
+          <line>233</line>
           <properties />
-          <option name="timeStamp" value="34" />
+          <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Parse.java</url>
-          <line>43</line>
+          <line>70</line>
           <properties />
-          <option name="timeStamp" value="37" />
+          <option name="timeStamp" value="65" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="matcherUpperFirstLetter.group().toUpperCase()" language="JAVA" />
-        <watch expression="stemmer.getCurrent()" />
-        <watch expression="sc2.next()" />
-        <watch expression="matcherText.group(1)" language="JAVA" />
-        <watch expression="matcherText.group(2)" />
+        <watch expression="fullText" language="JAVA" />
+        <watch expression="matcherPercent.group(1)" language="JAVA" />
+        <watch expression="matcherPercent.group(2)" language="JAVA" />
+        <watch expression="matcherPercent.group(3)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
+        <expression-string>matcherPercent.group(3)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>matcherPercent.group(2)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>matcherPercent.group(1)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>fullText</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>matcherText.group()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>matcherText.group(2)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>matcherText.group(1)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>entry.getValue()</expression-string>
+        <expression-string>matcherDotsLetters.group()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>entry</expression-string>
+        <expression-string>matcherDotsLetters</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>allDocsArr</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>term.length()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>term.indexOf(&quot;.&quot;) + 1</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>(float)Math.pow(10, indexAfterDot)</expression-string>
+        <expression-string>term.matches(&quot;\\.\\d+\\.&quot;)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/regex/Matcher.java" />
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor" />
@@ -500,10 +544,11 @@
     <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="jar://$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/org/tartarus/snowball/ext/PorterStemmer.class" />
     <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state>
+          <caret column="24" lean-forward="true" selection-start-column="24" selection-end-column="24" />
           <folding>
             <element signature="e#128#129#0" expanded="true" />
             <element signature="e#178#179#0" expanded="true" />
@@ -511,18 +556,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/org/tartarus/snowball/ext/PorterStemmer.class" />
-    <entry file="file://$PROJECT_DIR$/src/main.java">
+    <entry file="file://$PROJECT_DIR$/src/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        <state>
+          <caret column="13" selection-start-column="13" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="58" column="22" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
+        <state relative-caret-position="92">
+          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
           <folding>
             <element signature="e#612#613#0" expanded="true" />
             <element signature="e#653#654#0" expanded="true" />
@@ -534,13 +578,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="2237" column="38" selection-start-line="2237" selection-start-column="26" selection-end-line="2237" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="2346">
+          <caret line="207" column="4" selection-start-line="207" selection-start-column="4" selection-end-line="207" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
+            <element signature="method#deleteStopWords#0;class#Parse#0" />
+            <element signature="method#stemFulltext#0;class#Parse#0" />
+            <element signature="method#stringToSetOfString#0;class#Parse#0" />
+            <element signature="e#7673#7681#0" expanded="true" />
+            <element signature="method#pathOfStopWordsToSetOfStrings#0;class#Parse#0" />
+            <element signature="method#numWithoutUnits#0;class#Parse#0" />
+            <element signature="method#numWithPercent#0;class#Parse#0" />
+            <element signature="method#NumWithDates#0;class#Parse#0" />
             <element signature="method#monthContains#0;class#Parse#0" />
+            <element signature="method#Price#0;class#Parse#0" />
           </folding>
         </state>
       </provider>

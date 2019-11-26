@@ -3,8 +3,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +17,7 @@ public class ReadFile {
     // Constructor
     public ReadFile(String path){
         this.path = path;
-        allFiles = new HashMap<>();
+        allFiles = new LinkedHashMap<>();
     }
 
     /**
@@ -78,7 +78,7 @@ public class ReadFile {
      * @return mapFilesNumberContent
      */
     private Map<String, String> separatedFilesToStringMap(String fileString){
-        Map<String, String> mapFilesNumberContent = new HashMap<>();
+        Map<String, String> mapFilesNumberContent = new LinkedHashMap<>();
         final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
         // Names
         Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", reOptions);

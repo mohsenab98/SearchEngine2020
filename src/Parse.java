@@ -38,6 +38,7 @@ public class Parse {
                 fullText = matcherText.group(1);
             }
 
+            // LinkedList<String> listFullText = stringToLinkedList(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
             fullText = stemFulltext(fullText);
@@ -46,30 +47,30 @@ public class Parse {
             System.out.println("K");
         }
     }
-    //NumWithoutUnits
 
     public String termIdentifier (String fullText){
-        //#1 change M/K/B
-        String term = "";
-        Pattern patternText = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billion))?(?:\\.\\d+)?)", reOptions);
-        Matcher matcherText = patternText.matcher(fullText);
-        while (matcherText.find()){
-            term = matcherText.group(1) + matcherText.group(2);
+
+        String term;
+        // #1 change M/K/B
+        Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
+        Matcher matcherNumbers = patternNumbers.matcher(fullText);
+        while (matcherNumbers.find()){
+            term = matcherNumbers.group(1) + matcherNumbers.group(2);
             String str = numWithoutUnits(term);
-            fullText = fullText.replaceAll(term, str);
+            fullText = fullText.replace(term, str);
         }
+        // #2 change %
+        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
+        Matcher matcherPercent = patternPercent.matcher(fullText);
+        while (matcherPercent.find()){
+            term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
+            String str = numWithPercent(term);
+            fullText = fullText.replace(term, str);
+        }
+
         return fullText;
     }
 
-    /**
-     * Remove all punctuation chars, dots, &amp, spaces and / with SET
-     * @param setFullText
-     * @return
-     */
-    private Set<String> removePunctuationAndSpacesSet(Set<String> setFullText){
-
-        return  setFullText;
-    }
 
     /**
      * Remove all punctuation chars, dots, &amp, spaces and / with STRING
@@ -96,7 +97,7 @@ public class Parse {
         }
 
         // Remove / and spaces between --
-        Pattern patternOther = Pattern.compile("/|-\\s*-", reOptions);
+        Pattern patternOther = Pattern.compile("-\\s*-", reOptions);
         Matcher matcherOther = patternOther.matcher(fullText);
         while (matcherOther.find()) {
             fullText = matcherOther.replaceAll(" ");
@@ -113,14 +114,14 @@ public class Parse {
         Pattern patternDotsLetters = Pattern.compile("(\\d+?)\\.(\\d+?)", reOptions);
         Matcher matcherDotsLetters = patternDotsLetters.matcher(fullText);
         while (matcherDotsLetters.find()) {
-            fullText = matcherDotsLetters.replaceFirst(matcherDotsLetters.group(1) + "," + matcherDotsLetters.group(2));
+            fullText = matcherDotsLetters.replaceFirst(matcherDotsLetters.group(1) + "#" + matcherDotsLetters.group(2));
             matcherDotsLetters = patternDotsLetters.matcher(fullText);
         }
 
         // Remove dots
         fullText = fullText.replaceAll("\\.", "");
         // Replace , to . in numbers
-        fullText = fullText.replaceAll(",", ".");
+        fullText = fullText.replaceAll("#", ".");
 
         // Removes spaces
         Pattern patternSpaces = Pattern.compile("\\s{2,}", reOptions);
@@ -189,20 +190,20 @@ public class Parse {
         return newString;
     }
 
-
     /**
      *
      * @param fullText
      * @return setString that represent the strings of the text
      */
     private Set stringToSetOfString(String fullText){
-        Pattern pattern = Pattern.compile("\\s+", reOptions);
-        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
+//        Pattern pattern = Pattern.compile("\\s+", reOptions);
+//        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new HashSet<String>();
-        while(sc2.hasNext()){
-            setString.add(sc2.next());
-        }
+//        while(sc2.hasNext()){
+//            setString.add(sc2.next());
+//        }
         return setString;
+
     }
 
     /**
@@ -231,6 +232,11 @@ public class Parse {
      */
     public String numWithoutUnits(String term){
         int indexAfterDot;
+
+        if(term.contains("-") || Pattern.compile("\\.\\d+\\.").matcher(term).find() || term.contains("/")){
+            return term;
+        }
+
         float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
         if(term.contains(".")){
             indexAfterDot = term.length() - (term.indexOf(".") + 1);
