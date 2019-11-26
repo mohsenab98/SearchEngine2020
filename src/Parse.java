@@ -1,7 +1,7 @@
-import org.tartarus.snowball.ext.PorterStemmer;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,12 +40,8 @@ public class Parse {
             }
 
             fullText = removePunctuationAndSpaces(fullText);
-            Set<String> s = deleteStopWords(this.stopWordsPath, fullText);
-            termsInDocs.put(entry.getKey(), s);
-            //// hello ///
-            /// Hello 2 ///
-            /// HELLO 3///
-
+            fullText = deleteStopWords(this.stopWordsPath, fullText);
+            //termsInDocs.put(entry.getKey(), s);
         }
     }
 
@@ -116,20 +112,52 @@ public class Parse {
      * @param path of the StopWords file & fullText that represent the text of the Doc We are parsing
      * @return setStringText that doesnt have stop words
      */
-    public Set deleteStopWords(String path, String fullText) {
-        Set<String> setStringText = stringToSetOfString(fullText);
-        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
-        // Need to check terms rules before deleting stopWords
-        setStringText.removeAll(setStringStopWords);
-        return setStringText;
+    private String deleteStopWords(String path, String fullText) {
+//        Set<String> setStringText = stringToSetOfString(fullText);
+//        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
+//        // Need to check terms rules before deleting stopWords
+//        setStringText.removeAll(setStringStopWords);
+//        return setStringText;
+        String stopWords = "";
+        try{
+            stopWords = new String ( Files.readAllBytes( Paths.get(path) ) );
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String words[] = stopWords.split("\\n");
+        String capitalizeWord = "";
+        for(String w : words){
+            String first = w.substring(0,1);
+            String afterFirst = w.substring(1);
+            capitalizeWord += first.toUpperCase() + afterFirst +"\\n";
+        }
+//        Pattern patternUpperFirstLetter = Pattern.compile("^\\w", reOptions);
+//        Matcher matcherUpperFirstLetter = patternUpperFirstLetter.matcher(stopWordsUpperCaseFirstLetter);
+//        while (matcherUpperFirstLetter.find()) {
+//            stopWordsUpperCaseFirstLetter = stopWordsUpperCaseFirstLetter.replaceAll("^\\w", matcherUpperFirstLetter.group().toUpperCase());
+//        }
+
+
+        String stopWordsUpperCase = stopWords.toUpperCase();
+        stopWords = stopWords + capitalizeWord + stopWordsUpperCase;
+
+        Pattern patternStopWords = Pattern.compile("\\w+(?:'\\w+)?", reOptions);
+        Matcher matcherStopWords = patternStopWords.matcher(stopWords);
+        while (matcherStopWords.find()) {
+            fullText = fullText.replaceAll(" " + matcherStopWords.group() + " ", " ");
+        }
+
+        return fullText;
     }
-//ll
+
     /**
      *
      * @param fullText
      * @return setString that represent the strings of the text
      */
-    public Set stringToSetOfString(String fullText){
+    private Set stringToSetOfString(String fullText){
         Pattern pattern = Pattern.compile("\\s+", reOptions);
         Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new HashSet<String>();
@@ -144,7 +172,7 @@ public class Parse {
      * @param path
      * @return setString that represent the stopWords from the text in the path was given
      */
-    public Set pathOfStopWordsToSetOfStrings(String path){
+    private Set pathOfStopWordsToSetOfStrings(String path){
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File(path));
@@ -245,7 +273,7 @@ public class Parse {
      * @param test
      * @return the number that represent each month
      */
-    public int monthContains(String test) {
+    private int monthContains(String test) {
         int i = 1;
         for (Mounth m : Mounth.values()) {
             if (m.name().equals(test.toLowerCase())) {
@@ -270,8 +298,8 @@ public class Parse {
             term = term + " Dollars";
         }
 
-        if(term.contains("U.S.")){
-            term = term.replace("U.S.", "");
+        if(term.contains("US")){
+            term = term.replace("US", "");
         }
 
         int indexAfterDot;

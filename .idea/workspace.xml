@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ir2020.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Stemmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stemmer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
@@ -23,17 +25,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="127">
+              <caret line="16" column="126" selection-start-line="16" selection-start-column="126" selection-end-line="16" selection-end-column="126" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state>
+              <caret column="24" lean-forward="true" selection-start-column="24" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -50,8 +52,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1460">
-              <caret line="84" selection-start-line="84" selection-end-line="85" selection-end-column="74" />
+            <state relative-caret-position="-14">
+              <caret line="59" column="22" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
               <folding>
                 <element signature="e#612#613#0" expanded="true" />
                 <element signature="e#653#654#0" expanded="true" />
@@ -64,13 +66,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
+            <state relative-caret-position="282">
+              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#4913#4921#0" expanded="true" />
                 <element signature="method#NumWithoutUnits#0;class#Parse#0" />
                 <element signature="method#NumWithPercent#0;class#Parse#0" />
                 <element signature="method#NumWithDates#0;class#Parse#0" />
@@ -122,10 +125,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="198" />
-    <option name="y" value="3" />
-    <option name="width" value="1386" />
-    <option name="height" value="788" />
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="980" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -135,6 +138,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -144,47 +149,24 @@
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="org" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="lucene-snowball-3.0.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="lucene-snowball-3.0.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="org" type="462c0819:PsiDirectoryNode" />
-              <item name="snowball" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574762571709" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../lucene-snowball-3.0.2.jar/lucene-snowball-3.0.2.jar!/" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574764312823" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -234,7 +216,6 @@
       <workItem from="1574180309386" duration="24084000" />
       <workItem from="1574447224628" duration="5655000" />
       <workItem from="1574608455845" duration="7048000" />
-      <workItem from="1574756390319" duration="4262000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -299,25 +280,11 @@
       <option name="project" value="LOCAL" />
       <updated>1574705607900</updated>
     </task>
-    <task id="LOCAL-00010" summary="test">
-      <created>1574711465726</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1574711465726</updated>
-    </task>
-    <task id="LOCAL-00011" summary="test2">
-      <created>1574711797674</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1574711797674</updated>
-    </task>
-    <option name="localTasksCounter" value="12" />
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51633000" />
+    <option name="totallyTimeSpent" value="47749000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -329,10 +296,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2579425" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19798657" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -342,16 +309,16 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4919463" weight="0.34369886" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4924357" visible="true" weight="0.39770868" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.6281879" visible="true" weight="0.3967789" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5075643" side_tool="true" visible="true" weight="0.39770868" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49731544" weight="0.32719547" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49597314" weight="0.32719547" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.37181208" side_tool="true" visible="true" weight="0.3967789" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4966443" weight="0.32650074" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49463087" weight="0.32650074" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -445,27 +412,22 @@
     <MESSAGE value="Map for all docs in Read an Parse" />
     <MESSAGE value="One line deleted" />
     <MESSAGE value="removePunctuationAndSpaces" />
-    <MESSAGE value="test" />
-    <MESSAGE value="test2" />
-    <option name="LAST_COMMIT_MESSAGE" value="test2" />
+    <option name="LAST_COMMIT_MESSAGE" value="removePunctuationAndSpaces" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Stemmer.java</url>
-          <line>3</line>
+          <url>file://$PROJECT_DIR$/src/Parse.java</url>
+          <line>143</line>
           <properties />
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="allDocsArr" language="JAVA" />
-        <watch expression="entry" language="JAVA" />
-        <watch expression="entry.getValue()" language="JAVA" />
-        <watch expression="entry.getValue()" language="JAVA" />
+        <watch expression="matcherUpperFirstLetter.group().toUpperCase()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
@@ -506,17 +468,26 @@
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/regex/Matcher.java" />
-    <entry file="file://$PROJECT_DIR$/src/Indexer.java">
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
+          <caret column="24" lean-forward="true" selection-start-column="24" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1460">
-          <caret line="84" selection-start-line="84" selection-end-line="85" selection-end-column="74" />
+        <state relative-caret-position="-14">
+          <caret line="59" column="22" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
           <folding>
             <element signature="e#612#613#0" expanded="true" />
             <element signature="e#653#654#0" expanded="true" />
@@ -528,37 +499,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../lucene-snowball-3.0.2.jar/lucene-snowball-3.0.2.jar!/org/tartarus/snowball/ext/PorterStemmer.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        <state relative-caret-position="127">
+          <caret line="16" column="126" selection-start-line="16" selection-start-column="126" selection-end-line="16" selection-end-column="126" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
+        <state relative-caret-position="282">
+          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4913#4921#0" expanded="true" />
             <element signature="method#NumWithoutUnits#0;class#Parse#0" />
             <element signature="method#NumWithPercent#0;class#Parse#0" />
             <element signature="method#NumWithDates#0;class#Parse#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
@@ -568,7 +526,6 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>ir2020:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
