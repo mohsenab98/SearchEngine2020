@@ -23,7 +23,6 @@ public class Parse {
             this.stemmer = new Stemmer();
         }
 
-
     /**
      * The main function
      */
@@ -39,7 +38,7 @@ public class Parse {
                 fullText = matcherText.group(1);
             }
 
-            fullText = removePunctuationAndSpaces(fullText);
+            fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
             fullText = stemFulltext(fullText);
             //termsInDocs.put(entry.getKey(), s);
@@ -47,11 +46,21 @@ public class Parse {
     }
 
     /**
-     * Remove all punctuation chars, dots, &amp, spaces and /
+     * Remove all punctuation chars, dots, &amp, spaces and / with SET
+     * @param setFullText
+     * @return
+     */
+    private Set<String> removePunctuationAndSpacesSet(Set<String> setFullText){
+
+        return  setFullText;
+    }
+
+    /**
+     * Remove all punctuation chars, dots, &amp, spaces and / with STRING
      * @param fullText
      * @return full text: words separated by space
      */
-    private String removePunctuationAndSpaces(String fullText){
+    private String removePunctuationAndSpacesString(String fullText){
         // Clean new lines
         fullText = fullText.replace("\n", " ");
         fullText = fullText.replace("\r", " ");
@@ -134,11 +143,6 @@ public class Parse {
             String afterFirst = w.substring(1);
             capitalizeWord += first.toUpperCase() + afterFirst +"\\n";
         }
-//        Pattern patternUpperFirstLetter = Pattern.compile("^\\w", reOptions);
-//        Matcher matcherUpperFirstLetter = patternUpperFirstLetter.matcher(stopWordsUpperCaseFirstLetter);
-//        while (matcherUpperFirstLetter.find()) {
-//            stopWordsUpperCaseFirstLetter = stopWordsUpperCaseFirstLetter.replaceAll("^\\w", matcherUpperFirstLetter.group().toUpperCase());
-//        }
 
 
         String stopWordsUpperCase = stopWords.toUpperCase();
