@@ -11,8 +11,10 @@ public class Parse {
     private String stopWordsPath;
     private Map<String, String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
-    //well contain the docName and set of terms
+    // well contain the docName and set of terms
     private Map<String, Set<String>> termsInDocs;
+    // for checking upper cases in all corpus
+    private Set<String> setAllTerms;
     // field set //
 
     //Constructor
@@ -20,11 +22,12 @@ public class Parse {
             this.termsInDocs = new HashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
+            this.setAllTerms = new LinkedHashSet<>();
             this.stemmer = new Stemmer();
         }
 
     /**
-     * The main function
+     * The main function for parse
      */
     public void Parser(){
         Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
@@ -42,14 +45,20 @@ public class Parse {
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
             fullText = stemFulltext(fullText);
-            fullText = termIdentifier(fullText);
+            fullText = termFormat(fullText);
             //termsInDocs.put(entry.getKey(), s);
             System.out.println("K");
+            addWordsToSetTerms(fullText);
         }
+        identifyUpperCases();
     }
 
-    public String termIdentifier (String fullText){
-
+    /**
+     * Format terms to defined templates
+     * @param fullText
+     * @return
+     */
+    public String termFormat (String fullText){
         String term;
         // #1 change M/K/B
         Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
@@ -71,6 +80,48 @@ public class Parse {
         return fullText;
     }
 
+    /**
+     * Add each term in doc into set of terms
+     * @param fullText
+     */
+    private void addWordsToSetTerms(String fullText){
+        Pattern patternAllTerms = Pattern.compile("\\s(\\S+)", reOptions);
+        Matcher matcherAllTerms = patternAllTerms.matcher(fullText);
+        while (matcherAllTerms.find()){
+            this.setAllTerms.add(matcherAllTerms.group(1));
+        }
+    }
+
+    /**
+     * Identify constant upper case words and separate them in set of terms
+     */
+    private void identifyUpperCases(){
+        String strTerms = this.setAllTerms.toString();
+
+        Pattern patternAllTerms = Pattern.compile("([A-Z])(\\w+)", Pattern.MULTILINE | Pattern.DOTALL);
+        Matcher matcherAllTerms = patternAllTerms.matcher(strTerms);
+        while (matcherAllTerms.find()){
+            String upperCaseTerm = matcherAllTerms.group(1) + matcherAllTerms.group(2);
+            String lowerCaseTerm = matcherAllTerms.group(1).toLowerCase() + matcherAllTerms.group(2).toLowerCase();
+            if(this.setAllTerms.contains(lowerCaseTerm)){
+                this.setAllTerms.remove(upperCaseTerm);
+            }
+            else {
+                this.setAllTerms.remove(upperCaseTerm);
+                this.setAllTerms.add(upperCaseTerm.toUpperCase());
+            }
+        }
+
+        // Test //
+
+        /*
+        String[] arrayTerms = this.setAllTerms.toArray(new String[0]);
+        ArrayList<String> arrayListTerms = new ArrayList(Arrays.asList(arrayTerms));
+        Collections.sort(arrayListTerms, String.CASE_INSENSITIVE_ORDER);
+        return;
+        */
+
+    }
 
     /**
      * Remove all punctuation chars, dots, &amp, spaces and / with STRING
@@ -96,7 +147,7 @@ public class Parse {
             fullText = matcherAmpersand.replaceAll("&");
         }
 
-        // Remove / and spaces between --
+        // Remove between --
         Pattern patternOther = Pattern.compile("-\\s*-", reOptions);
         Matcher matcherOther = patternOther.matcher(fullText);
         while (matcherOther.find()) {
@@ -145,6 +196,10 @@ public class Parse {
 //        // Need to check terms rules before deleting stopWords
 //        setStringText.removeAll(setStringStopWords);
 //        return setStringText;
+
+        // Add term "Between number and number" to set of term before stop words cleaning
+        addBetweenNumberAndNumberToSetTerms(fullText);
+
         String stopWords = "";
         try{
             stopWords = new String ( Files.readAllBytes( Paths.get(path) ) );
@@ -172,6 +227,18 @@ public class Parse {
         }
 
         return fullText;
+    }
+
+    /**
+     * Add term "Between number and number" to set of terms
+     * @param fullText
+     */
+    private void addBetweenNumberAndNumberToSetTerms(String fullText){
+        Pattern patternPunctuation = Pattern.compile("between \\d+ and \\d+", reOptions);
+        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
+        while (matcherPunctuation.find()) {
+            this.setAllTerms.add(matcherPunctuation.group());
+        }
     }
 
     /**
@@ -277,16 +344,13 @@ public class Parse {
     }
 
     public String numWithPercent(String term){
-        String replacedStr = term;
-        if(term.contains("percentage")){
-            replacedStr  = term.replaceAll("percentage", "%");
+        Pattern patternAllTerms = Pattern.compile("percentage|percent", reOptions);
+        Matcher matcherAllTerms = patternAllTerms.matcher(term);
+        while (matcherAllTerms.find()){
+            term = term.replaceAll(matcherAllTerms.group(), "%").replaceAll("\\s+", "");
         }
-        else if(term.contains("percent")){
-            replacedStr = term.replaceAll("percent", "%");
-        }
-        replacedStr = replacedStr.replaceAll("[\\s]","");
 
-        return replacedStr;
+        return term;
     }
 
     /**
