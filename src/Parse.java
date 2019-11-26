@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
-
+    private Stemmer stemmer;
     private String stopWordsPath;
     private Map<String, String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
@@ -20,7 +20,7 @@ public class Parse {
             this.termsInDocs = new HashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
-
+            this.stemmer = new Stemmer();
         }
 
 
@@ -41,6 +41,7 @@ public class Parse {
 
             fullText = removePunctuationAndSpaces(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
+            fullText = stemFulltext(fullText);
             //termsInDocs.put(entry.getKey(), s);
         }
     }
@@ -151,6 +152,23 @@ public class Parse {
 
         return fullText;
     }
+
+    /**
+     * Stem every word in the given string
+     * @param fullText
+     * @return
+     */
+    private String stemFulltext(String fullText){
+        String newString = "";
+        Pattern pattern = Pattern.compile("\\s+", reOptions);
+        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
+
+        while(sc2.hasNext()){
+            newString = newString + " " +this.stemmer.porterStemmer((sc2.next()));
+        }
+        return newString;
+    }
+
 
     /**
      *
