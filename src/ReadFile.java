@@ -3,9 +3,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +12,11 @@ public class ReadFile {
     private String path;
     private Map<String, String> allFiles;
 
+
     // Constructor
     public ReadFile(String path){
         this.path = path;
-        allFiles = new LinkedHashMap<>();
+        this.allFiles = new LinkedHashMap<>();
     }
 
     /**
@@ -118,24 +117,6 @@ public class ReadFile {
             }
         }
     }
-
-    /**
-     * What to do:
-     * Send 'text' to parse class and create terms from the 'text', we have to save the term in a file in the corpus.
-     * Need to create some data structure for terms
-     * Create 'term' as field in ReadFile and Parse
-     * Add tag <TERM></TERM> into the files
-     * @param fileName
-     * @param content
-     */
-
-    private void parser(String fileName, String content){
-        Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-        Matcher matcherText = patternText.matcher(content);
-        String text = matcherText.group(1);
-
-    }
-
 
     public String getPath() {
         return path;
