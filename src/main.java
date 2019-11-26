@@ -8,13 +8,13 @@ public class main {
         String path = "Jackpot!";
         ReadFile rd = new ReadFile(path);
         System.out.println(rd.getPath());
-        rd.setPath("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
+        rd.setPath("C:\\Users\\mohse\\Desktop\\corpusTest1");
         System.out.println(rd.getPath());
         rd.printPath();
         rd.filesSeparator();
 //l
     /////// Parse tests ///////
-        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
+        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest1\\stopWords");
         p.Parser();
         //System.out.println(p.NumWithoutUnits("1010.56"));
         //System.out.println(p.NumWithPercent("15 percent"));
