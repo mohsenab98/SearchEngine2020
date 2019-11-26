@@ -41,8 +41,24 @@ public class Parse {
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
             fullText = stemFulltext(fullText);
+            fullText = termIdentifier(fullText);
             //termsInDocs.put(entry.getKey(), s);
+            System.out.println("K");
         }
+    }
+    //NumWithoutUnits
+
+    public String termIdentifier (String fullText){
+        //#1 change M/K/B
+        String term = "";
+        Pattern patternText = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billion))?(?:\\.\\d+)?)", reOptions);
+        Matcher matcherText = patternText.matcher(fullText);
+        while (matcherText.find()){
+            term = matcherText.group(1) + matcherText.group(2);
+            String str = numWithoutUnits(term);
+            fullText = fullText.replaceAll(term, str);
+        }
+        return fullText;
     }
 
     /**
@@ -208,7 +224,12 @@ public class Parse {
         return setString;
     }
 
-    public String NumWithoutUnits(String term){
+    /**
+     * #1
+     * @param term
+     * @return
+     */
+    public String numWithoutUnits(String term){
         int indexAfterDot;
         float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
         if(term.contains(".")){
@@ -249,7 +270,7 @@ public class Parse {
         return term;
     }
 
-    public String NumWithPercent(String term){
+    public String numWithPercent(String term){
         String replacedStr = term;
         if(term.contains("percentage")){
             replacedStr  = term.replaceAll("percentage", "%");
@@ -267,7 +288,7 @@ public class Parse {
      */
     enum Mounth {january , february, march, april, may, june, july, august, september, october, november, december}
     enum MountThreeChar {jan , feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec}
-    public String NumWithDates(String term){
+    public String numWithDates(String term){
 
         String strWithDigitOnly = term.replaceAll("[\\D]","");
         float numberInTerm = Float.parseFloat(strWithDigitOnly);
