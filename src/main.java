@@ -19,6 +19,7 @@ public class main {
 //        System.out.println(fullText);
         Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest\\stopWords.txt");
         p.Parser();
+//        p.termIdentifier("100 Million pepole in the world + 100 kkk 100,000,000,000,000 Billion 999.99");
         //System.out.println(p.NumWithoutUnits("1010.56"));
         //System.out.println(p.NumWithPercent("15 percent"));
         //System.out.println(p.NumWithDates("15 May"));
