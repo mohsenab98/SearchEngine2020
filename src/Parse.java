@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Parse {
     private Stemmer stemmer;
     private String stopWordsPath;
-    private Map<String, String> allDocs;
+    private ArrayList<String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
     // well contain the docName and set of terms
     private Map<String, Set<String>> termsInDocs;
@@ -18,7 +18,7 @@ public class Parse {
     private Map<String, Integer> mapNames;
 
     //Constructor
-    public Parse(Map<String, String> allDocs, String stopWordsPath){
+    public Parse(ArrayList<String> allDocs, String stopWordsPath){
             this.termsInDocs = new LinkedHashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
@@ -31,17 +31,19 @@ public class Parse {
      * The main function for parse
      */
     public void Parser(){
-        Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
+        //Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
         String fullText ="";
-        while(itr.hasNext()) {
-            Map.Entry<String, String> entry = itr.next();
+        for (int i = 0; i < allDocs.size() - 1; i++) {
+            //Map.Entry<String, String> entry = itr.next();
 
             Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", reOptions);
-            Matcher matcherText = patternText.matcher(entry.getValue());
+            Matcher matcherText = patternText.matcher(allDocs.get(i));
             while (matcherText.find()){
                 fullText = matcherText.group(1);
             }
 
+
+            // fullText = entry.getValue();
             // LinkedList<String> listFullText = stringToLinkedList(fullText);
             addNames(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
@@ -49,7 +51,7 @@ public class Parse {
             fullText = stemFulltext(fullText);
             fullText = termFormat(fullText);
             //termsInDocs.put(entry.getKey(), s);
-            System.out.println("K");
+            //System.out.println("K");
             addWordsToSetTerms(fullText);
         }
         identifyUpperCases();

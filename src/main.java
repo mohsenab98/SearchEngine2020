@@ -1,22 +1,17 @@
 import java.util.Set;
 
 public class main {
-    //ddddddddddddddd evgenyyyyyy
     public static void main(String[] args){
         double startTime = System.nanoTime();
 
     /////// ReadFile tests ///////
-        String path = "Jackpot!";
-        ReadFile rd = new ReadFile(path);
-        System.out.println(rd.getPath());
-        rd.setPath("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
-        System.out.println(rd.getPath());
-        rd.printPath();
-        rd.filesSeparator();
+        ReadFile rd = new ReadFile();
+        rd.filesSeparator("D:\\corpus");
+
 //l
     /////// Parse tests ///////
-        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
-        p.Parser();
+//        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
+//        p.Parser();
         //p.termIdentifier("123.123.123 100 million");
         //System.out.println(p.NumWithoutUnits("1010.56"));
         //System.out.println(p.NumWithPercent("15 percent"));
