@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -15,14 +14,16 @@ public class Parse {
     private Map<String, Set<String>> termsInDocs;
     // for checking upper cases in all corpus
     private Set<String> setAllTerms;
-    // field set //
+    // names and its counters in docs
+    private Map<String, Integer> mapNames;
 
     //Constructor
     public Parse(Map<String, String> allDocs, String stopWordsPath){
-            this.termsInDocs = new HashMap<>();
+            this.termsInDocs = new LinkedHashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
             this.setAllTerms = new LinkedHashSet<>();
+            this.mapNames = new LinkedHashMap<>();
             this.stemmer = new Stemmer();
         }
 
@@ -42,6 +43,7 @@ public class Parse {
             }
 
             // LinkedList<String> listFullText = stringToLinkedList(fullText);
+            addNames(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
             fullText = stemFulltext(fullText);
@@ -51,6 +53,7 @@ public class Parse {
             addWordsToSetTerms(fullText);
         }
         identifyUpperCases();
+        addNamesToSetTerms();
     }
 
     /**
@@ -91,6 +94,52 @@ public class Parse {
             this.setAllTerms.add(matcherAllTerms.group(1));
         }
     }
+
+    /**
+     * Add names of 2 or more docs from map of names to set of terms
+     */
+    private void addNamesToSetTerms(){
+        Set<String> names = new LinkedHashSet<>(this.mapNames.keySet());
+
+        // Clean map from names in one doc only
+        for (String name : names) {
+            if(this.mapNames.get(name) == 1){
+                this.mapNames.remove(name);
+            }
+        }
+
+        // Add names to terms
+        this.setAllTerms.addAll(mapNames.keySet());
+    }
+
+    /**
+     * Search for names in fullText, add them to map of names and count how many time docs contain the names
+     * @param fullText
+     */
+    private void addNames(String fullText){
+        Set<String> setNames = new LinkedHashSet<>();
+        Pattern patternNames = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE | Pattern.DOTALL);
+        Matcher matcherNames = patternNames.matcher(fullText);
+        while (matcherNames.find()) {
+            String match = matcherNames.group();
+            // Clean the name
+            match = match.replaceAll("[,:;()?!{}\\[\\]\"\'.]", "");
+            // Stem the name
+            match = stemFulltext(match).trim().toUpperCase();
+            setNames.add(match);
+        }
+
+        // Add to map and count the names
+        for (String name : setNames){
+            if(!this.mapNames.containsKey(name)){
+                this.mapNames.put(name, 1);
+            }
+            else{
+                this.mapNames.put(name, this.mapNames.get(name) + 1);
+            }
+        }
+    }
+
 
     /**
      * Identify constant upper case words and separate them in set of terms
