@@ -12,22 +12,26 @@ public class Parse {
 
     private Stemmer stemmer;
     private String stopWordsPath;
+    private Set<String> setStopWords;
+    private Set<String> setNames;
+    private Set<String> setUpperCase;
+    private Set<String> setAllTerms;
+    private Map<String, Set<String>> mapTermsInDocs;
+
+
     private ArrayList<String> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
     // well contain the docName and set of terms
-    private Map<String, Set<String>> termsInDocs;
-    // for checking upper cases in all corpus
-    private Set<String> setAllTerms;
-    // names and its counters in docs
-    private Map<String, Integer> mapNames;
+
 
     //Constructor
     public Parse(ArrayList<String> allDocs, String stopWordsPath){
-            this.termsInDocs = new LinkedHashMap<>();
+            this.mapTermsInDocs = new LinkedHashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
             this.setAllTerms = new LinkedHashSet<>();
-            this.mapNames = new LinkedHashMap<>();
+            this.setNames = new LinkedHashSet<>();
+            this.setUpperCase = new LinkedHashSet<>();
             this.stemmer = new Stemmer();
         }
 
@@ -36,30 +40,40 @@ public class Parse {
      */
     public void Parser(){
         //Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
+        try{
+            String stopWords = new String ( Files.readAllBytes( Paths.get(stopWordsPath) ));
+            this.setStopWords = stringToSetOfString(stopWords);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         for (int i = 0; i < allDocs.size() - 1; i++) {
             //Map.Entry<String, String> entry = itr.next();
 
-                String fullText ="";
-                Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", reOptions);
-                Matcher matcherText = patternText.matcher(allDocs.get(i));
-                while (matcherText.find()){
-                    fullText = matcherText.group(1);
-                }
+            String fullText = "";
+            String docName ="";
+            Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
+            Matcher matcherText = patternText.matcher(allDocs.get(i));
+            while (matcherText.find()){
+                docName = matcherText.group(1);
+                fullText = matcherText.group(2);
+            }
 
             // fullText = entry.getValue();
             // LinkedList<String> listFullText = stringToLinkedList(fullText);
-         //   addNames(fullText);
-            fullText = removePunctuationAndSpacesString(fullText);
-           // fullText = deleteStopWords(this.stopWordsPath, fullText);
-          //  fullText = stemFulltext(fullText);
-          //  fullText = termFormat(fullText);
+//            addNames(fullText);
+            fullText = separateTermsFromText(fullText, docName);
+//            fullText = deleteStopWords(this.stopWordsPath, fullText);
+//            fullText = stemFulltext(fullText);
+//            fullText = termFormat(fullText);
             //termsInDocs.put(entry.getKey(), s);
             //System.out.println("K");
-          //  addWordsToSetTerms(fullText);
+//            addWordsToSetTerms(fullText);
         }
-       // identifyUpperCases();
-       // addNamesToSetTerms();
+//        identifyUpperCases();
+//        addNamesToSetTerms();
     }
 
     /**
@@ -86,6 +100,25 @@ public class Parse {
             fullText = fullText.replace(term, str);
         }
 
+        // #3 Dates
+//        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
+        Pattern patternDate = Pattern.compile("\\d+(?:\\-\\d+)?(\\s*)\\w+", reOptions);
+        Matcher matcherDate = patternDate.matcher(fullText);
+        while (matcherDate.find()){
+            term = matcherDate.group(1) + matcherDate.group();
+            String str = numWithDates(term);
+            fullText = fullText.replace(term, str);
+        }
+
+        // #4 Prices
+        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:(?:dollars))?", reOptions);
+        Matcher matcherPrice = patternPrice.matcher(fullText);
+        while (matcherPrice.find()){
+            term = matcherPrice.group();
+            String str = numWithPercent(term);
+            fullText = fullText.replace(term, str);
+        }
+
         return fullText;
     }
 
@@ -104,6 +137,7 @@ public class Parse {
     /**
      * Add names of 2 or more docs from map of names to set of terms
      */
+    /*
     private void addNamesToSetTerms(){
         Set<String> names = new LinkedHashSet<>(this.mapNames.keySet());
 
@@ -117,6 +151,7 @@ public class Parse {
         // Add names to terms
         this.setAllTerms.addAll(mapNames.keySet());
     }
+    */
 
     /**
      * Search for names in fullText, add them to map of names and count how many time docs contain the names
@@ -135,6 +170,7 @@ public class Parse {
             setNames.add(match);
         }
 
+        /*
         // Add to map and count the names
         for (String name : setNames){
             if(!this.mapNames.containsKey(name)){
@@ -145,11 +181,13 @@ public class Parse {
             }
         }
     }
+    */
 
 
     /**
      * Identify constant upper case words and separate them in set of terms
      */
+    /*
     private void identifyUpperCases(){
         String strTerms = this.setAllTerms.toString();
 
@@ -166,6 +204,7 @@ public class Parse {
                 this.setAllTerms.add(upperCaseTerm.toUpperCase());
             }
         }
+        */
 
         // Test //
 
@@ -183,17 +222,45 @@ public class Parse {
      * @param fullText
      * @return full text: words separated by space
      */
-    private String removePunctuationAndSpacesString(String fullText){
+    private String separateTermsFromText(String fullText, String docName){
+        this.mapTermsInDocs.put(docName, new LinkedHashSet<>());
+        StringBuilder sbNames = new StringBuilder();
+        int counterNames = 0;
 
-        StringBuilder cleanFullText = new StringBuilder();
         Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
         Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
         while (matcherPunctuation.find()) {
-            cleanFullText.append(matcherPunctuation.group(1)).append(" ");
-        }
+            String term = matcherPunctuation.group(1);
+            // Stop words
+            if(isStopWord(term)){
+               continue;
+            }
+            // Stem
+            term = this.stemmer.porterStemmer(term);
 
-        return cleanFullText.toString();
+            this.setAllTerms.add(term);
+            this.mapTermsInDocs.get(docName).add(term);
+        }
+        Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
+        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
+        while (matcherPunctuation.find()) {
+
+        int x = 0;
+        return fullText;
     }
+
+    private boolean isStopWord(String term){
+        if(this.setStopWords.contains(term.toLowerCase())){
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+
+
 
     /**
      * DELETE StopWords
@@ -224,7 +291,7 @@ public class Parse {
         for(String w : words){
             String first = w.substring(0,1);
             String afterFirst = w.substring(1);
-            capitalizeWord += first.toUpperCase() + afterFirst +"\\n";
+            capitalizeWord += first.toUpperCase() + afterFirst + "\n";
         }
 
 
@@ -273,13 +340,13 @@ public class Parse {
      * @param fullText
      * @return setString that represent the strings of the text
      */
-    private Set stringToSetOfString(String fullText){
-//        Pattern pattern = Pattern.compile("\\s+", reOptions);
-//        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
-        Set<String> setString = new HashSet<String>();
-//        while(sc2.hasNext()){
-//            setString.add(sc2.next());
-//        }
+    private Set<String> stringToSetOfString(String fullText){
+        Pattern pattern = Pattern.compile("\n", reOptions);
+        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
+        Set<String> setString = new LinkedHashSet<>();
+        while(sc2.hasNext()){
+            setString.add(sc2.next());
+        }
         return setString;
 
     }
@@ -380,6 +447,9 @@ public class Parse {
         strWithCharOnly = strWithCharOnly.replaceAll("[\\s]","");
 
         int monthNumber = monthContains(strWithCharOnly);
+        if(monthNumber == -1){
+            return term;
+        }
         String monthNumberStr = String.valueOf(monthNumber);
         if(monthNumber < 10){
             monthNumberStr = "0" + monthNumber;
@@ -448,4 +518,6 @@ public class Parse {
 
         return term;
     }
+
+
 }
