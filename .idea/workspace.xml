@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/ReadFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/ReadFile.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReadFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadFile.java" afterDir="false" />
@@ -18,25 +16,19 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ir2020$main.ic" NAME="main Coverage Results" MODIFIED="1574901233404" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="ir2020" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="8" column="36" lean-forward="true" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="20" column="9" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+            <state>
+              <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -47,31 +39,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="35" />
+            <state relative-caret-position="148">
+              <caret line="16" column="73" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="73" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#281#282#0" expanded="true" />
-                <element signature="e#330#331#0" expanded="true" />
-                <element signature="e#2607#2608#0" expanded="true" />
-                <element signature="e#2638#2639#0" expanded="true" />
+                <element signature="e#512#513#0" expanded="true" />
+                <element signature="e#561#562#0" expanded="true" />
+                <element signature="e#3364#3365#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1242">
-              <caret line="59" selection-start-line="59" selection-end-line="59" />
+            <state relative-caret-position="240">
+              <caret line="193" lean-forward="true" selection-start-line="193" selection-end-line="193" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#addWordsToSetTerms#0;class#Parse#0" />
                 <element signature="method#addNamesToSetTerms#0;class#Parse#0" />
                 <element signature="method#addNames#0;class#Parse#0" />
                 <element signature="method#identifyUpperCases#0;class#Parse#0" />
-                <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
                 <element signature="method#addBetweenNumberAndNumberToSetTerms#0;class#Parse#0" />
                 <element signature="method#stemFulltext#0;class#Parse#0" />
                 <element signature="method#stringToSetOfString#0;class#Parse#0" />
@@ -106,6 +96,8 @@
       <find>90</find>
       <find>70</find>
       <find>per</find>
+      <find>22</find>
+      <find>.</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -135,8 +127,8 @@
       <list>
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Stemmer.java" />
-        <option value="$PROJECT_DIR$/src/Parse.java" />
         <option value="$PROJECT_DIR$/src/ReadFile.java" />
+        <option value="$PROJECT_DIR$/src/Parse.java" />
         <option value="$PROJECT_DIR$/src/main.java" />
       </list>
     </option>
@@ -182,7 +174,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574875870444" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574936787759" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/opennlp-tools-1.8.0.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -242,7 +234,8 @@
       <workItem from="1574883964854" duration="300000" />
       <workItem from="1574884341479" duration="2559000" />
       <workItem from="1574886967906" duration="1000" />
-      <workItem from="1574887331106" duration="291000" />
+      <workItem from="1574887331106" duration="586000" />
+      <workItem from="1574889695489" duration="16785000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -335,11 +328,18 @@
       <option name="project" value="LOCAL" />
       <updated>1574871080952</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="New Read file, ArrayList in map">
+      <created>1574887717346</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1574887717346</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100223000" />
+    <option name="totallyTimeSpent" value="117303000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -354,7 +354,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2261745" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2295302" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -363,17 +363,17 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6704698" visible="true" weight="0.477306" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6221477" weight="0.37188873" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6536913" visible="true" weight="0.40409955" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7691275" weight="0.37188873" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.3295302" side_tool="true" visible="true" weight="0.477306" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4966443" weight="0.32650074" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49127516" weight="0.32503662" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.34630874" side_tool="true" visible="true" weight="0.40409955" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49597314" weight="0.32650074" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.48657718" weight="0.32503662" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -384,37 +384,6 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Database" order="8" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.115733735" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Designer" order="4" />
-      <window_info id="UI Designer" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49167928" visible="true" weight="0.33965245" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.806354" weight="0.55766195" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50832075" side_tool="true" visible="true" weight="0.33965245" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4986577" weight="0.32719547" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.4978678" weight="0.3279003" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Theme Preview" order="4" />
-      <window_info anchor="right" id="Maven" order="5" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Database" order="8" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -471,10 +440,29 @@
     <MESSAGE value="termIdentifier:&#10;+ Numbers&#10;+ Percentage" />
     <MESSAGE value="Many many changes" />
     <MESSAGE value="functions for Names" />
-    <option name="LAST_COMMIT_MESSAGE" value="functions for Names" />
+    <MESSAGE value="New Read file, ArrayList in map" />
+    <option name="LAST_COMMIT_MESSAGE" value="New Read file, ArrayList in map" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="matcherPunctuation.group(1)" language="JAVA" />
+        <watch expression="cleanFullText.toString()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>cleanFullText.toString()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>matcherPunctuation.group(1)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>span.getEnd()</expression-string>
         <language-id>JAVA</language-id>
@@ -515,16 +503,6 @@
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>arrayListTerms[6000]</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>matcherPercent.group(3)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
@@ -556,8 +534,45 @@
     <entry file="file://$PROJECT_DIR$/hs_err_pid2768.log" />
     <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="345">
           <caret line="20" column="9" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/Runnable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/function/Predicate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="48" column="12" selection-start-line="48" selection-start-column="12" selection-end-line="48" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="16" column="73" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="73" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#512#513#0" expanded="true" />
+            <element signature="e#561#562#0" expanded="true" />
+            <element signature="e#3364#3365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -566,15 +581,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1242">
-          <caret line="59" selection-start-line="59" selection-end-line="59" />
+        <state relative-caret-position="240">
+          <caret line="193" lean-forward="true" selection-start-line="193" selection-end-line="193" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#addWordsToSetTerms#0;class#Parse#0" />
             <element signature="method#addNamesToSetTerms#0;class#Parse#0" />
             <element signature="method#addNames#0;class#Parse#0" />
             <element signature="method#identifyUpperCases#0;class#Parse#0" />
-            <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
             <element signature="method#addBetweenNumberAndNumberToSetTerms#0;class#Parse#0" />
             <element signature="method#stemFulltext#0;class#Parse#0" />
             <element signature="method#stringToSetOfString#0;class#Parse#0" />
@@ -585,27 +599,6 @@
             <element signature="method#monthContains#0;class#Parse#0" />
             <element signature="method#Price#0;class#Parse#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#281#282#0" expanded="true" />
-            <element signature="e#330#331#0" expanded="true" />
-            <element signature="e#2607#2608#0" expanded="true" />
-            <element signature="e#2638#2639#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="36" lean-forward="true" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
         </state>
       </provider>
     </entry>

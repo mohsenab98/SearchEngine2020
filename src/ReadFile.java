@@ -1,12 +1,20 @@
+import sun.awt.Mutex;
+
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-public class ReadFile {
+public class ReadFile extends Thread{
     // Fields
+    private ExecutorService threadPool = Executors.newCachedThreadPool();
     private ArrayList<String> allFiles;
 
     // Constructor
@@ -20,18 +28,29 @@ public class ReadFile {
      */
     public void filesSeparator(String path){
         File files = new File(path);
-
-        if(files.listFiles() == null) {
+        if (files.listFiles() == null) {
             return;
         }
 
-        for (File file : files.listFiles()) {
-            if(file.isDirectory()){
-                filesSeparator(file.getPath());
-            }
-            else{
-                separatedFilesToArrayList(fileIntoString(file), file.getParent());
-            }
+        try  {
+            Stream<Path> paths = Files.walk(Paths.get(path));
+            Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
+           // Future<?> future = null;
+                for(Path fileP : filesPaths) {
+
+                        String str = fileIntoString(new File(fileP.toString()));
+                        String str2 = fileP.toString();
+                  //  future = threadPool.submit( () -> {
+                        separatedFilesToArrayList(str, str2);
+                   // });
+                }
+
+           // future.get();
+           // threadPool.shutdown();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -62,9 +81,10 @@ public class ReadFile {
      */
     private void separatedFilesToArrayList(String fileString, String pathDirectory){
         // Content
+
         Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
-        while (matcherFileContent.find()){
+        while (matcherFileContent.find()) {
             writeDocName(matcherFileContent.group(), Paths.get(pathDirectory).getFileName().toString());
             this.allFiles.add(matcherFileContent.group());
         }
@@ -83,6 +103,5 @@ public class ReadFile {
     public ArrayList<String> getListAllDocs() {
         return allFiles;
     }
-
 
 }
