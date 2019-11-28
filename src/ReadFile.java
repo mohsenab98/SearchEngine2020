@@ -32,7 +32,7 @@ public class ReadFile {
      */
     private void filesSeparator(String path){
         File files = new File(path);
-
+        System.out.println("read");
         if(files.listFiles() != null) {
             for (File file : files.listFiles()) {
                 if(file.isDirectory()){
@@ -44,7 +44,9 @@ public class ReadFile {
                     Map<String, String> mapFilesNumberContent = separatedFilesToStringMap(fileString);
                     // Map with all docs in
                     allFiles.putAll(mapFilesNumberContent);
-//                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
+                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
+                    mapFilesNumberContent.clear();
+                    file.delete();
                 }
             }
         }

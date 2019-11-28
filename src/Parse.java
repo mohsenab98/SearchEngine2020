@@ -43,7 +43,7 @@ public class Parse {
                 fullText = matcherText.group(1);
             }
 
-            // LinkedList<String> listFullText = stringToLinkedList(fullText);
+//             LinkedList<String> listFullText = stringToLinkedList(fullText);
 //            addNames(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
