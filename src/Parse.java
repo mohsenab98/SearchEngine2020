@@ -46,7 +46,7 @@ public class Parse {
             addNames(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
-            fullText = stemFulltext(fullText);
+//            fullText = stemFulltext(fullText);
             fullText = termFormat(fullText);
             //termsInDocs.put(entry.getKey(), s);
             System.out.println("K");
@@ -61,7 +61,7 @@ public class Parse {
      * @param fullText
      * @return
      */
-    public String termFormat (String fullText){
+    private String termFormat(String fullText){
         String term;
         // #1 change M/K/B
         Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
@@ -71,11 +71,30 @@ public class Parse {
             String str = numWithoutUnits(term);
             fullText = fullText.replace(term, str);
         }
-        // #2 change %
+        // #2 Percent %
         Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()){
             term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
+            String str = numWithPercent(term);
+            fullText = fullText.replace(term, str);
+        }
+
+        // #3 Dates
+//        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
+        Pattern patternDate = Pattern.compile("\\d+(?:\\-\\d+)?(\\s*)\\w+", reOptions);
+        Matcher matcherDate = patternDate.matcher(fullText);
+        while (matcherDate.find()){
+            term = matcherDate.group(1) + matcherDate.group();
+            String str = numWithDates(term);
+            fullText = fullText.replace(term, str);
+        }
+
+        // #4 Prices
+        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:(?:dollars))?", reOptions);
+        Matcher matcherPrice = patternPrice.matcher(fullText);
+        while (matcherPrice.find()){
+            term = matcherPrice.group();
             String str = numWithPercent(term);
             fullText = fullText.replace(term, str);
         }
@@ -249,7 +268,7 @@ public class Parse {
         // Add term "Between number and number" to set of term before stop words cleaning
         addBetweenNumberAndNumberToSetTerms(fullText);
 
-        String stopWords = "";
+        String stopWords = ""; // #1 will recive the stop words from the path given
         try{
             stopWords = new String ( Files.readAllBytes( Paths.get(path) ) );
         }
@@ -258,22 +277,23 @@ public class Parse {
         }
 
         String words[] = stopWords.split("\\n");
-        String capitalizeWord = "";
+        String capitalizeWord = ""; // #2 Will save delete words with first letter in capital form
         for(String w : words){
             String first = w.substring(0,1);
             String afterFirst = w.substring(1);
-            capitalizeWord += first.toUpperCase() + afterFirst +"\\n";
+            capitalizeWord += first.toUpperCase() + afterFirst +"\n";
         }
 
 
-        String stopWordsUpperCase = stopWords.toUpperCase();
-        stopWords = stopWords + capitalizeWord + stopWordsUpperCase;
+        String stopWordsUpperCase = stopWords.toUpperCase(); // #3 stop words as capital letter
+        stopWords = stopWords + capitalizeWord + stopWordsUpperCase; // stop words as #1 + #2 + #3
 
         Pattern patternStopWords = Pattern.compile("\\w+(?:'\\w+)?", reOptions);
         Matcher matcherStopWords = patternStopWords.matcher(stopWords);
         while (matcherStopWords.find()) {
             fullText = fullText.replaceAll(" " + matcherStopWords.group() + " ", " ");
         }
+//        fullText.replaceAll(stopWords, "");
 
         return fullText;
     }
@@ -291,7 +311,7 @@ public class Parse {
     }
 
     /**
-     * Stem every word in the given string
+     * STEM every word in the given string
      * @param fullText
      * @return
      */
@@ -305,7 +325,7 @@ public class Parse {
         }
         return newString;
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      *
      * @param fullText
@@ -340,9 +360,9 @@ public class Parse {
         }
         return setString;
     }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * #1
+     * #1 MILLION/BILLION/THOUSAND
      * @param term
      * @return
      */
@@ -392,6 +412,11 @@ public class Parse {
         return term;
     }
 
+    /**
+     * #3 PERCENT
+     * @param term
+     * @return
+     */
     public String numWithPercent(String term){
         Pattern patternAllTerms = Pattern.compile("percentage|percent", reOptions);
         Matcher matcherAllTerms = patternAllTerms.matcher(term);
@@ -402,58 +427,12 @@ public class Parse {
         return term;
     }
 
-    /**
-     * 5th term rule // Dates
-     */
-    enum Mounth {january , february, march, april, may, june, july, august, september, october, november, december}
-    enum MountThreeChar {jan , feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec}
-    public String numWithDates(String term){
-
-        String strWithDigitOnly = term.replaceAll("[\\D]","");
-        float numberInTerm = Float.parseFloat(strWithDigitOnly);
-        String strWithCharOnly  = term.replaceAll(strWithDigitOnly, "");
-        if(numberInTerm<10){
-            strWithDigitOnly = "0" + strWithDigitOnly ;
-        }
-        strWithCharOnly = strWithCharOnly.replaceAll("[\\s]","");
-
-        int monthNumber = monthContains(strWithCharOnly);
-        String monthNumberStr = String.valueOf(monthNumber);
-        if(monthNumber < 10){
-            monthNumberStr = "0" + monthNumber;
-        }
-        // Month Number Could be a year
-        if(numberInTerm <= 31){
-            return monthNumberStr+"-"+strWithDigitOnly;
-        }else {
-            return strWithDigitOnly+"-"+monthNumberStr;
-        }
-    }
 
     /**
-     *
-     * @param test
-     * @return the number that represent each month
+     * #4 PRICES (DOLLARS)
+     * @param term
+     * @return
      */
-    private int monthContains(String test) {
-        int i = 1;
-        for (Mounth m : Mounth.values()) {
-            if (m.name().equals(test.toLowerCase())) {
-                return i;
-            }
-            i++;
-        }
-        i=1;
-        for (MountThreeChar m : MountThreeChar.values()) {
-            if (m.name().equals(test.toLowerCase())) {
-                return i;
-            }
-            i++;
-        }
-
-        return -1;
-    }
-
     public String Price(String term){
         if(term.contains("$")){
             term = term.replace("$", "");
@@ -486,4 +465,62 @@ public class Parse {
 
         return term;
     }
+
+
+
+/**
+ * 5th term rule // Dates
+ */
+enum Mounth {january , february, march, april, may, june, july, august, september, october, november, december}
+enum MountThreeChar {jan , feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec}
+    public String numWithDates(String term){
+
+        String strWithDigitOnly = term.replaceAll("[\\D]","");
+        float numberInTerm = Float.parseFloat(strWithDigitOnly);
+        String strWithCharOnly  = term.replaceAll(strWithDigitOnly, "");
+        if(numberInTerm<10){
+            strWithDigitOnly = "0" + strWithDigitOnly ;
+        }
+        strWithCharOnly = strWithCharOnly.replaceAll("[\\s]","");
+
+        int monthNumber = monthContains(strWithCharOnly);
+        if(monthNumber == -1){
+            return term;
+        }
+        String monthNumberStr = String.valueOf(monthNumber);
+        if(monthNumber < 10){
+            monthNumberStr = "0" + monthNumber;
+        }
+        // Month Number Could be a year
+        if(numberInTerm <= 31){
+            return monthNumberStr+"-"+strWithDigitOnly;
+        }else {
+            return strWithDigitOnly+"-"+monthNumberStr;
+        }
+    }
+
+    /**
+     * #5.1 Help Function
+     * @param test
+     * @return the number that represent each month
+     */
+    private int monthContains(String test) {
+        int i = 1;
+        for (Mounth m : Mounth.values()) {
+            if (m.name().equals(test.toLowerCase())) {
+                return i;
+            }
+            i++;
+        }
+        i=1;
+        for (MountThreeChar m : MountThreeChar.values()) {
+            if (m.name().equals(test.toLowerCase())) {
+                return i;
+            }
+            i++;
+        }
+
+        return -1;
+    }
+
 }
