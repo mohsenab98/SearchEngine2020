@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Parse {
     private Stemmer stemmer;
     private String stopWordsPath;
-    private Map<String, String> allDocs;
+    private Map<String, String> allDocs; // Each DOCNO and its TEXT
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
     // well contain the docName and set of terms
     private Map<String, Set<String>> termsInDocs;
@@ -33,6 +33,7 @@ public class Parse {
     public void Parser(){
         Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
         String fullText ="";
+        // RUN to the last doc
         while(itr.hasNext()) {
             Map.Entry<String, String> entry = itr.next();
 
@@ -43,14 +44,14 @@ public class Parse {
             }
 
             // LinkedList<String> listFullText = stringToLinkedList(fullText);
-            addNames(fullText);
+//            addNames(fullText);
             fullText = removePunctuationAndSpacesString(fullText);
             fullText = deleteStopWords(this.stopWordsPath, fullText);
-//            fullText = stemFulltext(fullText);
             fullText = termFormat(fullText);
+            fullText = stemFulltext(fullText);
             //termsInDocs.put(entry.getKey(), s);
-            System.out.println("K");
-            addWordsToSetTerms(fullText);
+//            System.out.println("K");
+//            addWordsToSetTerms(fullText);
         }
         identifyUpperCases();
         addNamesToSetTerms();
@@ -95,7 +96,7 @@ public class Parse {
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()){
             term = matcherPrice.group();
-            String str = numWithPercent(term);
+            String str = Price(term);
             fullText = fullText.replace(term, str);
         }
 
@@ -197,59 +198,14 @@ public class Parse {
      * @return full text: words separated by space
      */
     private String removePunctuationAndSpacesString(String fullText){
-        // Clean new lines
-        fullText = fullText.replace("\n", " ");
-        fullText = fullText.replace("\r", " ");
-
-        // Clean punctuations
-        Pattern patternPunctuation = Pattern.compile("[,:;()?!{}\\[\\]\"\'*]", reOptions);
+        StringBuilder cleanFullText = new StringBuilder();
+        Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
         Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
         while (matcherPunctuation.find()) {
-            fullText = matcherPunctuation.replaceAll("");
+            cleanFullText.append(matcherPunctuation.group(1)).append(" ");
         }
 
-        // CLean &amp
-        Pattern patternAmpersand = Pattern.compile("&amp", reOptions);
-        Matcher matcherAmpersand = patternAmpersand.matcher(fullText);
-        while (matcherAmpersand.find()) {
-            fullText = matcherAmpersand.replaceAll("&");
-        }
-
-        // Remove between --
-        Pattern patternOther = Pattern.compile("-\\s*-", reOptions);
-        Matcher matcherOther = patternOther.matcher(fullText);
-        while (matcherOther.find()) {
-            fullText = matcherOther.replaceAll(" ");
-        }
-
-        // Remove spaces between -word
-        Pattern patternHyphen = Pattern.compile("-\\s+?(\\w)", reOptions);
-        Matcher matcherHyphen = patternHyphen.matcher(fullText);
-        while (matcherHyphen.find()) {
-            fullText = matcherHyphen.replaceAll("-" + matcherHyphen.group(1));
-        }
-
-        // Replace . to , in numbers
-        Pattern patternDotsLetters = Pattern.compile("(\\d+?)\\.(\\d+?)", reOptions);
-        Matcher matcherDotsLetters = patternDotsLetters.matcher(fullText);
-        while (matcherDotsLetters.find()) {
-            fullText = matcherDotsLetters.replaceFirst(matcherDotsLetters.group(1) + "#" + matcherDotsLetters.group(2));
-            matcherDotsLetters = patternDotsLetters.matcher(fullText);
-        }
-
-        // Remove dots
-        fullText = fullText.replaceAll("\\.", "");
-        // Replace , to . in numbers
-        fullText = fullText.replaceAll("#", ".");
-
-        // Removes spaces
-        Pattern patternSpaces = Pattern.compile("\\s{2,}", reOptions);
-        Matcher matcherSpaces = patternSpaces.matcher(fullText);
-        while (matcherSpaces.find()) {
-            fullText = matcherSpaces.replaceAll(" ");
-        }
-
-        return fullText.trim();
+        return cleanFullText.toString();
     }
 
     /**

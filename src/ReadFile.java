@@ -44,7 +44,7 @@ public class ReadFile {
                     Map<String, String> mapFilesNumberContent = separatedFilesToStringMap(fileString);
                     // Map with all docs in
                     allFiles.putAll(mapFilesNumberContent);
-                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
+//                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
                 }
             }
         }

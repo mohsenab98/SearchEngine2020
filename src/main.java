@@ -10,7 +10,6 @@ public class main {
         ReadFile rd = new ReadFile(path);
         System.out.println(rd.getPath());
         rd.setPath("C:\\Users\\mohse\\Desktop\\corpusTest1");
-        System.out.println(rd.getPath());
         rd.printPath();
         rd.filesSeparator();
 //l
