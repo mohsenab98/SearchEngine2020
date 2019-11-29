@@ -1,6 +1,7 @@
 import sun.awt.Mutex;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 public class ReadFile extends Thread{
     // Fields
     private ExecutorService threadPool = Executors.newCachedThreadPool();
-    private ArrayList<String> allFiles;
+    private ArrayList<byte[]> allFiles;
 
     // Constructor
     public ReadFile(){
@@ -38,10 +39,10 @@ public class ReadFile extends Thread{
            // Future<?> future = null;
                 for(Path fileP : filesPaths) {
 
-                        String str = fileIntoString(new File(fileP.toString()));
-                        String str2 = fileP.toString();
+                    String str = fileIntoString(new File(fileP.toString()));
+                    String str2 = fileP.toString();
                   //  future = threadPool.submit( () -> {
-                        separatedFilesToArrayList(str, str2);
+                    separatedFilesToArrayList(str, str2);
                    // });
                 }
 
@@ -86,7 +87,7 @@ public class ReadFile extends Thread{
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
         while (matcherFileContent.find()) {
             writeDocName(matcherFileContent.group(), Paths.get(pathDirectory).getFileName().toString());
-            this.allFiles.add(matcherFileContent.group());
+            this.allFiles.add(matcherFileContent.group().getBytes(StandardCharsets.US_ASCII));
         }
     }
 
@@ -100,7 +101,7 @@ public class ReadFile extends Thread{
         }
     }
 
-    public ArrayList<String> getListAllDocs() {
+    public ArrayList<byte[]> getListAllDocs() {
         return allFiles;
     }
 

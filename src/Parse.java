@@ -8,72 +8,65 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
+    // private ExecutorService threadPool = Executors.newCachedThreadPool();
 
     private Stemmer stemmer;
     private String stopWordsPath;
     private Set<String> setStopWords;
+    private Set<String> setRawNames;
     private Set<String> setNames;
     private Set<String> setUpperCase;
     private Set<String> setAllTerms;
     private Map<String, Set<String>> mapTermsInDocs;
 
 
-    private ArrayList<String> allDocs;
+    private ArrayList<byte[]> allDocs;
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
     // well contain the docName and set of terms
 
 
     //Constructor
-    public Parse(ArrayList<String> allDocs, String stopWordsPath){
-            this.mapTermsInDocs = new LinkedHashMap<>();
-            this.allDocs = allDocs;
-            this.stopWordsPath = stopWordsPath;
-            this.setAllTerms = new LinkedHashSet<>();
-            this.setNames = new LinkedHashSet<>();
-            this.setUpperCase = new LinkedHashSet<>();
-            this.stemmer = new Stemmer();
-        }
+    public Parse(ArrayList<byte[]> allDocs, String stopWordsPath){
+        this.mapTermsInDocs = new LinkedHashMap<>();
+        this.allDocs = allDocs;
+        this.stopWordsPath = stopWordsPath;
+        this.setAllTerms = new LinkedHashSet<>();
+        this.setRawNames = new LinkedHashSet<>();
+        this.setNames = new LinkedHashSet<>();
+        this.setUpperCase = new LinkedHashSet<>();
+        this.stemmer = new Stemmer();
+    }
 
     /**
      * The main function for parse
      */
-    public void Parser(){
+    public void Parser() {
         //Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
-        try{
-            String stopWords = new String ( Files.readAllBytes( Paths.get(stopWordsPath) ));
+        try {
+            String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < allDocs.size() - 1; i++) {
+        int i = 0;
+        while (!allDocs.isEmpty()){
             //Map.Entry<String, String> entry = itr.next();
 
             String fullText = "";
-            String docName ="";
+            String docName = "";
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
-            Matcher matcherText = patternText.matcher(allDocs.get(i));
-            while (matcherText.find()){
+            Matcher matcherText = patternText.matcher(new String(allDocs.get(i)));
+            while (matcherText.find()) {
                 docName = matcherText.group(1);
                 fullText = matcherText.group(2);
             }
 
-            // fullText = entry.getValue();
-            // LinkedList<String> listFullText = stringToLinkedList(fullText);
-//            addNames(fullText);
             fullText = separateTermsFromText(fullText, docName);
-//            fullText = deleteStopWords(this.stopWordsPath, fullText);
-//            fullText = stemFulltext(fullText);
-//            fullText = termFormat(fullText);
-            //termsInDocs.put(entry.getKey(), s);
-            //System.out.println("K");
-//            addWordsToSetTerms(fullText);
+            this.allDocs.remove(i);
         }
-//        identifyUpperCases();
-//        addNamesToSetTerms();
+        int x = 0;
     }
 
     /**
@@ -184,9 +177,9 @@ public class Parse {
     */
 
 
-    /**
-     * Identify constant upper case words and separate them in set of terms
-     */
+        /**
+         * Identify constant upper case words and separate them in set of terms
+         */
     /*
     private void identifyUpperCases(){
         String strTerms = this.setAllTerms.toString();
@@ -224,27 +217,25 @@ public class Parse {
      */
     private String separateTermsFromText(String fullText, String docName){
         this.mapTermsInDocs.put(docName, new LinkedHashSet<>());
-        StringBuilder sbNames = new StringBuilder();
-        int counterNames = 0;
+        //StringBuilder processedText = new StringBuilder();
 
-        Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
-        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
-        while (matcherPunctuation.find()) {
-            String term = matcherPunctuation.group(1);
+        Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
+        Matcher matcherTerm = patternTerm.matcher(fullText);
+        while (matcherTerm.find()) {
+            String term = matcherTerm.group(1);
             // Stop words
             if(isStopWord(term)){
-               continue;
+                continue;
             }
             // Stem
             term = this.stemmer.porterStemmer(term);
 
-            this.setAllTerms.add(term);
-            this.mapTermsInDocs.get(docName).add(term);
+            //    this.setAllTerms.add(term);
+            //    this.mapTermsInDocs.get(docName).add(term);
+            //processedText.append(term).append(matcherTerm.group(2));
         }
-        Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
-        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
-        while (matcherPunctuation.find()) {
 
+        // nameTerm(fullText, docName);
         int x = 0;
         return fullText;
     }
@@ -254,6 +245,27 @@ public class Parse {
             return true;
         }
         return false;
+    }
+
+    private void nameTerm(String fullText, String docName){
+        Set<String> docNames = new LinkedHashSet<>();
+        Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE);
+        Matcher matcherName = patternName.matcher(fullText);
+        while (matcherName.find()) {
+            String name = matcherName.group();
+            name = docName + "-" + Pattern.compile("[,:;)?!}\\]\"\'*\n]|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
+            docNames.add(name);
+        }
+
+        for(String theName : docNames){
+            if(this.setRawNames.contains(theName)){
+                this.setNames.add(theName);
+            }
+            else{
+                this.setRawNames.add(theName);
+            }
+        }
+
     }
 
 
