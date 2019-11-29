@@ -1,5 +1,3 @@
-import sun.awt.Mutex;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -16,11 +14,11 @@ import java.util.stream.Stream;
 public class ReadFile extends Thread{
     // Fields
     private ExecutorService threadPool = Executors.newCachedThreadPool();
-    private ArrayList<byte[]> allFiles;
+    private List<byte[]> allFiles;
 
     // Constructor
     public ReadFile(){
-        this.allFiles = new ArrayList<>();
+        this.allFiles = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
@@ -36,18 +34,23 @@ public class ReadFile extends Thread{
         try  {
             Stream<Path> paths = Files.walk(Paths.get(path));
             Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
-           // Future<?> future = null;
-                for(Path fileP : filesPaths) {
+            for(Path fileP : filesPaths) {
+                String strFiles = fileIntoString(new File(fileP.toString()));
+                String strFilePath = fileP.toString();
+                threadPool.submit( () -> {
+                    separatedFilesToArrayList(strFiles, strFilePath);
+                });
+            }
 
-                    String str = fileIntoString(new File(fileP.toString()));
-                    String str2 = fileP.toString();
-                  //  future = threadPool.submit( () -> {
-                    separatedFilesToArrayList(str, str2);
-                   // });
-                }
+            // Wait for ending of threads
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
-           // future.get();
-           // threadPool.shutdown();
+           threadPool.shutdown();
 
         }
         catch (Exception e){
@@ -86,12 +89,13 @@ public class ReadFile extends Thread{
         Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
         while (matcherFileContent.find()) {
-            writeDocName(matcherFileContent.group(), Paths.get(pathDirectory).getFileName().toString());
-            this.allFiles.add(matcherFileContent.group().getBytes(StandardCharsets.US_ASCII));
+            String content = matcherFileContent.group();
+            content = writeDocName(content, Paths.get(pathDirectory).getFileName().toString());
+            this.allFiles.add(content.getBytes(StandardCharsets.US_ASCII));
         }
     }
 
-    private void writeDocName(String content, String pathDirectory){
+    private String writeDocName(String content, String pathDirectory){
         Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(content);
         while (matcherFileContent.find()){
@@ -99,9 +103,10 @@ public class ReadFile extends Thread{
                 content = content.replaceAll("<DOCNO>[^<]+?</DOCNO>", "<DOCNO>" + pathDirectory + "-" + matcherFileContent.group(1) + "</DOCNO>");
             }
         }
+        return content;
     }
 
-    public ArrayList<byte[]> getListAllDocs() {
+    public List<byte[]> getListAllDocs() {
         return allFiles;
     }
 

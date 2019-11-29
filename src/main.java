@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class main {
     public static void main(String[] args){
@@ -7,12 +9,13 @@ public class main {
 
     /////// ReadFile tests ///////
         ReadFile rd = new ReadFile();
-        rd.filesSeparator("D:\\corpus");;
+        rd.filesSeparator("D:\\corpus");
 
        // rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
 
 
     /////// Parse tests ///////
+
         Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
         p.Parser();
         //p.termIdentifier("123.123.123 100 million");
