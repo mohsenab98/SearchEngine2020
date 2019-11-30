@@ -15,7 +15,7 @@ public class Parse {
     private Set<String> setStopWords;
     private Map<String, Set<String>> mapNames;
     private Set<String> setUpperCase;
-    private Map<String, String> mapTermsInDocs;
+    private Map<String, Set<String>> mapTermsInDocs;
 
 
     private ArrayList<byte[]> allDocs;
@@ -38,6 +38,7 @@ public class Parse {
      */
     public void Parser() {
         //Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
+       // int counter = 1;
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
@@ -46,20 +47,27 @@ public class Parse {
             e.printStackTrace();
         }
 
-        int i = 0;
         while (!allDocs.isEmpty()){
             String fullText = "";
             String docName = "";
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
-            Matcher matcherText = patternText.matcher(new String(allDocs.get(i)));
+            Matcher matcherText = patternText.matcher(new String(allDocs.get(0)));
             while (matcherText.find()) {
                 docName = matcherText.group(1);
                 fullText = matcherText.group(2);
             }
 
             separateTermsFromText(fullText, docName);
-            this.allDocs.remove(i);
+            this.allDocs.remove(0);
+
+         //   System.out.println(counter);
+         //   counter ++;
         }
+
+        // Add names to terms
+        cleanNames();
+        this.mapTermsInDocs.putAll(this.mapNames);
+
         threadPool.shutdown();
         int x = 0;
     }
@@ -116,9 +124,6 @@ public class Parse {
      * @return full text: words separated by space
      */
     private void separateTermsFromText(String fullText, String docName){
-        this.mapTermsInDocs.put(docName, new LinkedHashSet<>());
-        //StringBuilder processedText = new StringBuilder();
-
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
@@ -130,12 +135,17 @@ public class Parse {
             // Stem
             term = this.stemmer.porterStemmer(term);
 
-            //    this.setAllTerms.add(term);
-            //  this.mapTermsInDocs.get(docName).add(term);
-            //processedText.append(term).append(matcherTerm.group(2));
+            if(this.mapTermsInDocs.containsKey(term)){
+                this.mapTermsInDocs.get(term).add(docName);
+            }
+            else {
+                this.mapTermsInDocs.put(term, new LinkedHashSet<>());
+                this.mapTermsInDocs.get(term).add(docName);
+            }
         }
+
         threadPool.execute( () -> {
-            nameTerm(fullText, docName);
+            searchNames(fullText, docName);
         });
         int x = 0;
     }
@@ -147,12 +157,12 @@ public class Parse {
         return false;
     }
 
-    private void nameTerm(String fullText, String docName){
+    private void searchNames(String fullText, String docName){
         Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
-            name = Pattern.compile("[,.:;)?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
+            name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
             // docNames.add(name);
 
@@ -162,6 +172,14 @@ public class Parse {
             else {
                 this.mapNames.put(name, new LinkedHashSet<>());
                 this.mapNames.get(name).add(docName);
+            }
+        }
+    }
+
+    private void cleanNames(){
+        for (Map.Entry<String,Set<String>> name : this.mapNames.entrySet()){
+            if(name.getValue().size() <= 1){
+                this.mapNames.remove(name.getKey());
             }
         }
     }

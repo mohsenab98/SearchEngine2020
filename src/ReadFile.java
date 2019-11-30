@@ -11,10 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class ReadFile extends Thread{
+public class ReadFile{
     // Fields
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private List<byte[]> allFiles;
+
 
     // Constructor
     public ReadFile(){
@@ -34,13 +35,15 @@ public class ReadFile extends Thread{
         try  {
             Stream<Path> paths = Files.walk(Paths.get(path));
             Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
-            for(Path fileP : filesPaths) {
+
+            for( Path fileP :  filesPaths) {
                 String strFiles = fileIntoString(new File(fileP.toString()));
                 String strFilePath = fileP.toString();
-                threadPool.submit( () -> {
+                threadPool.submit(() -> {
                     separatedFilesToArrayList(strFiles, strFilePath);
                 });
             }
+
 
             // Wait for ending of threads
             try {
