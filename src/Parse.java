@@ -37,8 +37,7 @@ public class Parse {
      * The main function for parse
      */
     public void Parser() {
-        //Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
-       // int counter = 1;
+//        int counter = 1;
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
@@ -60,8 +59,8 @@ public class Parse {
             separateTermsFromText(fullText, docName);
             this.allDocs.remove(0);
 
-         //   System.out.println(counter);
-         //   counter ++;
+//            System.out.println(counter);
+//            counter ++;
         }
 
         // Add names to terms
@@ -124,24 +123,40 @@ public class Parse {
      * @return full text: words separated by space
      */
     private void separateTermsFromText(String fullText, String docName){
+        int counterBetween = 0;
+        StringBuilder between = new StringBuilder();
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
             String term = matcherTerm.group(1);
+            // Between
+            if(term.equalsIgnoreCase("between") || counterBetween > 0){
+                between.append(term.toLowerCase()).append(" ");
+                counterBetween ++;
+                if(counterBetween == 4){
+                    between.append(",");
+                    counterBetween = 0;
+                }
+                continue;
+            }
             // Stop words
             if(isStopWord(term)){
                 continue;
             }
             // Stem
-            term = this.stemmer.porterStemmer(term);
-
-            if(this.mapTermsInDocs.containsKey(term)){
-                this.mapTermsInDocs.get(term).add(docName);
+            if(Character.isUpperCase(term.charAt(0))) {
+                term = this.stemmer.porterStemmer(term.toLowerCase());
+                term = term.toUpperCase();
             }
             else {
-                this.mapTermsInDocs.put(term, new LinkedHashSet<>());
-                this.mapTermsInDocs.get(term).add(docName);
+                term = this.stemmer.porterStemmer(term.toLowerCase());
             }
+            // Check Upper Case letters and add term -> doc to map
+            addTermToMap(term, docName);
+        }
+
+        if(!between.toString().isEmpty()) {
+            between(between.toString(), docName);
         }
 
         threadPool.execute( () -> {
@@ -155,6 +170,23 @@ public class Parse {
             return true;
         }
         return false;
+    }
+
+    private void between(String between, String docName){
+        String[] tokens = between.split("\\s*,");
+        for(String term : tokens){
+            if(Pattern.compile("between \\d+ and \\d+").matcher(term).matches()){
+                this.mapTermsInDocs.put(term, new LinkedHashSet<>());
+                this.mapTermsInDocs.get(term).add(docName);
+            }
+            else{
+                Pattern patternTerm = Pattern.compile("\\w+", reOptions);
+                Matcher matcherTerm = patternTerm.matcher(term);
+                while (matcherTerm.find()) {
+                    addTermToMap(matcherTerm.group(), docName);
+                }
+            }
+        }
     }
 
     private void searchNames(String fullText, String docName){
@@ -181,6 +213,26 @@ public class Parse {
             if(name.getValue().size() <= 1){
                 this.mapNames.remove(name.getKey());
             }
+        }
+    }
+
+    private void addTermToMap(String term, String docName){
+        if(Character.isUpperCase(term.charAt(0))){
+            if(this.mapTermsInDocs.containsKey(term.toLowerCase())) {
+                this.mapTermsInDocs.get(term.toLowerCase()).add(docName);
+            }
+            else{
+                this.mapTermsInDocs.put(term.toUpperCase(), new LinkedHashSet<>());
+                this.mapTermsInDocs.get(term.toUpperCase()).add(docName);
+            }
+        }
+        else if(Character.isLowerCase(term.charAt(0)) && this.mapTermsInDocs.containsKey(term.toUpperCase())){
+            this.mapTermsInDocs.put(term, this.mapTermsInDocs.get(term.toUpperCase()));
+            this.mapTermsInDocs.remove(term.toUpperCase());
+        }
+        else {
+            this.mapTermsInDocs.put(term, new LinkedHashSet<>());
+            this.mapTermsInDocs.get(term).add(docName);
         }
     }
 
