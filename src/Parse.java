@@ -13,21 +13,22 @@ public class Parse {
 
     private String stopWordsPath;
     private Set<String> setStopWords;
-    private Map<String, Set<String>> mapNames;
-    private Map<String, Set<String>> mapTermsInDocs;
+    private Map<String, Map<String, Integer>> mapNames;
     private ArrayList<byte[]> allDocs;
+
+    private Indexer indexer;
 
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
     //Constructor
-    public Parse(List<byte[]> allDocs, String stopWordsPath) {
+    public Parse(List<byte[]> allDocs, String stopWordsPath, Indexer indexer) {
         threadPool = Executors.newCachedThreadPool();
         this.stemmer = new Stemmer();
 
         this.stopWordsPath = stopWordsPath;
         this.mapNames = new ConcurrentHashMap<>();
-        this.mapTermsInDocs = new LinkedHashMap<>();
         this.allDocs = new ArrayList<>(allDocs);
+        this.indexer = indexer;
     }
 
     /**
@@ -62,7 +63,8 @@ public class Parse {
 
         // Add names to terms
         cleanNames();
-        this.mapTermsInDocs.putAll(this.mapNames);
+        this.indexer.addNameToIndexer(this.mapNames);
+
 
         threadPool.shutdown();
         int x = 0;
@@ -81,16 +83,19 @@ public class Parse {
         Matcher matcherNumbers = patternNumbers.matcher(fullText);
         while (matcherNumbers.find()) {
             term = matcherNumbers.group(1) + matcherNumbers.group(2);
-            term = numWithoutUnits(term);
-            addTermToMap(numWithoutUnits(term), docName);
+            String  term1 = numWithoutUnits(term);
+//            addTermToMap(numWithoutUnits(term), docName);
+            indexer.addTermToIndexer(numWithoutUnits(term).toLowerCase(), docName);
+
         }
         // #3 %
         Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()) {
             term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
-            term = numWithPercent(term);
-            addTermToMap(numWithPercent(term), docName);
+            String  term1 = numWithPercent(term);
+            indexer.addTermToIndexer(numWithPercent(term).toLowerCase(), docName);
+//            addTermToMap(numWithPercent(term), docName);
         }
 
         // #4 Dates
@@ -99,14 +104,19 @@ public class Parse {
         Matcher matcherDate = patternDate.matcher(fullText);
         while (matcherDate.find()) {
             term = matcherDate.group(1) + matcherDate.group();
-            addTermToMap(numWithDates(term), docName);
+            String  term1 = numWithDates(term);
+//            addTermToMap(numWithDates(term), docName);
+            indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
         }
 
         // #5 Prices
         Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:dollars)?", reOptions);
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
-            addTermToMap(Price(matcherPrice.group()), docName);
+            String  term1 = Price(matcherPrice.group());
+//            addTermToMap(Price(matcherPrice.group()), docName);
+            indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
+
         }
 
     }
@@ -121,7 +131,7 @@ public class Parse {
         int counterBetween = 0;
         StringBuilder between = new StringBuilder();
         StringBuilder tokens = new StringBuilder();
-        Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
+        Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[-\\/]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
             String term = matcherTerm.group(1);
@@ -147,8 +157,10 @@ public class Parse {
                 term = this.stemmer.porterStemmer(term.toLowerCase());
             }
             // Check Upper Case letters and add term -> doc to map
-            tokens.append(term);
-            addTermToMap(term, docName);
+            tokens.append(term).append(" ");
+//            System.out.println(term + " " + matcherTerm.start() + " " + matcherTerm.end() + " " + docName);
+//            addTermToMap(term, docName);
+            indexer.addTermToIndexer(term.toLowerCase(), docName);
         }
 
         if (!between.toString().isEmpty()) {
@@ -173,13 +185,15 @@ public class Parse {
         String[] tokens = between.split("\\s*,");
         for (String term : tokens) {
             if (Pattern.compile("between \\d+ and \\d+").matcher(term).matches()) {
-                this.mapTermsInDocs.put(term, new LinkedHashSet<>());
-                this.mapTermsInDocs.get(term).add(docName);
+//                addTermToMap(term, docName);
+                indexer.addTermToIndexer(term.toLowerCase(), docName);
+
             } else {
                 Pattern patternTerm = Pattern.compile("\\w+", reOptions);
                 Matcher matcherTerm = patternTerm.matcher(term);
                 while (matcherTerm.find()) {
-                    addTermToMap(matcherTerm.group(), docName);
+//                    addTermToMap(matcherTerm.group(), docName);
+                    indexer.addTermToIndexer(matcherTerm.group().toLowerCase(), docName);
                 }
             }
         }
@@ -211,22 +225,6 @@ public class Parse {
         }
     }
 
-    private void addTermToMap(String term, String docName) {
-        if (Character.isUpperCase(term.charAt(0))) {
-            if (this.mapTermsInDocs.containsKey(term.toLowerCase())) {
-                this.mapTermsInDocs.get(term.toLowerCase()).add(docName);
-            } else {
-                this.mapTermsInDocs.put(term.toUpperCase(), new LinkedHashSet<>());
-                this.mapTermsInDocs.get(term.toUpperCase()).add(docName);
-            }
-        } else if (Character.isLowerCase(term.charAt(0)) && this.mapTermsInDocs.containsKey(term.toUpperCase())) {
-            this.mapTermsInDocs.put(term, this.mapTermsInDocs.get(term.toUpperCase()));
-            this.mapTermsInDocs.remove(term.toUpperCase());
-        } else {
-            this.mapTermsInDocs.put(term, new LinkedHashSet<>());
-            this.mapTermsInDocs.get(term).add(docName);
-        }
-    }
 
     /**
      * @param fullText

@@ -7,17 +7,18 @@ public class main {
     public static void main(String[] args){
         double startTime = System.nanoTime();
 
+
     /////// ReadFile tests ///////
         ReadFile rd = new ReadFile();
      //   rd.filesSeparator("D:\\corpus");
-     //   rd.filesSeparator("D:\\corpusTestD");
+        rd.filesSeparator("C:\\Users\\mohse\\Desktop\\corpusTest");
 
-        rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
+       // rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
 
 
     /////// Parse tests ///////
-
-        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
+        Indexer n = new Indexer();
+        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest\\StopWords", n);
         p.Parser();
         //p.termIdentifier("123.123.123 100 million");
         //System.out.println(p.NumWithoutUnits("1010.56"));
