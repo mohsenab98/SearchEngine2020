@@ -10,9 +10,9 @@ public class main {
     /////// ReadFile tests ///////
         ReadFile rd = new ReadFile();
      //   rd.filesSeparator("D:\\corpus");
-        rd.filesSeparator("D:\\corpusTestD");
+     //   rd.filesSeparator("D:\\corpusTestD");
 
-       // rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
+        rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
 
 
     /////// Parse tests ///////

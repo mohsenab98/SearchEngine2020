@@ -76,23 +76,21 @@ public class Parse {
      * @param fullText
      * @return
      */
-    public String termFormat (String fullText){
+    public void termFormat (String fullText, String docName){
         String term;
         // #1 change M/K/B
         Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
         Matcher matcherNumbers = patternNumbers.matcher(fullText);
         while (matcherNumbers.find()){
             term = matcherNumbers.group(1) + matcherNumbers.group(2);
-            String str = numWithoutUnits(term);
-            fullText = fullText.replace(term, str);
+            addTermToMap(numWithoutUnits(term), docName);
         }
         // #2 change %
         Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()){
             term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
-            String str = numWithPercent(term);
-            fullText = fullText.replace(term, str);
+            addTermToMap(numWithPercent(term), docName);
         }
 
         // #3 Dates
@@ -101,20 +99,16 @@ public class Parse {
         Matcher matcherDate = patternDate.matcher(fullText);
         while (matcherDate.find()){
             term = matcherDate.group(1) + matcherDate.group();
-            String str = numWithDates(term);
-            fullText = fullText.replace(term, str);
+            addTermToMap(numWithDates(term), docName);
         }
 
         // #4 Prices
         Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:(?:dollars))?", reOptions);
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()){
-            term = matcherPrice.group();
-            String str = numWithPercent(term);
-            fullText = fullText.replace(term, str);
+            addTermToMap(numWithPercent(matcherPrice.group()), docName);
         }
 
-        return fullText;
     }
 
     /**
@@ -125,6 +119,7 @@ public class Parse {
     private void separateTermsFromText(String fullText, String docName){
         int counterBetween = 0;
         StringBuilder between = new StringBuilder();
+        StringBuilder tokens = new StringBuilder();
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
@@ -152,6 +147,7 @@ public class Parse {
                 term = this.stemmer.porterStemmer(term.toLowerCase());
             }
             // Check Upper Case letters and add term -> doc to map
+            tokens.append(term);
             addTermToMap(term, docName);
         }
 
@@ -160,6 +156,7 @@ public class Parse {
         }
 
         threadPool.execute( () -> {
+            termFormat(tokens.toString(), docName);
             searchNames(fullText, docName);
         });
         int x = 0;
