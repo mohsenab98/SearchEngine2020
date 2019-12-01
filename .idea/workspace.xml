@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/Parse.java" description="Pattern patternTerm = Pattern.compile(&quot;(\\w+(?:\\...." line="123" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="functions for Names">
+    <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ir2020.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Stemmer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Stemmer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -17,6 +18,9 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ir2020$main.ic" NAME="main Coverage Results" MODIFIED="1574901233404" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="ir2020" />
   </component>
@@ -25,17 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+            <state relative-caret-position="322">
+              <caret line="14" column="26" lean-forward="true" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,36 +41,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2530">
-              <caret line="119" selection-start-line="119" selection-end-line="119" />
+            <state relative-caret-position="552">
+              <caret line="37" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3560#3561#0" expanded="true" />
+                <element signature="e#3591#3592#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="151">
+              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#addWordsToSetTerms#0;class#Parse#0" />
-                <element signature="method#addNamesToSetTerms#0;class#Parse#0" />
-                <element signature="method#addNames#0;class#Parse#0" />
-                <element signature="method#identifyUpperCases#0;class#Parse#0" />
-                <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
-                <element signature="method#deleteStopWords#0;class#Parse#0" />
-                <element signature="method#addBetweenNumberAndNumberToSetTerms#0;class#Parse#0" />
-                <element signature="method#stemFulltext#0;class#Parse#0" />
+                <element signature="method#isStopWord#0;class#Parse#0" />
+                <element signature="method#between#0;class#Parse#0" />
+                <element signature="method#searchNames#0;class#Parse#0" />
+                <element signature="method#cleanNames#0;class#Parse#0" />
                 <element signature="method#stringToSetOfString#0;class#Parse#0" />
-                <element signature="method#pathOfStopWordsToSetOfStrings#0;class#Parse#0" />
                 <element signature="method#numWithoutUnits#0;class#Parse#0" />
                 <element signature="method#numWithPercent#0;class#Parse#0" />
+                <element signature="method#Price#0;class#Parse#0" />
+                <element signature="docComment;class#Mounth#0;class#Parse#0" />
                 <element signature="method#numWithDates#0;class#Parse#0" />
                 <element signature="method#monthContains#0;class#Parse#0" />
-                <element signature="method#Price#0;class#Parse#0" />
               </folding>
             </state>
           </provider>
@@ -101,6 +95,10 @@
       <find>90</find>
       <find>70</find>
       <find>per</find>
+      <find>22</find>
+      <find>.</find>
+      <find>threadPool</find>
+      <find>mapNames</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -129,18 +127,18 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/Stemmer.java" />
         <option value="$PROJECT_DIR$/src/ReadFile.java" />
         <option value="$PROJECT_DIR$/src/main.java" />
-        <option value="$PROJECT_DIR$/src/Stemmer.java" />
         <option value="$PROJECT_DIR$/src/Parse.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="100" />
+    <option name="y" value="51" />
+    <option name="width" value="784" />
+    <option name="height" value="830" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -156,11 +154,6 @@
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
               <item name="ir2020" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
@@ -182,8 +175,8 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574871020922" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/opennlp-tools-1.8.0.jar!/" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1575124823449" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../QA/Ass1/softwareQualityEngineering_Q_1_4" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -233,7 +226,22 @@
       <workItem from="1574180309386" duration="24084000" />
       <workItem from="1574447224628" duration="5655000" />
       <workItem from="1574608455845" duration="7048000" />
-      <workItem from="1574860542860" duration="5900000" />
+      <workItem from="1574860542860" duration="6558000" />
+      <workItem from="1574875031186" duration="53000" />
+      <workItem from="1574875422132" duration="749000" />
+      <workItem from="1574876559112" duration="2481000" />
+      <workItem from="1574879108169" duration="1180000" />
+      <workItem from="1574881185936" duration="2471000" />
+      <workItem from="1574883964854" duration="300000" />
+      <workItem from="1574884341479" duration="2559000" />
+      <workItem from="1574886967906" duration="1000" />
+      <workItem from="1574887331106" duration="586000" />
+      <workItem from="1574889695489" duration="34019000" />
+      <workItem from="1574978748061" duration="20432000" />
+      <workItem from="1575055489751" duration="989000" />
+      <workItem from="1575056553109" duration="18095000" />
+      <workItem from="1575203330433" duration="1378000" />
+      <workItem from="1575209217256" duration="3980000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -312,11 +320,81 @@
       <option name="project" value="LOCAL" />
       <updated>1574808976008</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="functions for Names">
+      <created>1574870919248</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1574870919248</updated>
+    </task>
+    <task id="LOCAL-00013" summary="functions for Names">
+      <created>1574871080952</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1574871080952</updated>
+    </task>
+    <task id="LOCAL-00014" summary="New Read file, ArrayList in map">
+      <created>1574887717346</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1574887717346</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Level up over 9999 remove punctuation">
+      <created>1574936939772</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1574936939773</updated>
+    </task>
+    <task id="LOCAL-00016" summary="New Parse - the beginning">
+      <created>1574953371820</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1574953371820</updated>
+    </task>
+    <task id="LOCAL-00017" summary="strings to byte array byte array">
+      <created>1575039271204</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1575039271204</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Names complete">
+      <created>1575068486060</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1575068486060</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Names complete">
+      <created>1575073490288</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1575073490288</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Upper case and Between">
+      <created>1575118225494</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1575118225494</updated>
+    </task>
+    <task id="LOCAL-00021" summary="terms format">
+      <created>1575210726464</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1575210726464</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89480000" />
+    <option name="totallyTimeSpent" value="179411000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -331,7 +409,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20067114" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09597316" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -340,19 +418,19 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.490604" visible="true" weight="0.2591508" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6234899" weight="0.4114202" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6234899" weight="0.3762811" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.7456376" visible="true" weight="0.38799414" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50939596" side_tool="true" visible="true" weight="0.2591508" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4966443" weight="0.32650074" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49261746" weight="0.32503662" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.2543624" side_tool="true" visible="true" weight="0.38799414" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49597314" weight="0.32650074" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.46979865" weight="0.32503662" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.24966443" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Theme Preview" order="4" />
@@ -361,37 +439,6 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Database" order="8" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.115733735" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Designer" order="4" />
-      <window_info id="UI Designer" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49167928" visible="true" weight="0.33965245" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.806354" weight="0.55766195" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50832075" side_tool="true" visible="true" weight="0.33965245" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4986577" weight="0.32719547" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.4978678" weight="0.3279003" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Theme Preview" order="4" />
-      <window_info anchor="right" id="Maven" order="5" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Database" order="8" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -447,67 +494,88 @@
     <MESSAGE value="+Stemming Function runs(String)" />
     <MESSAGE value="termIdentifier:&#10;+ Numbers&#10;+ Percentage" />
     <MESSAGE value="Many many changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Many many changes" />
+    <MESSAGE value="functions for Names" />
+    <MESSAGE value="New Read file, ArrayList in map" />
+    <MESSAGE value="Level up over 9999 remove punctuation" />
+    <MESSAGE value="New Parse - the beginning" />
+    <MESSAGE value="strings to byte array byte array" />
+    <MESSAGE value="Names complete" />
+    <MESSAGE value="Upper case and Between" />
+    <MESSAGE value="terms format" />
+    <option name="LAST_COMMIT_MESSAGE" value="terms format" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Parse.java</url>
+          <line>82</line>
+          <properties />
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="matcherNames.groupCount()" language="JAVA" />
-        <watch expression="matcherNames.group()" language="JAVA" />
-        <watch expression="span.getStart()" language="JAVA" />
-        <watch expression="span.getEnd()" language="JAVA" />
+        <watch expression="this.mapTermsInDocs.keySet()" language="JAVA" />
+        <watch expression="this.mapTermsInDocs.keySet().toArray()[18000]" language="JAVA" />
+        <watch expression="matcherTerm.group()" language="JAVA" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
-        <expression-string>span.getEnd()</expression-string>
+        <expression-string>matcherTerm.group()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>span.getStart()</expression-string>
+        <expression-string>this.mapTermsInDocs.keySet().toArray()[18000]</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>matcherNames.group()</expression-string>
+        <expression-string>this.mapTermsInDocs.keySet()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>matcherNames.groupCount()</expression-string>
+        <expression-string>matcherText.group(1)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>matcherPunctuation.group()</expression-string>
+        <expression-string>matcherName.group(2)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>arrayListTerms.get(6150)</expression-string>
+        <expression-string>matcherName.group(1)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>arrayListTerms.get(6100)</expression-string>
+        <expression-string>matcherName.group()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>arrayListTerms.get(6000)</expression-string>
+        <expression-string>prossesedText.toString()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>arrayListTerms[6000]</expression-string>
+        <expression-string>Character.isUpperCase(term.charAt(0))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>matcherPercent.group(3)</expression-string>
+        <expression-string>this.setNames</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -539,17 +607,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.java">
+    <entry file="file://$PROJECT_DIR$/hs_err_pid2768.log" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/Runnable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+        <state relative-caret-position="220">
+          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/function/Predicate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="48" column="12" selection-start-line="48" selection-start-column="12" selection-end-line="48" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/nio/file/Path.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="97" column="17" selection-start-line="97" selection-start-column="17" selection-end-line="97" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2530">
-          <caret line="119" selection-start-line="119" selection-end-line="119" />
+        <state relative-caret-position="552">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3560#3561#0" expanded="true" />
+            <element signature="e#3591#3592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="14" column="26" lean-forward="true" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -558,34 +663,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="151">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#addWordsToSetTerms#0;class#Parse#0" />
-            <element signature="method#addNamesToSetTerms#0;class#Parse#0" />
-            <element signature="method#addNames#0;class#Parse#0" />
-            <element signature="method#identifyUpperCases#0;class#Parse#0" />
-            <element signature="method#removePunctuationAndSpacesString#0;class#Parse#0" />
-            <element signature="method#deleteStopWords#0;class#Parse#0" />
-            <element signature="method#addBetweenNumberAndNumberToSetTerms#0;class#Parse#0" />
-            <element signature="method#stemFulltext#0;class#Parse#0" />
+            <element signature="method#isStopWord#0;class#Parse#0" />
+            <element signature="method#between#0;class#Parse#0" />
+            <element signature="method#searchNames#0;class#Parse#0" />
+            <element signature="method#cleanNames#0;class#Parse#0" />
             <element signature="method#stringToSetOfString#0;class#Parse#0" />
-            <element signature="method#pathOfStopWordsToSetOfStrings#0;class#Parse#0" />
             <element signature="method#numWithoutUnits#0;class#Parse#0" />
             <element signature="method#numWithPercent#0;class#Parse#0" />
+            <element signature="method#Price#0;class#Parse#0" />
+            <element signature="docComment;class#Mounth#0;class#Parse#0" />
             <element signature="method#numWithDates#0;class#Parse#0" />
             <element signature="method#monthContains#0;class#Parse#0" />
-            <element signature="method#Price#0;class#Parse#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="26" column="35" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
