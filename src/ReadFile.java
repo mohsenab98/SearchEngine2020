@@ -1,140 +1,116 @@
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-public class ReadFile {
+public class ReadFile{
     // Fields
-    private String path;
-    private Map<String, String> allFiles;
+    private ExecutorService threadPool = Executors.newCachedThreadPool();
+    private List<byte[]> allFiles;
 
 
     // Constructor
-    public ReadFile(String path){
-        this.path = path;
-        this.allFiles = new LinkedHashMap<>();
-    }
-
-    /**
-     * Envelope function for FilesSeparator(String path)
-     */
-    public void filesSeparator(){
-        filesSeparator(this.path);
+    public ReadFile(){
+        this.allFiles = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
      * Separate files and parse terms(?)
      * @param path
      */
-    private void filesSeparator(String path){
+    public void filesSeparator(String path){
         File files = new File(path);
-        System.out.println("read");
-        if(files.listFiles() != null) {
-            for (File file : files.listFiles()) {
-                if(file.isDirectory()){
-                    filesSeparator(file.getPath());
-                }
-                else{
-                    String fileString = fileIntoString(file);
-                    String parentDirectoryPath = file.getParent();
-                    Map<String, String> mapFilesNumberContent = separatedFilesToStringMap(fileString);
-                    // Map with all docs in
-                    allFiles.putAll(mapFilesNumberContent);
-                    splitFiles( mapFilesNumberContent, parentDirectoryPath );
-                    mapFilesNumberContent.clear();
-                    file.delete();
-                }
+        if (files.listFiles() == null) {
+            return;
+        }
+
+        try  {
+            Stream<Path> paths = Files.walk(Paths.get(path));
+            Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
+
+            for( Path fileP :  filesPaths) {
+                String strFiles = fileIntoString(new File(fileP.toString()));
+                String strFilePath = fileP.toString();
+                threadPool.submit(() -> {
+                    separatedFilesToArrayList(strFiles, strFilePath);
+                });
             }
+
+
+            // Wait for ending of threads
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            threadPool.shutdown();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
     }
 
     /**
      * Create string from all content of a file
-     *
      * @param file
      * @return strFile
      */
     private String fileIntoString(File file){
-        String strFile = "";
+        String fileString = "";
 
         try{
-            strFile = new String ( Files.readAllBytes( Paths.get(file.getPath()) ) );
+            fileString = new String ( Files.readAllBytes( Paths.get(file.getPath()) ) );
         }
         catch (Exception e){
+            System.out.println(file.getPath());
             e.printStackTrace();
         }
 
-        return strFile;
+        return fileString;
     }
 
     /**
-     * Separate articles from all content string to dictionary(HashMap).
-     * Key: number(id) of article; Value: content of article
+     * Separate articles from all content string to array list.
      * @param fileString
      * @return mapFilesNumberContent
      */
-    private Map<String, String> separatedFilesToStringMap(String fileString){
-        Map<String, String> mapFilesNumberContent = new LinkedHashMap<>();
-        final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
-        // Names
-        Pattern patternFileNumber = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", reOptions);
-        Matcher matcherFileNumber = patternFileNumber.matcher(fileString);
+    private void separatedFilesToArrayList(String fileString, String pathDirectory){
         // Content
-        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", reOptions);
+
+        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
-
-        while (matcherFileNumber.find() && matcherFileContent.find()){
-            mapFilesNumberContent.put(matcherFileNumber.group(1), matcherFileContent.group());
-        }
-
-        return mapFilesNumberContent;
-    }
-
-    /**
-     * Create article files from the dictionary to every article in the directory of a source file
-     * @param mapFiles
-     * @param parentPath
-     */
-    private void splitFiles(Map<String, String> mapFiles, String parentPath){
-        Iterator<Map.Entry<String, String>> itr = mapFiles.entrySet().iterator();
-
-        while(itr.hasNext()) {
-            Map.Entry<String, String> entry = itr.next();
-            try {
-                OutputStream os = new FileOutputStream( new File(parentPath + "/" + entry.getKey()) );
-
-                /////
-                // Parser(entry.getKey(), entry.getValue());
-                /////
-
-                os.write(entry.getValue().getBytes(), 0, entry.getValue().length());
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        while (matcherFileContent.find()) {
+            String content = matcherFileContent.group();
+            content = writeDocName(content, Paths.get(pathDirectory).getFileName().toString());
+            this.allFiles.add(content.getBytes(StandardCharsets.US_ASCII));
         }
     }
 
-    public String getPath() {
-        return path;
+    private String writeDocName(String content, String pathDirectory){
+        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        Matcher matcherFileContent = patternFileContent.matcher(content);
+        while (matcherFileContent.find()){
+            if(!matcherFileContent.group(1).contains(pathDirectory)) {
+                content = content.replaceAll("<DOCNO>[^<]+?</DOCNO>", "<DOCNO>" + pathDirectory + "-" + matcherFileContent.group(1) + "</DOCNO>");
+            }
+        }
+        return content;
     }
 
-    public Map<String, String> getMapAllDocs() {
+    public List<byte[]> getListAllDocs() {
         return allFiles;
     }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void printPath(){
-        System.out.println(this.path);
-    }
-
 
 }

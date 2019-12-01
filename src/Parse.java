@@ -8,53 +8,121 @@ import java.util.regex.Pattern;
 public class Parse {
     private Stemmer stemmer;
     private String stopWordsPath;
-    private Map<String, String> allDocs; // Each DOCNO and its TEXT
+    private List<byte[]> allDocs; // Each DOCNO and its TEXT
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
     // well contain the docName and set of terms
-    private Map<String, Set<String>> termsInDocs;
+    private Map<String, Set<String>> mapTermsInDocs;
     // for checking upper cases in all corpus
     private Set<String> setAllTerms;
     // names and its counters in docs
-    private Map<String, Integer> mapNames;
+    private Map<String, Integer> mapNames; //// ????
+    private Set<String> setStopWords;
 
     //Constructor
-    public Parse(Map<String, String> allDocs, String stopWordsPath){
-            this.termsInDocs = new LinkedHashMap<>();
+    public Parse(List<byte[]> allDocs, String stopWordsPath){
+            this.mapTermsInDocs = new LinkedHashMap<>();
             this.allDocs = allDocs;
             this.stopWordsPath = stopWordsPath;
             this.setAllTerms = new LinkedHashSet<>();
             this.mapNames = new LinkedHashMap<>();
             this.stemmer = new Stemmer();
-        }
+            this.allDocs = new ArrayList<>(allDocs);
+            this.setStopWords = new HashSet<>();
+
+    }
 
     /**
      * The main function for parse
      */
     public void Parser(){
-        Iterator<Map.Entry<String, String>> itr = this.allDocs.entrySet().iterator();
-        String fullText ="";
-        // RUN to the last doc
-        while(itr.hasNext()) {
-            Map.Entry<String, String> entry = itr.next();
+        try {
+//            String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
+            this.setStopWords = stringToSetOfString(stopWordsPath);
 
-            Pattern patternText = Pattern.compile("<TEXT>(.+?)</TEXT>", reOptions);
-            Matcher matcherText = patternText.matcher(entry.getValue());
-            while (matcherText.find()){
-                fullText = matcherText.group(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // RUN to the last doc
+        while (!allDocs.isEmpty()){
+            String fullText = "";
+            String docName = "";
+            Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
+            Matcher matcherText = patternText.matcher(new String(allDocs.get(0)));
+            while (matcherText.find()) {
+                docName = matcherText.group(1);
+                fullText = matcherText.group(2);
             }
 
-//             LinkedList<String> listFullText = stringToLinkedList(fullText);
-//            addNames(fullText);
-            fullText = removePunctuationAndSpacesString(fullText);
-            fullText = deleteStopWords(this.stopWordsPath, fullText);
-            fullText = termFormat(fullText);
-            fullText = stemFulltext(fullText);
-            //termsInDocs.put(entry.getKey(), s);
-//            System.out.println("K");
-//            addWordsToSetTerms(fullText);
+            separateTermsFromText(fullText, docName);
+            this.allDocs.remove(0);
+
+//            System.out.println(counter);
+//            counter ++;
         }
-        identifyUpperCases();
-        addNamesToSetTerms();
+//        cleanNames();
+//        this.mapTermsInDocs.putAll(this.mapNames);
+//
+//        threadPool.shutdown();
+//        int x = 0;
+
+//        identifyUpperCases();
+//        addNamesToSetTerms();
+    }
+    /**
+     * Remove all punctuation chars, dots, &amp, spaces and / with STRING
+     * @param fullText
+     * @return full text: words separated by space
+     */
+
+    private void separateTermsFromText(String fullText, String docName) {
+        int counterBetween = 0;
+        StringBuilder between = new StringBuilder();
+        //removePunctuationAndSpacesString(
+        Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
+        Matcher matcherTerm = patternTerm.matcher(fullText);
+        while (matcherTerm.find()) {
+            String term = matcherTerm.group(1);
+            // Between
+            if (term.equalsIgnoreCase("between") || counterBetween > 0) {
+                between.append(term.toLowerCase()).append(" ");
+                counterBetween++;
+                if (counterBetween == 4) {
+                    between.append(",");
+                    counterBetween = 0;
+                }
+                continue;
+            }
+
+            // Delete Words -- if its dont add it
+            if (isStopWord(term)) {
+                continue;
+            }
+            //Stemm
+            term = this.stemmer.porterStemmer(term);
+
+            // Check Upper Case letters and add term -> doc to map
+            addTermToMap(term, docName);
+
+            //termFormat
+            //            fullText = termFormat(fullText);
+
+
+        }
+    }
+
+    private void addTermToMap(String term, String docName) {
+        this.mapTermsInDocs.put(term, new LinkedHashSet<>());
+        this.mapTermsInDocs.get(term).add(docName);
+
+
+    }
+
+    private boolean isStopWord(String term){
+        if(this.setStopWords.contains(term.toLowerCase())){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -192,67 +260,7 @@ public class Parse {
 
     }
 
-    /**
-     * Remove all punctuation chars, dots, &amp, spaces and / with STRING
-     * @param fullText
-     * @return full text: words separated by space
-     */
-    private String removePunctuationAndSpacesString(String fullText){
-        StringBuilder cleanFullText = new StringBuilder();
-        Pattern patternPunctuation = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[/-]\\s*\\w+)*)(?:\\W|\\s+)", reOptions);
-        Matcher matcherPunctuation = patternPunctuation.matcher(fullText);
-        while (matcherPunctuation.find()) {
-            cleanFullText.append(matcherPunctuation.group(1)).append(" ");
-        }
 
-        return cleanFullText.toString();
-    }
-
-    /**
-     * DELETE StopWords
-     * Creating two Sets of strings and delete fro the set of text the set of stopWords
-     * @param path of the StopWords file & fullText that represent the text of the Doc We are parsing
-     * @return setStringText that doesnt have stop words
-     */
-    private String deleteStopWords(String path, String fullText) {
-//        Set<String> setStringText = stringToSetOfString(fullText);
-//        Set<String> setStringStopWords = pathOfStopWordsToSetOfStrings(path);
-//        // Need to check terms rules before deleting stopWords
-//        setStringText.removeAll(setStringStopWords);
-//        return setStringText;
-
-        // Add term "Between number and number" to set of term before stop words cleaning
-        addBetweenNumberAndNumberToSetTerms(fullText);
-
-        String stopWords = ""; // #1 will recive the stop words from the path given
-        try{
-            stopWords = new String ( Files.readAllBytes( Paths.get(path) ) );
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        String words[] = stopWords.split("\\n");
-        String capitalizeWord = ""; // #2 Will save delete words with first letter in capital form
-        for(String w : words){
-            String first = w.substring(0,1);
-            String afterFirst = w.substring(1);
-            capitalizeWord += first.toUpperCase() + afterFirst +"\n";
-        }
-
-
-        String stopWordsUpperCase = stopWords.toUpperCase(); // #3 stop words as capital letter
-        stopWords = stopWords + capitalizeWord + stopWordsUpperCase; // stop words as #1 + #2 + #3
-
-        Pattern patternStopWords = Pattern.compile("\\w+(?:'\\w+)?", reOptions);
-        Matcher matcherStopWords = patternStopWords.matcher(stopWords);
-        while (matcherStopWords.find()) {
-            fullText = fullText.replaceAll(" " + matcherStopWords.group() + " ", " ");
-        }
-//        fullText.replaceAll(stopWords, "");
-
-        return fullText;
-    }
 
     /**
      * Add term "Between number and number" to set of terms
@@ -284,26 +292,10 @@ public class Parse {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      *
-     * @param fullText
-     * @return setString that represent the strings of the text
-     */
-    private Set stringToSetOfString(String fullText){
-//        Pattern pattern = Pattern.compile("\\s+", reOptions);
-//        Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
-        Set<String> setString = new HashSet<String>();
-//        while(sc2.hasNext()){
-//            setString.add(sc2.next());
-//        }
-        return setString;
-
-    }
-
-    /**
-     *
      * @param path
      * @return setString that represent the stopWords from the text in the path was given
      */
-    private Set pathOfStopWordsToSetOfStrings(String path){
+    private Set stringToSetOfString(String path){
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File(path));

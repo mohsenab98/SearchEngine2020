@@ -1,5 +1,3 @@
-import java.util.Set;
-
 public class main {
     //ddddddddddddddd evgenyyyyyy
     public static void main(String[] args){
@@ -7,16 +5,16 @@ public class main {
 
     /////// ReadFile tests ///////
         String path = "Jackpot!";
-        ReadFile rd = new ReadFile(path);
-        System.out.println(rd.getPath());
-        rd.setPath("D:\\corpus");
-//        rd.setPath("C:\\Users\\mohse\\Desktop\\corpusTest1");
-        rd.printPath();
-        rd.filesSeparator();
+        ReadFile rd = new ReadFile();
+//        System.out.println(rd.getPath());
+//        rd.setPath("D:\\corpus");
+////        rd.setPath("C:\\Users\\mohse\\Desktop\\corpusTest1");
+//        rd.printPath();
+        rd.filesSeparator("C:\\Users\\mohse\\Desktop\\corpus\\corpus");
 //l
     /////// Parse tests ///////
-//        Parse p = new Parse(rd.getMapAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest1\\stopWords.txt");
-//        p.Parser();
+        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest\\stopWords.txt");
+        p.Parser();
         //p.termIdentifier("123.123.123 100 million");
         //System.out.println(p.NumWithoutUnits("1010.56"));
         //System.out.println(p.NumWithPercent("15 percent"));
