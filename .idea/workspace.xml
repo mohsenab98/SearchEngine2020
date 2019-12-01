@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/Parse.java" description="Pattern patternTerm = Pattern.compile(&quot;(\\w+(?:\\...." line="123" />
+    <bookmark url="file://$PROJECT_DIR$/src/Parse.java" description="Pattern patternTerm = Pattern.compile(&quot;(\\w+(?:\\...." line="128" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/main.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="14" column="26" lean-forward="true" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+            <state relative-caret-position="184">
+              <caret line="20" selection-start-line="20" selection-end-line="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -41,7 +42,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
+            <state relative-caret-position="324">
               <caret line="37" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -55,22 +56,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+            <state relative-caret-position="149">
+              <caret line="163" column="9" selection-start-line="163" selection-start-column="9" selection-end-line="163" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#isStopWord#0;class#Parse#0" />
-                <element signature="method#between#0;class#Parse#0" />
-                <element signature="method#searchNames#0;class#Parse#0" />
-                <element signature="method#cleanNames#0;class#Parse#0" />
-                <element signature="method#stringToSetOfString#0;class#Parse#0" />
-                <element signature="method#numWithoutUnits#0;class#Parse#0" />
-                <element signature="method#numWithPercent#0;class#Parse#0" />
-                <element signature="method#Price#0;class#Parse#0" />
-                <element signature="docComment;class#Mounth#0;class#Parse#0" />
-                <element signature="method#numWithDates#0;class#Parse#0" />
-                <element signature="method#monthContains#0;class#Parse#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Indexer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
             </state>
           </provider>
         </entry>
@@ -136,8 +135,8 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="100" />
-    <option name="y" value="51" />
-    <option name="width" value="784" />
+    <option name="y" value="50" />
+    <option name="width" value="785" />
     <option name="height" value="830" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -242,6 +241,7 @@
       <workItem from="1575056553109" duration="18095000" />
       <workItem from="1575203330433" duration="1378000" />
       <workItem from="1575209217256" duration="3980000" />
+      <workItem from="1575234116585" duration="1299000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -390,11 +390,18 @@
       <option name="project" value="LOCAL" />
       <updated>1575210726464</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="merge indexer and parser">
+      <created>1575234923496</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1575234923496</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="179411000" />
+    <option name="totallyTimeSpent" value="180710000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -409,7 +416,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09597316" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09731544" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -418,15 +425,15 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6234899" weight="0.3762811" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.7456376" visible="true" weight="0.38799414" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.62281877" visible="true" weight="0.3762811" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7456376" weight="0.38799414" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.328594" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.2543624" side_tool="true" visible="true" weight="0.38799414" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.3771812" side_tool="true" visible="true" weight="0.3762811" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49597314" weight="0.32650074" />
       <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.46979865" weight="0.32503662" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -502,19 +509,10 @@
     <MESSAGE value="Names complete" />
     <MESSAGE value="Upper case and Between" />
     <MESSAGE value="terms format" />
-    <option name="LAST_COMMIT_MESSAGE" value="terms format" />
+    <MESSAGE value="merge indexer and parser" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge indexer and parser" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Parse.java</url>
-          <line>82</line>
-          <properties />
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="this.mapTermsInDocs.keySet()" language="JAVA" />
@@ -593,13 +591,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="jar://$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/org/tartarus/snowball/ext/PorterStemmer.class" />
-    <entry file="file://$PROJECT_DIR$/src/Indexer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -639,9 +630,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Indexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
+        <state relative-caret-position="324">
           <caret line="37" selection-start-line="37" selection-end-line="37" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -651,33 +659,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="14" column="26" lean-forward="true" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+        <state relative-caret-position="149">
+          <caret line="163" column="9" selection-start-line="163" selection-start-column="9" selection-end-line="163" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#isStopWord#0;class#Parse#0" />
-            <element signature="method#between#0;class#Parse#0" />
-            <element signature="method#searchNames#0;class#Parse#0" />
-            <element signature="method#cleanNames#0;class#Parse#0" />
-            <element signature="method#stringToSetOfString#0;class#Parse#0" />
-            <element signature="method#numWithoutUnits#0;class#Parse#0" />
-            <element signature="method#numWithPercent#0;class#Parse#0" />
-            <element signature="method#Price#0;class#Parse#0" />
-            <element signature="docComment;class#Mounth#0;class#Parse#0" />
-            <element signature="method#numWithDates#0;class#Parse#0" />
-            <element signature="method#monthContains#0;class#Parse#0" />
           </folding>
         </state>
       </provider>
