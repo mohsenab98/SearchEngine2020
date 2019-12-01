@@ -8,28 +8,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
-
+    private ExecutorService threadPool;
     private Stemmer stemmer;
+
     private String stopWordsPath;
     private Set<String> setStopWords;
     private Map<String, Set<String>> mapNames;
-    private Set<String> setUpperCase;
     private Map<String, Set<String>> mapTermsInDocs;
-
-
     private ArrayList<byte[]> allDocs;
-    private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
-    // well contain the docName and set of terms
 
+    private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
     //Constructor
-    public Parse(List<byte[]> allDocs, String stopWordsPath){
-        this.mapTermsInDocs = new LinkedHashMap<>();
+    public Parse(List<byte[]> allDocs, String stopWordsPath) {
+        threadPool = Executors.newCachedThreadPool();
+        this.stemmer = new Stemmer();
+
         this.stopWordsPath = stopWordsPath;
         this.mapNames = new ConcurrentHashMap<>();
-        this.setUpperCase = new LinkedHashSet<>();
-        this.stemmer = new Stemmer();
+        this.mapTermsInDocs = new LinkedHashMap<>();
         this.allDocs = new ArrayList<>(allDocs);
     }
 
@@ -46,7 +43,7 @@ public class Parse {
             e.printStackTrace();
         }
 
-        while (!allDocs.isEmpty()){
+        while (!allDocs.isEmpty()) {
             String fullText = "";
             String docName = "";
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
@@ -73,50 +70,54 @@ public class Parse {
 
     /**
      * Format terms to defined templates
+     *
      * @param fullText
      * @return
      */
-    public void termFormat (String fullText, String docName){
+    public void termFormat(String fullText, String docName) {
         String term;
-        // #1 change M/K/B
+        // #1 M/K/B
         Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
         Matcher matcherNumbers = patternNumbers.matcher(fullText);
-        while (matcherNumbers.find()){
+        while (matcherNumbers.find()) {
             term = matcherNumbers.group(1) + matcherNumbers.group(2);
+            term = numWithoutUnits(term);
             addTermToMap(numWithoutUnits(term), docName);
         }
-        // #2 change %
+        // #3 %
         Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
-        while (matcherPercent.find()){
+        while (matcherPercent.find()) {
             term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
+            term = numWithPercent(term);
             addTermToMap(numWithPercent(term), docName);
         }
 
-        // #3 Dates
+        // #4 Dates
 //        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
-        Pattern patternDate = Pattern.compile("\\d+(?:\\-\\d+)?(\\s*)\\w+", reOptions);
+        Pattern patternDate = Pattern.compile("\\d+(?:-\\d+)?(\\s*)\\w+", reOptions);
         Matcher matcherDate = patternDate.matcher(fullText);
-        while (matcherDate.find()){
+        while (matcherDate.find()) {
             term = matcherDate.group(1) + matcherDate.group();
             addTermToMap(numWithDates(term), docName);
         }
 
-        // #4 Prices
-        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:(?:dollars))?", reOptions);
+        // #5 Prices
+        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:dollars)?", reOptions);
         Matcher matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()){
-            addTermToMap(numWithPercent(matcherPrice.group()), docName);
+        while (matcherPrice.find()) {
+            addTermToMap(Price(matcherPrice.group()), docName);
         }
 
     }
 
     /**
      * Remove all punctuation chars, dots, &amp, spaces and / with STRING
+     *
      * @param fullText
      * @return full text: words separated by space
      */
-    private void separateTermsFromText(String fullText, String docName){
+    private void separateTermsFromText(String fullText, String docName) {
         int counterBetween = 0;
         StringBuilder between = new StringBuilder();
         StringBuilder tokens = new StringBuilder();
@@ -125,25 +126,24 @@ public class Parse {
         while (matcherTerm.find()) {
             String term = matcherTerm.group(1);
             // Between
-            if(term.equalsIgnoreCase("between") || counterBetween > 0){
+            if (term.equalsIgnoreCase("between") || counterBetween > 0) {
                 between.append(term.toLowerCase()).append(" ");
-                counterBetween ++;
-                if(counterBetween == 4){
+                counterBetween++;
+                if (counterBetween == 4) {
                     between.append(",");
                     counterBetween = 0;
                 }
                 continue;
             }
             // Stop words
-            if(isStopWord(term)){
+            if (isStopWord(term)) {
                 continue;
             }
             // Stem
-            if(Character.isUpperCase(term.charAt(0))) {
+            if (Character.isUpperCase(term.charAt(0))) {
                 term = this.stemmer.porterStemmer(term.toLowerCase());
                 term = term.toUpperCase();
-            }
-            else {
+            } else {
                 term = this.stemmer.porterStemmer(term.toLowerCase());
             }
             // Check Upper Case letters and add term -> doc to map
@@ -151,32 +151,31 @@ public class Parse {
             addTermToMap(term, docName);
         }
 
-        if(!between.toString().isEmpty()) {
+        if (!between.toString().isEmpty()) {
             between(between.toString(), docName);
         }
 
-        threadPool.execute( () -> {
+        threadPool.execute(() -> {
             termFormat(tokens.toString(), docName);
             searchNames(fullText, docName);
         });
         int x = 0;
     }
 
-    private boolean isStopWord(String term){
-        if(this.setStopWords.contains(term.toLowerCase())){
+    private boolean isStopWord(String term) {
+        if (this.setStopWords.contains(term.toLowerCase())) {
             return true;
         }
         return false;
     }
 
-    private void between(String between, String docName){
+    private void between(String between, String docName) {
         String[] tokens = between.split("\\s*,");
-        for(String term : tokens){
-            if(Pattern.compile("between \\d+ and \\d+").matcher(term).matches()){
+        for (String term : tokens) {
+            if (Pattern.compile("between \\d+ and \\d+").matcher(term).matches()) {
                 this.mapTermsInDocs.put(term, new LinkedHashSet<>());
                 this.mapTermsInDocs.get(term).add(docName);
-            }
-            else{
+            } else {
                 Pattern patternTerm = Pattern.compile("\\w+", reOptions);
                 Matcher matcherTerm = patternTerm.matcher(term);
                 while (matcherTerm.find()) {
@@ -186,7 +185,7 @@ public class Parse {
         }
     }
 
-    private void searchNames(String fullText, String docName){
+    private void searchNames(String fullText, String docName) {
         Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
@@ -195,54 +194,49 @@ public class Parse {
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
             // docNames.add(name);
 
-            if(this.mapNames.containsKey(name)) {
+            if (this.mapNames.containsKey(name)) {
                 this.mapNames.get(name).add(docName);
-            }
-            else {
+            } else {
                 this.mapNames.put(name, new LinkedHashSet<>());
                 this.mapNames.get(name).add(docName);
             }
         }
     }
 
-    private void cleanNames(){
-        for (Map.Entry<String,Set<String>> name : this.mapNames.entrySet()){
-            if(name.getValue().size() <= 1){
+    private void cleanNames() {
+        for (Map.Entry<String, Set<String>> name : this.mapNames.entrySet()) {
+            if (name.getValue().size() <= 1) {
                 this.mapNames.remove(name.getKey());
             }
         }
     }
 
-    private void addTermToMap(String term, String docName){
-        if(Character.isUpperCase(term.charAt(0))){
-            if(this.mapTermsInDocs.containsKey(term.toLowerCase())) {
+    private void addTermToMap(String term, String docName) {
+        if (Character.isUpperCase(term.charAt(0))) {
+            if (this.mapTermsInDocs.containsKey(term.toLowerCase())) {
                 this.mapTermsInDocs.get(term.toLowerCase()).add(docName);
-            }
-            else{
+            } else {
                 this.mapTermsInDocs.put(term.toUpperCase(), new LinkedHashSet<>());
                 this.mapTermsInDocs.get(term.toUpperCase()).add(docName);
             }
-        }
-        else if(Character.isLowerCase(term.charAt(0)) && this.mapTermsInDocs.containsKey(term.toUpperCase())){
+        } else if (Character.isLowerCase(term.charAt(0)) && this.mapTermsInDocs.containsKey(term.toUpperCase())) {
             this.mapTermsInDocs.put(term, this.mapTermsInDocs.get(term.toUpperCase()));
             this.mapTermsInDocs.remove(term.toUpperCase());
-        }
-        else {
+        } else {
             this.mapTermsInDocs.put(term, new LinkedHashSet<>());
             this.mapTermsInDocs.get(term).add(docName);
         }
     }
 
     /**
-     *
      * @param fullText
      * @return setString that represent the strings of the text
      */
-    private Set<String> stringToSetOfString(String fullText){
+    private Set<String> stringToSetOfString(String fullText) {
         Pattern pattern = Pattern.compile("\n", reOptions);
         Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new LinkedHashSet<>();
-        while(sc2.hasNext()){
+        while (sc2.hasNext()) {
             setString.add(sc2.next());
         }
         return setString;
@@ -250,99 +244,152 @@ public class Parse {
     }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * #1
+     * #1 MILLION/BILLION/THOUSAND
+     *
      * @param term
      * @return
      */
-    public String numWithoutUnits(String term){
+    public String numWithoutUnits(String term) {
         int indexAfterDot;
 
-        if(term.contains("-") || Pattern.compile("\\.\\d+\\.").matcher(term).find() || term.contains("/")){
+        if (term.contains("-") || Pattern.compile("\\.\\d+\\.").matcher(term).find() || term.contains("/")) {
             return term;
         }
 
         float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
-        if(term.contains(".")){
+        if (term.contains(".")) {
             indexAfterDot = term.length() - (term.indexOf(".") + 1);
-            numberInTerm = numberInTerm/(float)Math.pow(10, indexAfterDot);
+            numberInTerm = numberInTerm / (float) Math.pow(10, indexAfterDot);
         }
 
         int range = 0;
-        if((numberInTerm >= 1000 && numberInTerm < 1000000)){
+        if ((numberInTerm >= 1000 && numberInTerm < 1000000)) {
             range = 1;
-        }else if((numberInTerm >= 1000000 && numberInTerm < 1000000000)){
+        } else if ((numberInTerm >= 1000000 && numberInTerm < 1000000000)) {
             range = 2;
-        }else if(numberInTerm >= 1000000000 ){
+        } else if (numberInTerm >= 1000000000) {
             range = 3;
-        }else if(term.contains("Thousand")){
+        } else if (term.contains("Thousand")) {
             range = 4;
-        }else if( term.contains("Million")){
+        } else if (term.contains("Million")) {
             range = 5;
-        }else if(term.contains("Billion")){
+        } else if (term.contains("Billion")) {
             range = 6;
         }
 
-        switch (range){
+        switch (range) {
             case 1:
-                return String.format("%.03f",numberInTerm/1000) +"K";
+                return String.format("%.03f", numberInTerm / 1000) + "K";
             case 2:
-                return String.format("%.03f", numberInTerm/1000000) +"M";
+                return String.format("%.03f", numberInTerm / 1000000) + "M";
             case 3:
-                return String.format("%.03f",numberInTerm/1000000000) +"B";
+                return String.format("%.03f", numberInTerm / 1000000000) + "B";
             case 4:
-                return numberInTerm +"K";
+                return numberInTerm + "K";
             case 5:
-                return numberInTerm +"M";
+                return numberInTerm + "M";
             case 6:
-                return numberInTerm +"B";
+                return numberInTerm + "B";
         }
 
         return term;
     }
 
-    public String numWithPercent(String term){
+    /**
+     * #3 PERCENT
+     *
+     * @param term
+     * @return
+     */
+    public String numWithPercent(String term) {
         Pattern patternAllTerms = Pattern.compile("percentage|percent", reOptions);
         Matcher matcherAllTerms = patternAllTerms.matcher(term);
-        while (matcherAllTerms.find()){
+        while (matcherAllTerms.find()) {
             term = term.replaceAll(matcherAllTerms.group(), "%").replaceAll("\\s+", "");
         }
 
         return term;
     }
 
+
+    /**
+     * #4 PRICES (DOLLARS)
+     *
+     * @param term
+     * @return
+     */
+    public String Price(String term) {
+        if (term.contains("$")) {
+            term = term.replace("$", "");
+            term = term + " Dollars";
+        }
+
+        if (term.contains("US")) {
+            term = term.replace("US", "");
+        }
+
+        int indexAfterDot;
+        float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
+        if (term.contains(".")) {
+            String numberInTermStr = numberInTerm + "";
+            indexAfterDot = numberInTermStr.length() - (term.indexOf(".") + 1);
+            numberInTerm = numberInTerm / (float) Math.pow(10, indexAfterDot);
+        }
+
+        if (numberInTerm >= 1000000) {
+            return numberInTerm / 1000000 + " M" + " Dollars";
+        }
+
+        if (term.contains("million") || term.contains("m ")) {
+            return numberInTerm + " M" + " Dollars";
+        }
+
+        if (term.contains("billion") || term.contains("bn ")) {
+            return numberInTerm * 1000 + " M" + " Dollars";
+        }
+
+        return term;
+    }
+
+
     /**
      * 5th term rule // Dates
      */
-    enum Mounth {january , february, march, april, may, june, july, august, september, october, november, december}
-    enum MountThreeChar {jan , feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec}
-    public String numWithDates(String term){
+    enum Mounth {january, february, march, april, may, june, july, august, september, october, november, december}
 
-        String strWithDigitOnly = term.replaceAll("[\\D]","");
+    enum MountThreeChar {jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec}
+
+    public String numWithDates(String term) {
+
+        String strWithDigitOnly = term.replaceAll("[\\D]", "");
         float numberInTerm = Float.parseFloat(strWithDigitOnly);
-        String strWithCharOnly  = term.replaceAll(strWithDigitOnly, "");
-        if(numberInTerm<10){
-            strWithDigitOnly = "0" + strWithDigitOnly ;
+        String strWithCharOnly = term.replaceAll(strWithDigitOnly, "");
+        if (numberInTerm < 10) {
+            strWithDigitOnly = "0" + strWithDigitOnly;
         }
-        strWithCharOnly = strWithCharOnly.replaceAll("[\\s]","");
+        strWithCharOnly = strWithCharOnly.replaceAll("[\\s]", "");
 
         int monthNumber = monthContains(strWithCharOnly);
-        if(monthNumber == -1){
+        if (monthNumber == -1) {
             return term;
         }
         String monthNumberStr = String.valueOf(monthNumber);
-        if(monthNumber < 10){
+        if (monthNumber < 10) {
             monthNumberStr = "0" + monthNumber;
         }
         // Month Number Could be a year
-        if(numberInTerm <= 31){
-            return monthNumberStr+"-"+strWithDigitOnly;
-        }else {
-            return strWithDigitOnly+"-"+monthNumberStr;
+        if (numberInTerm <= 31) {
+            return monthNumberStr + "-" + strWithDigitOnly;
+        } else {
+            return strWithDigitOnly + "-" + monthNumberStr;
         }
     }
 
     /**
+     * #5.1 Help Function
      *
      * @param test
      * @return the number that represent each month
@@ -355,7 +402,7 @@ public class Parse {
             }
             i++;
         }
-        i=1;
+        i = 1;
         for (MountThreeChar m : MountThreeChar.values()) {
             if (m.name().equals(test.toLowerCase())) {
                 return i;
@@ -365,38 +412,4 @@ public class Parse {
 
         return -1;
     }
-
-    public String Price(String term){
-        if(term.contains("$")){
-            term = term.replace("$", "");
-            term = term + " Dollars";
-        }
-
-        if(term.contains("US")){
-            term = term.replace("US", "");
-        }
-
-        int indexAfterDot;
-        float numberInTerm = Float.parseFloat(term.replaceAll("[\\D]", ""));
-        if(term.contains(".")){
-            String numberInTermStr = numberInTerm + "";
-            indexAfterDot = numberInTermStr.length() - (term.indexOf(".") + 1);
-            numberInTerm = numberInTerm/(float)Math.pow(10, indexAfterDot);
-        }
-
-        if(numberInTerm >= 1000000){
-            return numberInTerm/1000000 + " M" + " Dollars";
-        }
-
-        if(term.contains("million") || term.contains("m ")){
-            return numberInTerm + " M" + " Dollars";
-        }
-
-        if(term.contains("billion") || term.contains("bn ")){
-            return numberInTerm * 1000 + " M" + " Dollars";
-        }
-
-        return term;
-    }
-
 }
