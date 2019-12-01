@@ -13,6 +13,8 @@ public class Parse {
 
     private String stopWordsPath;
     private Set<String> setStopWords;
+    private Set<String> setRawUpperCase;
+    private Set<String> setUpperCase;
     private Map<String, Map<String, Integer>> mapNames;
     private ArrayList<byte[]> allDocs;
 
@@ -26,6 +28,8 @@ public class Parse {
         this.stemmer = new Stemmer();
 
         this.stopWordsPath = stopWordsPath;
+        this.setRawUpperCase = new LinkedHashSet<>();
+        this.setUpperCase = new LinkedHashSet<>();
         this.mapNames = new ConcurrentHashMap<>();
         this.allDocs = new ArrayList<>(allDocs);
         this.indexer = indexer;
@@ -161,6 +165,7 @@ public class Parse {
 //            System.out.println(term + " " + matcherTerm.start() + " " + matcherTerm.end() + " " + docName);
 //            addTermToMap(term, docName);
             indexer.addTermToIndexer(term.toLowerCase(), docName);
+            termUpperCase(term);
         }
 
         if (!between.toString().isEmpty()) {
@@ -206,22 +211,38 @@ public class Parse {
             String name = matcherName.group();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
-            // docNames.add(name);
-
+            ;
             if (this.mapNames.containsKey(name)) {
-                this.mapNames.get(name).add(docName);
-            } else {
-                this.mapNames.put(name, new LinkedHashSet<>());
-                this.mapNames.get(name).add(docName);
+                Map<String, Integer> docMap = mapNames.get(name);
+                if(docMap.containsKey(docName)) {
+                    docMap.put(docName, docMap.get(docName) + 1);
+                }
+                else {
+                    docMap.put(docName, 1);
+                }
+            }
+            else{
+                this.mapNames.put(name, new LinkedHashMap<>());
+                this.mapNames.get(name).put(docName, 1);
             }
         }
     }
 
     private void cleanNames() {
-        for (Map.Entry<String, Set<String>> name : this.mapNames.entrySet()) {
+        for (Map.Entry<String, Map<String, Integer>> name : this.mapNames.entrySet()) {
             if (name.getValue().size() <= 1) {
                 this.mapNames.remove(name.getKey());
             }
+        }
+    }
+
+    private void termUpperCase(String term) {
+        if (Character.isLowerCase(term.charAt(0)) && this.setUpperCase.contains(term.toUpperCase())) {
+            this.setUpperCase.remove(term.toUpperCase());
+            this.setRawUpperCase.add(term.toLowerCase());
+        }
+        else if (Character.isUpperCase(term.charAt(0)) && !this.setRawUpperCase.contains(term.toLowerCase())) {
+            this.setUpperCase.add(term.toUpperCase());
         }
     }
 

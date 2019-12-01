@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -7,29 +8,15 @@ public class main {
     public static void main(String[] args){
         double startTime = System.nanoTime();
 
-
     /////// ReadFile tests ///////
+        int k = new File("C:\\Users\\mohse\\Desktop\\corpusTest").list().length;
+        int maxRun = k/6;
+
         ReadFile rd = new ReadFile();
-     //   rd.filesSeparator("D:\\corpus");
         rd.filesSeparator("C:\\Users\\mohse\\Desktop\\corpusTest");
-
-       // rd.filesSeparator("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest");
-
-
-    /////// Parse tests ///////
         Indexer n = new Indexer();
         Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\mohse\\Desktop\\corpusTest\\StopWords", n);
         p.Parser();
-        //p.termIdentifier("123.123.123 100 million");
-        //System.out.println(p.NumWithoutUnits("1010.56"));
-        //System.out.println(p.NumWithPercent("15 percent"));
-        //System.out.println(p.NumWithDates("15 May"));
-        //System.out.println(p.Price("20.6m Dollars"));
-
-        // p.stringToSetOfString("a ab 1 abc 123 Ab2 abbb");
-//        p.pathOfStopWordsToSetOfStrings("C:\\Users\\mohse\\Desktop\\corpusTest\\stopWords.txt");
-         // Set<String> setString = p.deleteStopWords("C:\\Users\\mohse\\Desktop\\corpusTest\\stopWords.txt","apple a bannana any wish dad did");
-         // System.out.println(setString.toString());
 
         double endTime   = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000 ;
