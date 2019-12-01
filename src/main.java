@@ -17,7 +17,7 @@ public class main {
 
     /////// Parse tests ///////
 
-        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords");
+        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords.txt");
         p.Parser();
         //p.termIdentifier("123.123.123 100 million");
         //System.out.println(p.NumWithoutUnits("1010.56"));
