@@ -32,6 +32,7 @@ public class main {
 
             p.Parser(fullText, docName);
 
+
             p.getMapTerms();
 
             rd.getListAllDocs().remove(0);
