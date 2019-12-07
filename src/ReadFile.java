@@ -13,7 +13,9 @@ import java.util.stream.Stream;
 
 public class ReadFile{
     // Fields
+    private ExecutorService threadPool = Executors.newCachedThreadPool();
     private List<byte[]> allFiles;
+
 
     // Constructor
     public ReadFile(){
@@ -22,16 +24,40 @@ public class ReadFile{
 
     /**
      * Separate files and parse terms(?)
-     * @param filesPaths
+     * @param path
      */
-    public void filesSeparator(Path[] filesPaths){
+    public void filesSeparator(String path){
+        File files = new File(path);
+        if (files.listFiles() == null) {
+            return;
+        }
 
-        for( Path fileP :  filesPaths) {
-            String strFiles = fileIntoString(new File(fileP.toString()));
-            String strFilePath = fileP.toString();
+        try  {
+            Stream<Path> paths = Files.walk(Paths.get(path));
+            Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
 
-            separatedFilesToArrayList(strFiles, strFilePath);
+            for( Path fileP :  filesPaths) {
+                String strFiles = fileIntoString(new File(fileP.toString()));
+                String strFilePath = fileP.toString();
+                threadPool.submit(() -> {
+                    separatedFilesToArrayList(strFiles, strFilePath);
+                });
+            }
 
+
+            // Wait for ending of threads
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            threadPool.shutdown();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
     }

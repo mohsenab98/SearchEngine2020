@@ -1,40 +1,23 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
-    private ExecutorService threadPool;
     private boolean stem;
     private Stemmer stemmer;
 
-  //  private String stopWordsPath;
     private Set<String> setStopWords;
-    private Set<String> setRawUpperCase;
-    private Set<String> setUpperCase;
-    private Map<String, Map<String, Integer>> mapNames;
-   // private ArrayList<byte[]> allDocs;
-
-    private Indexer indexer;
+    private SortedMap<String, ArrayList<String>> mapTerms;
 
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
     //Constructor
-    public Parse(String stopWordsPath, boolean stem, Indexer indexer) {
-        threadPool = Executors.newCachedThreadPool();
+    public Parse(String stopWordsPath, boolean stem) {
         this.stem = stem;
         this.stemmer = new Stemmer();
-
-      //  this.stopWordsPath = stopWordsPath;
-        this.setRawUpperCase = new LinkedHashSet<>();
-        this.setUpperCase = new LinkedHashSet<>();
-        this.mapNames = new ConcurrentHashMap<>();
-       // this.allDocs = new ArrayList<>(allDocs);
-        this.indexer = indexer;
+        this.mapTerms = new TreeMap<>();
 
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
@@ -48,98 +31,33 @@ public class Parse {
     /**
      * The main function for parse
      */
-    public void Parser(List<byte[]> allDocs) {
-     //   int counter = 1;
-        allDocs = new ArrayList<>(allDocs);
-        while (!allDocs.isEmpty()) {
-        String fullText = "";
-        String docName = "";
-        Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
-        Matcher matcherText = patternText.matcher(new String(allDocs.get(0)));
-        while (matcherText.find()) {
-            docName = matcherText.group(1);
-            fullText = matcherText.group(2);
-        }
-
-        separateTermsFromText(fullText, docName);
-        allDocs.remove(0);
-
-         //   System.out.println(counter);
-         //   counter ++;
-        }
-
-        // Add names to terms
-        cleanNames();
-        this.indexer.addNameToIndexer(this.mapNames);
-
-       // threadPool.shutdown();
-        System.out.println("Names are " + this.mapNames.size());
-        System.out.println("Uppers are " + this.setUpperCase.size());
-        int x = 0;
-    }
-
-    /**
-     * Format terms to defined templates
-     *
-     * @param fullText
-     * @return
-     */
-    public void termFormat(String fullText, String docName) {
-        String term;
-        // #1 M/K/B
-        Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)", reOptions);
-        Matcher matcherNumbers = patternNumbers.matcher(fullText);
-        while (matcherNumbers.find()) {
-            term = matcherNumbers.group(1) + matcherNumbers.group(2);
-            indexer.addTermToIndexer(numWithoutUnits(term).toLowerCase(), docName);
-
-        }
-        // #3 %
-        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
-        Matcher matcherPercent = patternPercent.matcher(fullText);
-        while (matcherPercent.find()) {
-            term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
-            indexer.addTermToIndexer(numWithPercent(term).toLowerCase(), docName);
-        }
-
-        // #4 Dates
-//        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
-        Pattern patternDate = Pattern.compile("\\d+(?:-\\d+)?(\\s*)\\w+", reOptions);
-        Matcher matcherDate = patternDate.matcher(fullText);
-        while (matcherDate.find()) {
-            term = matcherDate.group(1) + matcherDate.group();
-            indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
-        }
-
-        // #5 Prices
-        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:dollars)?", reOptions);
-        Matcher matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()) {
-            indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
-        }
-
-    }
-
-    /**
-     * Remove all punctuation chars, dots, &amp, spaces and / with STRING
-     *
-     * @param fullText
-     * @return full text: words separated by space
-     */
-    private void separateTermsFromText(String fullText, String docName) {
+    public void Parser(String fullText, String docName) {
         int counterBetween = 0;
-        StringBuilder between = new StringBuilder();
+        String between = "";
+        StringBuilder tokensPossition = new StringBuilder();
         StringBuilder tokens = new StringBuilder();
+        Map<String, ArrayList<Integer>> betweenPosition = new LinkedHashMap<>();
+        Integer startBetween = 0;
+
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
             String term = matcherTerm.group(1);
             // Between
             if (term.equalsIgnoreCase("between") || counterBetween > 0) {
-                between.append(term.toLowerCase()).append(" ");
+                between = term.toLowerCase() + " ";
+                if(counterBetween == 0){
+                    startBetween = matcherTerm.start();
+                }
+
                 counterBetween++;
                 if (counterBetween == 4) {
-                    between.append(",");
+                    if(!betweenPosition.containsKey(between)) {
+                        betweenPosition.put(between, new ArrayList<>());
+                        betweenPosition.get(between).add(startBetween);
+                        betweenPosition.get(between).add(matcherTerm.end(1));
+                    }
+                    between = "";
                     counterBetween = 0;
                 }
                 continue;
@@ -151,7 +69,6 @@ public class Parse {
 
             // Stem
             if(this.stem) {
-
                 if (Character.isUpperCase(term.charAt(0))) {
                     term = this.stemmer.porterStemmer(term.toLowerCase());
                     term = term.toUpperCase();
@@ -160,25 +77,65 @@ public class Parse {
                 }
             }
 
-
+            tokensPossition.append(term).append("(" + matcherTerm.start() + ":" + matcherTerm.end() + ")").append(" ");
             tokens.append(term).append(" ");
-//            System.out.println(term + " " + matcherTerm.start() + " " + matcherTerm.end() + " " + docName);
-//            addTermToMap(term, docName);
-            indexer.addTermToIndexer(term.toLowerCase(), docName);
-            // Check Upper Case letters and add term -> doc to map
-            termUpperCase(term);
+            addTermToMap(term.toLowerCase(), docName, matcherTerm.start(1), matcherTerm.end(1));
         }
 
-        if (!between.toString().isEmpty()) {
-            between(between.toString(), docName);
+        if (!between.isEmpty()) {
+            between(betweenPosition, docName);
         }
 
-       // threadPool.execute(() -> {
-            termFormat(tokens.toString(), docName);
-            searchNames(fullText, docName);
-      //  });
+        // threadPool.execute(() -> {
+        termFormat(tokens.toString(), tokensPossition.toString(), docName);
+        searchNames(fullText, docName);
+        //  });
         int x = 0;
     }
+
+    /**
+     * Format terms to defined templates
+     *
+     * @param fullText
+     * @return
+     */
+    public void termFormat(String fullText, String tokensPossition, String docName) {
+        String term;
+        // #1 M/K/B
+        Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)\\((\\d+:\\d+)\\)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)\\((\\d+:\\d+)\\)", reOptions);
+        Matcher matcherNumbers = patternNumbers.matcher(fullText);
+        while (matcherNumbers.find()) {
+            term = matcherNumbers.group(1) + matcherNumbers.group(3);
+            addTermToMap(term, docName, Integer.valueOf(Pattern.compile("(\\d+?):").matcher(matcherNumbers.group(2)).group(1)), Integer.valueOf(Pattern.compile(":(\\d+)").matcher(matcherNumbers.group(4)).group(1)));
+        }
+        // #3 %
+        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)\\((\\d+:\\d+)\\)(\\s*)(%|(?:percentage?)|(?:percent))\\((\\d+:\\d+)\\)", reOptions);
+        Matcher matcherPercent = patternPercent.matcher(fullText);
+        while (matcherPercent.find()) {
+            term = matcherPercent.group(1) + matcherPercent.group(3) + matcherPercent.group(4);
+            addTermToMap(term, docName, Integer.valueOf(Pattern.compile("(\\d+?):").matcher(matcherPercent.group(2)).group(1)), Integer.valueOf(Pattern.compile(":(\\d+)").matcher(matcherPercent.group(5)).group(1)));
+          //  indexer.addTermToIndexer(numWithPercent(term).toLowerCase(), docName);
+        }
+
+        // #4 Dates
+//        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
+        Pattern patternDate = Pattern.compile("\\d+(?:-\\d+)?(\\s*)\\w+", reOptions);
+        Matcher matcherDate = patternDate.matcher(fullText);
+        while (matcherDate.find()) {
+            term = matcherDate.group(1) + matcherDate.group();
+         //   indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
+        }
+
+        // #5 Prices
+        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:dollars)?", reOptions);
+        Matcher matcherPrice = patternPrice.matcher(fullText);
+        while (matcherPrice.find()) {
+            term = matcherPrice.group();
+          //  indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
+        }
+
+    }
+
 
     private boolean isStopWord(String term) {
         if (this.setStopWords.contains(term.toLowerCase())) {
@@ -187,31 +144,22 @@ public class Parse {
         return false;
     }
 
-    private void between(String between, String docName) {
-        String[] tokens = between.split("\\s*,");
-        for (String term : tokens) {
+    private void between(Map<String, ArrayList<Integer>> between, String docName) {
+        for (String term : between.keySet()) {
             if (Pattern.compile("between \\d+ and \\d+").matcher(term).matches()) {
-                indexer.addTermToIndexer(term.toLowerCase(), docName);
+                addTermToMap(term, docName, between.get(term).get(0), between.get(term).get(1));
 
-            } else {
+            }
+            else {
                 Pattern patternTerm = Pattern.compile("\\w+", reOptions);
                 Matcher matcherTerm = patternTerm.matcher(term);
                 while (matcherTerm.find()) {
-                    indexer.addTermToIndexer(matcherTerm.group().toLowerCase(), docName);
+                    addTermToMap(term, docName, between.get(term).get(0), between.get(term).get(1));
                 }
             }
         }
     }
 
-    private void termUpperCase(String term) {
-        if (Character.isLowerCase(term.charAt(0)) && this.setUpperCase.contains(term.toUpperCase())) {
-            this.setUpperCase.remove(term.toUpperCase());
-            this.setRawUpperCase.add(term.toLowerCase());
-        }
-        else if (Character.isUpperCase(term.charAt(0)) && !this.setRawUpperCase.contains(term.toLowerCase())) {
-            this.setUpperCase.add(term.toUpperCase());
-        }
-    }
 
     /**
      * @param fullText
@@ -226,6 +174,19 @@ public class Parse {
         }
         return setString;
 
+    }
+
+    private void addTermToMap(String term, String docName, int start, int end){
+        if(!this.mapTerms.containsKey(term)) {
+            this.mapTerms.put(term, new ArrayList<>());
+            this.mapTerms.get(term).add(docName);
+        }
+
+        this.mapTerms.get(term).add(start + ":" + end);
+    }
+
+    public void cleanTerms(){
+        this.mapTerms.clear();
     }
 
 
@@ -409,31 +370,11 @@ public class Parse {
         Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
-            String name = matcherName.group();
+            String name = matcherName.group().toUpperCase();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
-            ;
-            if (this.mapNames.containsKey(name)) {
-                Map<String, Integer> docMap = mapNames.get(name);
-                if(docMap.containsKey(docName)) {
-                    docMap.put(docName, docMap.get(docName) + 1);
-                }
-                else {
-                    docMap.put(docName, 1);
-                }
-            }
-            else{
-                this.mapNames.put(name, new LinkedHashMap<>());
-                this.mapNames.get(name).put(docName, 1);
-            }
-        }
-    }
 
-    private void cleanNames() {
-        for (Map.Entry<String, Map<String, Integer>> name : this.mapNames.entrySet()) {
-            if (name.getValue().size() <= 1) {
-                this.mapNames.remove(name.getKey());
-            }
+            addTermToMap(name, docName, matcherName.start(), matcherName.end());
         }
     }
 }
