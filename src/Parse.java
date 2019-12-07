@@ -9,37 +9,33 @@ import java.util.regex.Pattern;
 
 public class Parse {
     private ExecutorService threadPool;
+    private boolean stem;
     private Stemmer stemmer;
 
-    private String stopWordsPath;
+  //  private String stopWordsPath;
     private Set<String> setStopWords;
     private Set<String> setRawUpperCase;
     private Set<String> setUpperCase;
     private Map<String, Map<String, Integer>> mapNames;
-    private ArrayList<byte[]> allDocs;
+   // private ArrayList<byte[]> allDocs;
 
     private Indexer indexer;
 
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
     //Constructor
-    public Parse(List<byte[]> allDocs, String stopWordsPath, Indexer indexer) {
+    public Parse(String stopWordsPath, boolean stem, Indexer indexer) {
         threadPool = Executors.newCachedThreadPool();
+        this.stem = stem;
         this.stemmer = new Stemmer();
 
-        this.stopWordsPath = stopWordsPath;
+      //  this.stopWordsPath = stopWordsPath;
         this.setRawUpperCase = new LinkedHashSet<>();
         this.setUpperCase = new LinkedHashSet<>();
         this.mapNames = new ConcurrentHashMap<>();
-        this.allDocs = new ArrayList<>(allDocs);
+       // this.allDocs = new ArrayList<>(allDocs);
         this.indexer = indexer;
-    }
 
-    /**
-     * The main function for parse
-     */
-    public void Parser() {
-//        int counter = 1;
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
@@ -47,30 +43,38 @@ public class Parse {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * The main function for parse
+     */
+    public void Parser(List<byte[]> allDocs) {
+     //   int counter = 1;
+        allDocs = new ArrayList<>(allDocs);
         while (!allDocs.isEmpty()) {
-            String fullText = "";
-            String docName = "";
-            Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
-            Matcher matcherText = patternText.matcher(new String(allDocs.get(0)));
-            while (matcherText.find()) {
-                docName = matcherText.group(1);
-                fullText = matcherText.group(2);
-            }
+        String fullText = "";
+        String docName = "";
+        Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", reOptions);
+        Matcher matcherText = patternText.matcher(new String(allDocs.get(0)));
+        while (matcherText.find()) {
+            docName = matcherText.group(1);
+            fullText = matcherText.group(2);
+        }
 
-            separateTermsFromText(fullText, docName);
-            this.allDocs.remove(0);
+        separateTermsFromText(fullText, docName);
+        allDocs.remove(0);
 
-//            System.out.println(counter);
-//            counter ++;
+         //   System.out.println(counter);
+         //   counter ++;
         }
 
         // Add names to terms
         cleanNames();
         this.indexer.addNameToIndexer(this.mapNames);
 
-
-        threadPool.shutdown();
+       // threadPool.shutdown();
+        System.out.println("Names are " + this.mapNames.size());
+        System.out.println("Uppers are " + this.setUpperCase.size());
         int x = 0;
     }
 
@@ -144,13 +148,19 @@ public class Parse {
             if (isStopWord(term)) {
                 continue;
             }
+
             // Stem
-            if (Character.isUpperCase(term.charAt(0))) {
-                term = this.stemmer.porterStemmer(term.toLowerCase());
-                term = term.toUpperCase();
-            } else {
-                term = this.stemmer.porterStemmer(term.toLowerCase());
+            if(this.stem) {
+
+                if (Character.isUpperCase(term.charAt(0))) {
+                    term = this.stemmer.porterStemmer(term.toLowerCase());
+                    term = term.toUpperCase();
+                } else {
+                    term = this.stemmer.porterStemmer(term.toLowerCase());
+                }
             }
+
+
             tokens.append(term).append(" ");
 //            System.out.println(term + " " + matcherTerm.start() + " " + matcherTerm.end() + " " + docName);
 //            addTermToMap(term, docName);
@@ -163,10 +173,10 @@ public class Parse {
             between(between.toString(), docName);
         }
 
-        threadPool.execute(() -> {
+       // threadPool.execute(() -> {
             termFormat(tokens.toString(), docName);
             searchNames(fullText, docName);
-        });
+      //  });
         int x = 0;
     }
 
