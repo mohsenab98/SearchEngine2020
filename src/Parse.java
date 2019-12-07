@@ -90,7 +90,6 @@ public class Parse {
         termFormat(tokens.toString(), tokensPossition.toString(), docName);
         searchNames(fullText, docName);
         //  });
-        int x = 0;
     }
 
     /**
@@ -183,6 +182,10 @@ public class Parse {
         }
 
         this.mapTerms.get(term).add(start + ":" + end);
+    }
+
+    public Map<String, ArrayList<String>> getMapTerms(){
+        return this.mapTerms;
     }
 
     public void cleanTerms(){

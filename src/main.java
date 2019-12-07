@@ -11,8 +11,8 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-        String pathCorpus = "D:\\corpus";
-       // String pathCorpus = "D:\\corpusTestD";
+     //   String pathCorpus = "D:\\corpus";
+        String pathCorpus = "D:\\corpusTestD";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
         ReadFile rd = new ReadFile();
@@ -31,6 +31,8 @@ public class main {
             }
 
             p.Parser(fullText, docName);
+
+            p.getMapTerms();
 
             rd.getListAllDocs().remove(0);
             p.cleanTerms();
