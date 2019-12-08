@@ -6,8 +6,9 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-      //  String pathCorpus = "D:\\corpus";
-        String pathCorpus = "D:\\corpusTestD";
+        String pathCorpus = "D:\\corpus";
+      //  String pathCorpus = "D:\\corpusTestD";
+      //  String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
         ReadFile rd = new ReadFile();
@@ -15,6 +16,7 @@ public class main {
         rd.filesSeparator(pathCorpus);
         Parse p = new Parse(pathStopWords, stem);
 
+       // int counter = 1;
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
