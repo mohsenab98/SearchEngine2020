@@ -1,5 +1,5 @@
 import org.tartarus.snowball.ext.PorterStemmer;
-import java.util.regex.Pattern;
+
 
 public class Stemmer {
 

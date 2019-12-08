@@ -1,25 +1,24 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class main {
-    public static void main(String[] args){
+    //private ExecutorService threadPool = Executors.newCachedThreadPool();
+
+    public static void main(String[] args) {
         double startTime = System.nanoTime();
+//        Indexer n = new Indexer(pathCorpus, stem, 100);
 
         boolean stem = true;
-     //   String pathCorpus = "D:\\corpus";
-        String pathCorpus = "D:\\corpusTestD";
-        String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
+        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest2";
+        //String pathCorpus = "D:\\corpusTestD";
+        String pathStopWords = "C:\\Users\\mohse\\Desktop\\corpusTest1\\StopWords";
 
         ReadFile rd = new ReadFile();
-        Indexer n = new Indexer();
+//        Indexer n = new Indexer();
         rd.filesSeparator(pathCorpus);
         Parse p = new Parse(pathStopWords, stem);
-
+        Indexer n = new Indexer(pathCorpus, stem, 10);
+        // int counter = 1;
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
@@ -32,8 +31,8 @@ public class main {
 
             p.Parser(fullText, docName);
 
+            n.addTermToIndexer(p.getMapTerms());
 
-            p.getMapTerms();
 
             rd.getListAllDocs().remove(0);
             p.cleanTerms();
@@ -44,9 +43,25 @@ public class main {
 
 
 
-        double endTime   = System.nanoTime();
-        double totalTime = (endTime - startTime) / 1000000000 ;
-        System.out.println(totalTime + " sec");
 
+
+
+/*
+        ReadFile rd = new ReadFile();
+        rd.filesSeparator("D:\\corpusTestD");
+*/
+    /*
+    /////// ReadFile tests ///////
+       // int k = new File("D:\\corpus").list().length;
+       // int maxRun = k/6;
+        Indexer n = new Indexer();
+        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords", n);
+        p.Parser();
+        */
+
+
+        double endTime = System.nanoTime();
+        double totalTime = (endTime - startTime) / 1000000000;
+        System.out.println((totalTime)/60+ "minutes");
     }
 }
