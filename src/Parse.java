@@ -12,7 +12,9 @@ public class Parse {
 
     private Set<String> setStopWords;
     private SortedMap<String, ArrayList<String>> mapTerms;
-    private Map<String, ArrayList<String>> concurrentMap;
+    private int positionCounter = 1;
+
+ //   private Map<String, ArrayList<String>> concurrentMap;
 
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
@@ -21,7 +23,7 @@ public class Parse {
         this.stem = stem;
         this.stemmer = new Stemmer();
         this.mapTerms = new TreeMap<>();
-        this.concurrentMap = new ConcurrentHashMap<>();
+    //    this.concurrentMap = new ConcurrentHashMap<>();
 
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
@@ -38,72 +40,56 @@ public class Parse {
     public void Parser(String fullText, String docName) {
         int counterBetween = 0;
         String between = "";
-        StringBuilder tokensPosition = new StringBuilder();
-        StringBuilder tokens = new StringBuilder();
-        Map<String, ArrayList<Integer>> betweenPosition = new LinkedHashMap<>();
-        Integer startBetween = 0;
-
-
-        termFormat(fullText, docName);
+        String tokensFullText = "";
 
 
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
         while (matcherTerm.find()) {
+            int posInTextToken = 1;
             String term = matcherTerm.group(1);
             // Between
             if (term.equalsIgnoreCase("between") || counterBetween > 0) {
-                between = term.toLowerCase() + " ";
-                if(counterBetween == 0){
-                    startBetween = matcherTerm.start();
-                }
-
+                between += term.toLowerCase() + " ";
                 counterBetween++;
                 if (counterBetween == 4) {
-                    if(!betweenPosition.containsKey(between)) {
-                        betweenPosition.put(between, new ArrayList<>());
-                        betweenPosition.get(between).add(startBetween);
-                        betweenPosition.get(between).add(matcherTerm.end(1));
-                    }
-                    between = "";
+                    between += ",";
                     counterBetween = 0;
                 }
                 continue;
             }
+
             // Stop words
             if (isStopWord(term)) {
                 continue;
             }
 
+            tokensFullText += term + " ";
+
             // Stem
-            if(this.stem) {
-                if (Character.isUpperCase(term.charAt(0))) {
-                    term = this.stemmer.porterStemmer(term.toLowerCase());
-                    term = term.toUpperCase();
-                } else {
+            if (Character.isUpperCase(term.charAt(0))) {
+                if(this.stem) {
                     term = this.stemmer.porterStemmer(term.toLowerCase());
                 }
+                term = term.toUpperCase();
+            }
+            else if(this.stem) {
+                term = this.stemmer.porterStemmer(term);
             }
 
-            tokensPosition.append(term).append("(").append(matcherTerm.start()).append(":").append(matcherTerm.end()).append(")").append(" ");
-            tokens.append(term).append(" ");
-            addTermToMap(term.toLowerCase(), docName, matcherTerm.start(1), matcherTerm.end(1));
+            addTermToMap(term, docName);
         }
 
         if (!between.isEmpty()) {
-            between(betweenPosition, docName);
+            between(between, docName);
         }
 
          //threadPool.execute(() -> {
-         //   termFormat(tokensPosition.toString(), docName);
+            termFormat(tokensFullText, docName);
         //  });
             searchNames(fullText, docName);
-            this.mapTerms.putAll(this.concurrentMap);
+            //this.mapTerms.putAll(this.concurrentMap);
             int x = 0;
-
-    }
-
-    private String fullTextSeparator(String fullText){
 
     }
 
@@ -120,7 +106,7 @@ public class Parse {
         Matcher matcherNumbers = patternNumbers.matcher(fullText);
         while (matcherNumbers.find()) {
             term = matcherNumbers.group(1) + " " + matcherNumbers.group(2);
-            addTermToMap(numWithoutUnits(term).toLowerCase(), docName, matcherNumbers.start(1), matcherNumbers.end(2));
+            addTermToMap(numWithoutUnits(term).toLowerCase(), docName);
           //  indexer.addTermToIndexer(numWithoutUnits(term).toLowerCase(), docName);
 
         }
@@ -129,33 +115,42 @@ public class Parse {
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()) {
             term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
-            addTermToMap(numWithPercent(term).toLowerCase(), docName, matcherPercent.start(1), matcherPercent.end(3));
+            addTermToMap(numWithPercent(term).toLowerCase(), docName);
           //  indexer.addTermToIndexer(numWithPercent(term).toLowerCase(), docName);
         }
         // #4 Dates
-//        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
+        //Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
         Pattern patternDate = Pattern.compile("(?:\\d{1,2}\\s*)(?:jan\\w*|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)|(?:jan\\w+|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)(?:\\s*\\d{1,4})", reOptions);
         Matcher matcherDate = patternDate.matcher(fullText);
         while (matcherDate.find()) {
             term = matcherDate.group();
-            addTermToMap(numWithDates(term).toLowerCase(), docName, matcherDate.start(), matcherDate.end());
+            addTermToMap(numWithDates(term).toLowerCase(), docName);
            // indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
         }
         // #5 Prices
         Pattern patternPrice = Pattern.compile("\\$\\d+(?:[,.]+\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?", reOptions);
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
-            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName, matcherPrice.start(), matcherPrice.end());
+            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName);
            // indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
         }
         patternPrice = Pattern.compile("\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:U.S.)?\\s*(?:dollars)", reOptions);
         matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
-            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName, matcherPrice.start(), matcherPrice.end());
+            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName);
+            // indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
+        }
+
+        // #7 Telephone/Fax (our's law)
+        patternPrice = Pattern.compile("\\(?\\d{3}\\)? \\d{3}-\\d{4}", reOptions);
+        matcherPrice = patternPrice.matcher(fullText);
+        while (matcherPrice.find()) {
+            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName);
             // indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
         }
     }
 
+    /*
     public void addTermToConcurrentMap(String term, String docName, int start, int end){
         if(!this.concurrentMap.containsKey(term)) {
             this.concurrentMap.put(term, new ArrayList<>());
@@ -164,6 +159,7 @@ public class Parse {
 
         this.concurrentMap.get(term).add(start + ":" + end);
     }
+    */
 
     private boolean isStopWord(String term) {
         if (this.setStopWords.contains(term.toLowerCase())) {
@@ -172,21 +168,24 @@ public class Parse {
         return false;
     }
 
-    private void between(Map<String, ArrayList<Integer>> between, String docName) {
-        for (String term : between.keySet()) {
+    private void between(String between, String docName) {
+        String[] tokens = between.split("\\s*,");
+        for (String term : tokens) {
             if (Pattern.compile("between \\d+ and \\d+").matcher(term).matches()) {
-                addTermToMap(term, docName, between.get(term).get(0), between.get(term).get(1));
+                addTermToMap(term, docName);
+               // indexer.addTermToIndexer(term.toLowerCase(), docName);
 
-            }
-            else {
+            } else {
                 Pattern patternTerm = Pattern.compile("\\w+", reOptions);
                 Matcher matcherTerm = patternTerm.matcher(term);
                 while (matcherTerm.find()) {
-                    addTermToMap(term, docName, between.get(term).get(0), between.get(term).get(1));
+                    addTermToMap(matcherTerm.group(), docName);
+                    //indexer.addTermToIndexer(matcherTerm.group().toLowerCase(), docName);
                 }
             }
         }
     }
+
 
 
     /**
@@ -204,13 +203,30 @@ public class Parse {
 
     }
 
-    private void addTermToMap(String term, String docName, int start, int end){
+    /**
+     * index:
+     *       0 - DocID
+     *       2 - amount in Doc
+     *       3 - positions on Doc
+     *
+     * @param term
+     * @param docName
+     */
+    private void addTermToMap(String term, String docName){
+        term = term.trim();
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
             this.mapTerms.get(term).add(docName);
+            this.mapTerms.get(term).add(String.valueOf(1));
+            this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
+            this.positionCounter ++;
+            return;
         }
 
-        this.mapTerms.get(term).add(start + ":" + end);
+        int counter = Integer.parseInt(this.mapTerms.get(term).get(1));
+        this.mapTerms.get(term).set(1, String.valueOf(counter + 1));
+        this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
+        this.positionCounter ++;
     }
 
     public Map<String, ArrayList<String>> getMapTerms(){
@@ -407,7 +423,7 @@ public class Parse {
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
-            addTermToMap(name, docName, matcherName.start(), matcherName.end());
+            addTermToMap(name, docName);
         }
     }
 }

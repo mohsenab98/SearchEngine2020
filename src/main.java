@@ -1,8 +1,3 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +6,7 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-       // String pathCorpus = "D:\\corpus";
+      //  String pathCorpus = "D:\\corpus";
         String pathCorpus = "D:\\corpusTestD";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
