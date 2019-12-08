@@ -1,15 +1,18 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parse {
+   // private ExecutorService threadPool = new ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     private boolean stem;
     private Stemmer stemmer;
 
     private Set<String> setStopWords;
     private SortedMap<String, ArrayList<String>> mapTerms;
+    private Map<String, ArrayList<String>> concurrentMap;
 
     private final int reOptions = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 
@@ -18,6 +21,7 @@ public class Parse {
         this.stem = stem;
         this.stemmer = new Stemmer();
         this.mapTerms = new TreeMap<>();
+        this.concurrentMap = new ConcurrentHashMap<>();
 
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
@@ -34,10 +38,14 @@ public class Parse {
     public void Parser(String fullText, String docName) {
         int counterBetween = 0;
         String between = "";
-        StringBuilder tokensPossition = new StringBuilder();
+        StringBuilder tokensPosition = new StringBuilder();
         StringBuilder tokens = new StringBuilder();
         Map<String, ArrayList<Integer>> betweenPosition = new LinkedHashMap<>();
         Integer startBetween = 0;
+
+
+        termFormat(fullText, docName);
+
 
         Pattern patternTerm = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
         Matcher matcherTerm = patternTerm.matcher(fullText);
@@ -77,7 +85,7 @@ public class Parse {
                 }
             }
 
-            tokensPossition.append(term).append("(" + matcherTerm.start() + ":" + matcherTerm.end() + ")").append(" ");
+            tokensPosition.append(term).append("(").append(matcherTerm.start()).append(":").append(matcherTerm.end()).append(")").append(" ");
             tokens.append(term).append(" ");
             addTermToMap(term.toLowerCase(), docName, matcherTerm.start(1), matcherTerm.end(1));
         }
@@ -86,55 +94,76 @@ public class Parse {
             between(betweenPosition, docName);
         }
 
-        // threadPool.execute(() -> {
-        termFormat(tokens.toString(), tokensPossition.toString(), docName);
-        searchNames(fullText, docName);
+         //threadPool.execute(() -> {
+         //   termFormat(tokensPosition.toString(), docName);
         //  });
+            searchNames(fullText, docName);
+            this.mapTerms.putAll(this.concurrentMap);
+            int x = 0;
+
+    }
+
+    private String fullTextSeparator(String fullText){
+
     }
 
     /**
      * Format terms to defined templates
      *
-     * @param fullText
+     * @param  docName
      * @return
      */
-    public void termFormat(String fullText, String tokensPossition, String docName) {
+    public void termFormat(String fullText, String docName) {
         String term;
         // #1 M/K/B
-        Pattern patternNumbers = Pattern.compile("(\\d+(?:,\\d+)*)\\((\\d+:\\d+)\\)((?:\\D+(?:Thousand|Million|Billon))?(?:/\\d+)?(?:(?:\\.\\d+)*)?(?:-\\d+)?)\\((\\d+:\\d+)\\)", reOptions);
+        Pattern patternNumbers = Pattern.compile("(\\d+(?:[,.]\\d+)*)\\s*((?:thousand)?(?:million)?(?:billion)?)", reOptions);
         Matcher matcherNumbers = patternNumbers.matcher(fullText);
         while (matcherNumbers.find()) {
-            term = matcherNumbers.group(1) + matcherNumbers.group(3);
-            addTermToMap(term, docName, Integer.valueOf(Pattern.compile("(\\d+?):").matcher(matcherNumbers.group(2)).group(1)), Integer.valueOf(Pattern.compile(":(\\d+)").matcher(matcherNumbers.group(4)).group(1)));
+            term = matcherNumbers.group(1) + " " + matcherNumbers.group(2);
+            addTermToMap(numWithoutUnits(term).toLowerCase(), docName, matcherNumbers.start(1), matcherNumbers.end(2));
+          //  indexer.addTermToIndexer(numWithoutUnits(term).toLowerCase(), docName);
+
         }
         // #3 %
-        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)\\((\\d+:\\d+)\\)(\\s*)(%|(?:percentage?)|(?:percent))\\((\\d+:\\d+)\\)", reOptions);
+        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()) {
-            term = matcherPercent.group(1) + matcherPercent.group(3) + matcherPercent.group(4);
-            addTermToMap(term, docName, Integer.valueOf(Pattern.compile("(\\d+?):").matcher(matcherPercent.group(2)).group(1)), Integer.valueOf(Pattern.compile(":(\\d+)").matcher(matcherPercent.group(5)).group(1)));
+            term = matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3);
+            addTermToMap(numWithPercent(term).toLowerCase(), docName, matcherPercent.start(1), matcherPercent.end(3));
           //  indexer.addTermToIndexer(numWithPercent(term).toLowerCase(), docName);
         }
-
         // #4 Dates
 //        Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
-        Pattern patternDate = Pattern.compile("\\d+(?:-\\d+)?(\\s*)\\w+", reOptions);
+        Pattern patternDate = Pattern.compile("(?:\\d{1,2}\\s*)(?:jan\\w*|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)|(?:jan\\w+|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)(?:\\s*\\d{1,4})", reOptions);
         Matcher matcherDate = patternDate.matcher(fullText);
         while (matcherDate.find()) {
-            term = matcherDate.group(1) + matcherDate.group();
-         //   indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
+            term = matcherDate.group();
+            addTermToMap(numWithDates(term).toLowerCase(), docName, matcherDate.start(), matcherDate.end());
+           // indexer.addTermToIndexer(numWithDates(term).toLowerCase(), docName);
         }
-
         // #5 Prices
-        Pattern patternPrice = Pattern.compile("\\$?\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:(?:Dollars)|(?:U.S.))?\\s*(?:dollars)?", reOptions);
+        Pattern patternPrice = Pattern.compile("\\$\\d+(?:[,.]+\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?", reOptions);
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
-            term = matcherPrice.group();
-          //  indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
+            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName, matcherPrice.start(), matcherPrice.end());
+           // indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
         }
-
+        patternPrice = Pattern.compile("\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:U.S.)?\\s*(?:dollars)", reOptions);
+        matcherPrice = patternPrice.matcher(fullText);
+        while (matcherPrice.find()) {
+            addTermToMap(Price(matcherPrice.group()).toLowerCase(), docName, matcherPrice.start(), matcherPrice.end());
+            // indexer.addTermToIndexer(Price(matcherPrice.group()).toLowerCase(), docName);
+        }
     }
 
+    public void addTermToConcurrentMap(String term, String docName, int start, int end){
+        if(!this.concurrentMap.containsKey(term)) {
+            this.concurrentMap.put(term, new ArrayList<>());
+            this.concurrentMap.get(term).add(docName);
+        }
+
+        this.concurrentMap.get(term).add(start + ":" + end);
+    }
 
     private boolean isStopWord(String term) {
         if (this.setStopWords.contains(term.toLowerCase())) {
@@ -190,6 +219,7 @@ public class Parse {
 
     public void cleanTerms(){
         this.mapTerms.clear();
+        //threadPool.shutdown();
     }
 
 
@@ -324,7 +354,7 @@ public class Parse {
 
         int monthNumber = monthContains(strWithCharOnly);
         if (monthNumber == -1) {
-            return term;
+            return "";
         }
         String monthNumberStr = String.valueOf(monthNumber);
         if (monthNumber < 10) {

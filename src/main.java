@@ -11,7 +11,7 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-     //   String pathCorpus = "D:\\corpus";
+       // String pathCorpus = "D:\\corpus";
         String pathCorpus = "D:\\corpusTestD";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
