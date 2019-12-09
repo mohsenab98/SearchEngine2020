@@ -15,26 +15,22 @@ public class Indexer {
      * isStem variable that we git from the user ( the parse send it to here)
      */
     private boolean isStem;
-    /**
-     * number of docs that we want to index every time (נוסחה???)
-     */
-    private int numberOfDocs;
-    /**
-     * check the number of docs (LIMIT is numberOfDocs)
-     */
-    private int docCounter;
+
     /**
      * name of the temp file
      */
     private static int tempPostCounter = 0;
 
-    public Indexer(String pathCorpus, boolean isStem, int numberOfDocs) {
+    /**
+     * will determinate the size of the posting (~3000 terms in posting file)
+     */
+    private final int MAX_POST_SIZE = 3000;
+
+    public Indexer(String pathCorpus, boolean isStem) {
         this.mapTermPosting = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
         this.mapSortedTerms = new TreeMap<>();
         this.isStem = isStem;
-        this.numberOfDocs = numberOfDocs;
-        this.docCounter = 0;
         postingFilesCreate(pathCorpus);
     }
 
@@ -44,8 +40,7 @@ public class Indexer {
      * @param termDoc , map that contain the term and list{DOCID , pos1 , pos2...}
      */
     public void addTermToIndexer(Map<String, ArrayList<String>>termDoc){
-        if(docCounter > numberOfDocs){
-            // intilazte the mapSorted / counter | update mapPosting
+        if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset(termDoc);
         }
         for (String key : termDoc.keySet()) {
@@ -62,7 +57,7 @@ public class Indexer {
                 mapSortedTerms.put(key, listOfInfo);
             }
         }
-        docCounter++;
+
 
     }
 
@@ -75,7 +70,6 @@ public class Indexer {
      */
     private void reset(Map<String, ArrayList<String>> termDoc){
         String textToPostFile = "";
-        this.docCounter = 0;
 
         for (String key : mapSortedTerms.keySet()) {
             textToPostFile = textToPostFile +"<" + key + "|" + textForPosting(mapSortedTerms.get(key)) + ">" +"\n";

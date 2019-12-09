@@ -9,7 +9,7 @@ public class main {
 //        Indexer n = new Indexer(pathCorpus, stem, 100);
 
         boolean stem = true;
-        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest2";
+        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest1";
         //String pathCorpus = "D:\\corpusTestD";
         String pathStopWords = "C:\\Users\\mohse\\Desktop\\corpusTest1\\StopWords";
 
@@ -17,7 +17,7 @@ public class main {
 //        Indexer n = new Indexer();
         rd.filesSeparator(pathCorpus);
         Parse p = new Parse(pathStopWords, stem);
-        Indexer n = new Indexer(pathCorpus, stem, 10);
+        Indexer n = new Indexer(pathCorpus, stem);
         // int counter = 1;
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
