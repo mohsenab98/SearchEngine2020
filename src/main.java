@@ -6,19 +6,15 @@ public class main {
 
     public static void main(String[] args) {
         double startTime = System.nanoTime();
-//        Indexer n = new Indexer(pathCorpus, stem, 100);
 
         boolean stem = true;
-        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest1";
-        //String pathCorpus = "D:\\corpusTestD";
+        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest2";
         String pathStopWords = "C:\\Users\\mohse\\Desktop\\corpusTest1\\StopWords";
 
         ReadFile rd = new ReadFile();
-//        Indexer n = new Indexer();
         rd.filesSeparator(pathCorpus);
         Parse p = new Parse(pathStopWords, stem);
         Indexer n = new Indexer(pathCorpus, stem);
-        // int counter = 1;
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
@@ -37,27 +33,13 @@ public class main {
             rd.getListAllDocs().remove(0);
             p.cleanTerms();
 
-            //   System.out.println(counter);
-            //   counter ++;
         }
 
 
 
-
-
-
-/*
-        ReadFile rd = new ReadFile();
-        rd.filesSeparator("D:\\corpusTestD");
-*/
-    /*
-    /////// ReadFile tests ///////
-       // int k = new File("D:\\corpus").list().length;
-       // int maxRun = k/6;
-        Indexer n = new Indexer();
-        Parse p = new Parse(rd.getListAllDocs(), "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords", n);
-        p.Parser();
-        */
+        n.reset(); // check if there is stell terms in the sorted map
+        n.merge(); //merge the temp sorted files into A-Z sorted files
+        n.saveDictionary();
 
 
         double endTime = System.nanoTime();

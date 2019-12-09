@@ -41,7 +41,7 @@ public class Indexer {
      */
     public void addTermToIndexer(Map<String, ArrayList<String>>termDoc){
         if(mapSortedTerms.size() > MAX_POST_SIZE){
-            reset(termDoc);
+            reset();
         }
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
@@ -68,7 +68,7 @@ public class Indexer {
      * update the mapPosting
      * write the data to the posting file
      */
-    private void reset(Map<String, ArrayList<String>> termDoc){
+    public void reset(){
         String textToPostFile = "";
 
         for (String key : mapSortedTerms.keySet()) {
@@ -76,11 +76,9 @@ public class Indexer {
             mapTermPosting.put(key, String.valueOf(tempPostCounter));
         }
         mapSortedTerms.clear();
-        usingBufferedWritter(textToPostFile, tempPostCounter);
+        usingBufferedWritter(textToPostFile, String.valueOf(tempPostCounter));
 
         tempPostCounter++;
-
-        addTermToIndexer(termDoc); // return to add the doc info to the new Indexer
 
     }
 
@@ -124,7 +122,7 @@ public class Indexer {
      * @param text
      * @throws IOException
      */
-    public void usingBufferedWritter(String text, int filename)
+    public void usingBufferedWritter(String text, String filename)
     {
         String stemFolder = "";
         if(isStem){
@@ -206,5 +204,27 @@ public class Indexer {
     }
 
 
+    public void merge() {
+        String stemFolder = "";
+        if(isStem){
+            stemFolder = "stem";
+        }else {
+            stemFolder = "nostem";
+        }
+        String pathPosting = pathCorpus + "/" + stemFolder;
 
+
+
+    }
+
+    /**
+     * Save the term map at the end of the indexing because we need it in the second part when we will search
+     */
+    public void saveDictionary() {
+        String text = "";
+        for (String key : mapTermPosting.keySet()) {
+            text = text + key + ":" +mapTermPosting.get(key)+";"+"\n";
+        }
+        usingBufferedWritter(text,"Dictionary");
+    }
 }
