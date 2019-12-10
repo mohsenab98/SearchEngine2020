@@ -182,7 +182,6 @@ public class Parse {
         term = term.trim();
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
-            this.mapTerms.get(term).add(docName);
             this.mapTerms.get(term).add(String.valueOf(1));
            // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
            // this.positionCounter ++;
@@ -221,6 +220,12 @@ public class Parse {
         return this.mapTerms;
     }
 
+    /**
+     * Index:
+     *      0 - doc name
+     *      1 - term
+     * @return
+     */
     public ArrayList<String> getDocInfo(){
         return this.docInfo;
     }
