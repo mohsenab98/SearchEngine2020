@@ -8,7 +8,7 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest2";
+        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest1";
         String pathStopWords = "C:\\Users\\mohse\\Desktop\\corpusTest1\\StopWords";
 
         ReadFile rd = new ReadFile();
@@ -39,7 +39,7 @@ public class main {
 
         n.reset(); // check if there is stell terms in the sorted map
         //n.merge(); //merge the temp sorted files into A-Z sorted files
-        n.saveDictionary();
+//        n.saveDictionary();
         n.saveDocInfo();
 
 

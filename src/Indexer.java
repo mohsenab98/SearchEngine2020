@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static jdk.nashorn.internal.objects.NativeArray.map;
 
@@ -68,7 +70,7 @@ public class Indexer {
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
-        mapDocID.put(docIDCounter, docInfo); // add doc info to mapDoc
+        mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
@@ -165,9 +167,38 @@ public class Indexer {
         }
 
         String fileUrl = this.pathCorpus + "/" + stemFolder + "/" + filename;
-        File file =  new File(fileUrl);
-        BufferedWriter writer = null;
+//        File file =  new File(fileUrl);
+//        BufferedWriter writer = null;
+//        try {
+//            file.createNewFile();
+//            writer = new BufferedWriter(
+//                    new FileWriter(fileUrl, true)  //Set true for append mode
+//            );
+//            writer.write(text);
+////            writer.newLine();   //Add new line
+//            writer.close();
+//        } catch (IOException e) {
+//            System.out.println(filename);
+//            e.printStackTrace();
+//        }
         try {
+
+            File f = new File(fileUrl);
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
+            ZipEntry e = new ZipEntry(filename);
+            out.putNextEntry(e);
+
+            out.write(text.getBytes(), 0, text.length());
+            out.closeEntry();
+
+            out.close();
+
+
+
+
+/*
+            ZipFile file =  new ZipFile (fileUrl);
+            BufferedWriter writer = null;
             file.createNewFile();
             writer = new BufferedWriter(
                     new FileWriter(fileUrl, true)  //Set true for append mode
@@ -175,27 +206,12 @@ public class Indexer {
             writer.write(text);
 //            writer.newLine();   //Add new line
             writer.close();
+
+            */
         } catch (IOException e) {
             System.out.println(filename);
             e.printStackTrace();
         }
-//        MappedByteBuffer mappedByteBuffer = null;
-//        CharBuffer charBuffer = CharBuffer
-//                .wrap(text);
-////        Path pathToWrite = getFileURIFromResources("fileToWriteTo.txt");
-//        try(FileChannel fileChannel = FileChannel.open(
-//                Paths.get(fileUrl),
-//                StandardOpenOption.READ, StandardOpenOption.WRITE)) {
-//            long size = fileChannel.size();
-//            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, size);
-//
-//        } catch (IOException e) {
-//            if (mappedByteBuffer != null) {
-//                mappedByteBuffer.put(
-//                        Charset.forName("utf-8").encode(charBuffer));
-//            }
-//            System.out.println("Exciption");
-//        }
 
     }
     public static boolean isNumeric(String str) {
