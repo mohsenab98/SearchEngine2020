@@ -61,7 +61,7 @@ public class Parse {
                     continue;
                 } else {
                     lawBetween += term.toLowerCase() + " ";
-                    addTermToMap(lawBetween.trim(), docName);
+                    addTermToMap(lawBetween.trim());
                     betweenCounter = 0;
                     lawBetween = "";
                     continue;
@@ -85,10 +85,10 @@ public class Parse {
                 term = this.stemmer.porterStemmer(term);
             }
 
-            addTermToMap(term, docName);
+            addTermToMap(term);
         }
 
-        termFormat(tokensFullText, docName);
+        termFormat(tokensFullText);
 
         searchNames(fullText, docName);
         this.docInfo.add(this.termMaxTf);
@@ -102,7 +102,7 @@ public class Parse {
      * @param  docName
      * @return
      */
-    public void termFormat(String fullText, String docName) {
+    public void termFormat(String fullText) {
         String term;
         // #4 Dates
         //Pattern patternDate = Pattern.compile("\\d+\\s\\w+|\\w+\\s\\d+", reOptions);
@@ -110,7 +110,7 @@ public class Parse {
         Matcher matcherDate = patternDate.matcher(fullText);
         while (matcherDate.find()) {
             term = matcherDate.group().trim();
-            addTermToMap(numWithDates(term), docName);
+            addTermToMap(numWithDates(term));
         }
 
         // #1 M/K/B
@@ -121,14 +121,14 @@ public class Parse {
             if(term.contains("-")){
                 continue;
             }
-            addTermToMap(numWithoutUnits(term), docName);
+            addTermToMap(numWithoutUnits(term));
         }
         // #3 %
         Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
         Matcher matcherPercent = patternPercent.matcher(fullText);
         while (matcherPercent.find()) {
             term = (matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3)).trim();
-            addTermToMap(numWithPercent(term), docName);
+            addTermToMap(numWithPercent(term));
         }
 
         // #5 Prices
@@ -136,13 +136,13 @@ public class Parse {
         Matcher matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
             term = matcherPrice.group().trim();
-            addTermToMap(Price(term), docName);
+            addTermToMap(Price(term));
         }
         patternPrice = Pattern.compile("\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:U.S.)?\\s*(?:dollars)", reOptions);
         matcherPrice = patternPrice.matcher(fullText);
         while (matcherPrice.find()) {
             term = matcherPrice.group().trim();
-            addTermToMap(Price(term), docName);
+            addTermToMap(Price(term));
         }
 
     }
@@ -178,7 +178,7 @@ public class Parse {
      * @param term
      * @param docName
      */
-    private void addTermToMap(String term, String docName){
+    private void addTermToMap(String term){
         term = term.trim();
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
@@ -188,11 +188,11 @@ public class Parse {
             return;
         }
 
-        int counter = Integer.parseInt(this.mapTerms.get(term).get(1));
-        this.mapTerms.get(term).set(1, String.valueOf(counter + 1));
+        int counter = Integer.parseInt(this.mapTerms.get(term).get(0));
+        this.mapTerms.get(term).set(0, String.valueOf(counter + 1));
 
-        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(1))){
-            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(1));
+        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(0))){
+            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0));
             this.termMaxTf = term;
         }
        // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
@@ -221,17 +221,20 @@ public class Parse {
     }
 
     /**
-     * Index:
+     * DocInfo Index:
      *      0 - doc name
-     *      1 - term
+     *      1 - term max tf
+     *      2 - count max tf
+     *      3 - count uniq terms in doc
      * @return
      */
     public ArrayList<String> getDocInfo(){
         return this.docInfo;
     }
 
-    public void cleanTerms(){
+    public void cleanParse(){
         this.mapTerms.clear();
+        this.docInfo.clear();
         //threadPool.shutdown();
     }
 
@@ -427,7 +430,7 @@ public class Parse {
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
-            addTermToMap(name, docName);
+            addTermToMap(name);
         }
     }
 

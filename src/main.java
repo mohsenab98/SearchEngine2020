@@ -28,16 +28,14 @@ public class main {
             }
 
             p.Parser(fullText, docName);
-            p.getDocInfo();
+          //  p.getDocInfo();
 
             //n.addTermToIndexer(p.getMapTerms());
 
             rd.getListAllDocs().remove(0);
-            p.cleanTerms();
+            p.cleanParse();
 
         }
-
-
 
       //  n.reset(); // check if there is stell terms in the sorted map
        // n.merge(); //merge the temp sorted files into A-Z sorted files
