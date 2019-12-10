@@ -27,19 +27,20 @@ public class main {
 
             p.Parser(fullText, docName);
 
-            n.addTermToIndexer(p.getMapTerms());
+            n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
 
 
             rd.getListAllDocs().remove(0);
-            p.cleanTerms();
+            p.cleanParse();
 
         }
 
 
 
         n.reset(); // check if there is stell terms in the sorted map
-        n.merge(); //merge the temp sorted files into A-Z sorted files
+        //n.merge(); //merge the temp sorted files into A-Z sorted files
         n.saveDictionary();
+        n.saveDocInfo();
 
 
         double endTime = System.nanoTime();
