@@ -90,7 +90,8 @@ public class Parse {
         termFormat(tokensFullText, docName);
 
         searchNames(fullText, docName);
-        int x = 0;
+        this.docInfo.add(String.valueOf(this.counterMaxTf));
+        this.docInfo.add(String.valueOf(this.mapTerms.size()));
     }
 
     /**
@@ -217,8 +218,6 @@ public class Parse {
     }
 
     public ArrayList<String> getDocInfo(){
-        this.docInfo.add(String.valueOf(this.counterMaxTf));
-        this.docInfo.add(String.valueOf(this.mapTerms.size()));
         return this.docInfo;
     }
 
