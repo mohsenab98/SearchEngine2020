@@ -13,6 +13,7 @@ public class Parse {
     private SortedMap<String, ArrayList<String>> mapTerms;
     private ArrayList<String> docInfo;
     private int counterMaxTf = 0;
+    private String termMaxTf = "";
     // private int positionCounter = 1;
     // private Map<String, ArrayList<String>> concurrentMap;
 
@@ -90,6 +91,7 @@ public class Parse {
         termFormat(tokensFullText, docName);
 
         searchNames(fullText, docName);
+        this.docInfo.add(this.termMaxTf);
         this.docInfo.add(String.valueOf(this.counterMaxTf));
         this.docInfo.add(String.valueOf(this.mapTerms.size()));
     }
@@ -189,8 +191,10 @@ public class Parse {
 
         int counter = Integer.parseInt(this.mapTerms.get(term).get(1));
         this.mapTerms.get(term).set(1, String.valueOf(counter + 1));
+
         if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(1))){
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(1));
+            this.termMaxTf = term;
         }
        // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
        // this.positionCounter ++;
