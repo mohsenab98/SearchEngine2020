@@ -8,7 +8,7 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest1";
+        String pathCorpus = "C:\\Users\\mohse\\Desktop\\corpusTest2";
         String pathStopWords = "C:\\Users\\mohse\\Desktop\\corpusTest1\\StopWords";
 
         ReadFile rd = new ReadFile();

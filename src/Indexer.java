@@ -8,8 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import static jdk.nashorn.internal.objects.NativeArray.map;
 
@@ -167,38 +165,9 @@ public class Indexer {
         }
 
         String fileUrl = this.pathCorpus + "/" + stemFolder + "/" + filename;
-//        File file =  new File(fileUrl);
-//        BufferedWriter writer = null;
-//        try {
-//            file.createNewFile();
-//            writer = new BufferedWriter(
-//                    new FileWriter(fileUrl, true)  //Set true for append mode
-//            );
-//            writer.write(text);
-////            writer.newLine();   //Add new line
-//            writer.close();
-//        } catch (IOException e) {
-//            System.out.println(filename);
-//            e.printStackTrace();
-//        }
+        File file =  new File(fileUrl);
+        BufferedWriter writer = null;
         try {
-
-            File f = new File(fileUrl);
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
-            ZipEntry e = new ZipEntry(filename);
-            out.putNextEntry(e);
-
-            out.write(text.getBytes(), 0, text.length());
-            out.closeEntry();
-
-            out.close();
-
-
-
-
-/*
-            ZipFile file =  new ZipFile (fileUrl);
-            BufferedWriter writer = null;
             file.createNewFile();
             writer = new BufferedWriter(
                     new FileWriter(fileUrl, true)  //Set true for append mode
@@ -206,12 +175,11 @@ public class Indexer {
             writer.write(text);
 //            writer.newLine();   //Add new line
             writer.close();
-
-            */
         } catch (IOException e) {
             System.out.println(filename);
             e.printStackTrace();
         }
+
 
     }
     public static boolean isNumeric(String str) {
