@@ -99,7 +99,7 @@ public class Parse {
     /**
      * Format terms to defined templates
      *
-     * @param  docName
+     * @param
      * @return
      */
     public void termFormat(String fullText) {
@@ -176,15 +176,15 @@ public class Parse {
      *       3 - positions on Doc
      *
      * @param term
-     * @param docName
+     * @param
      */
     private void addTermToMap(String term){
         term = term.trim();
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
             this.mapTerms.get(term).add(String.valueOf(1));
-           // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
-           // this.positionCounter ++;
+            // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
+            // this.positionCounter ++;
             return;
         }
 
@@ -195,8 +195,8 @@ public class Parse {
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0));
             this.termMaxTf = term;
         }
-       // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
-       // this.positionCounter ++;
+        // this.mapTerms.get(term).add(String.valueOf(this.positionCounter));
+        // this.positionCounter ++;
     }
 
     /*
@@ -235,8 +235,6 @@ public class Parse {
     public void cleanParse(){
         this.mapTerms.clear();
         this.docInfo.clear();
-        counterMaxTf = 0;
-        termMaxTf = "";
         //threadPool.shutdown();
     }
 

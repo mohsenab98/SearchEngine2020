@@ -8,14 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.stream.Stream;
+import org.json.JSONObject;
 
 import static jdk.nashorn.internal.objects.NativeArray.map;
 
 public class Indexer {
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
     /**
      * will Save the terms of the index and will save a pointer to the match posting file
      */
@@ -51,11 +49,12 @@ public class Indexer {
      */
     private Map<Integer, ArrayList<String>> mapDocID;
 
+    private String stemFolder = "";
     private static int docIDCounter = 0;
 
 
     public Indexer(String pathCorpus, boolean isStem) {
-        this.mapTermPosting = new ConcurrentHashMap<>();
+        this.mapTermPosting = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
         this.mapSortedTerms = new TreeMap<>();
         this.isStem = isStem;
@@ -168,41 +167,25 @@ public class Indexer {
             stemFolder = "nostem";
         }
 
-
         String fileUrl = this.pathCorpus + "/" + stemFolder + "/" + filename;
-        /*
-        File file =  new File(fileUrl);
-        BufferedWriter writer = null;
-        try {
-            file.createNewFile();
-            writer = new BufferedWriter(
-                    new FileWriter(fileUrl, true)  //Set true for append mode
-            );
-            writer.write(text);
-//            writer.newLine();   //Add new line
-            writer.close();
-        } catch (IOException e) {
-            System.out.println(filename);
-            e.printStackTrace();
-        }
-        */
-        MappedByteBuffer mappedByteBuffer = null;
-        CharBuffer charBuffer = CharBuffer
-                .wrap(text);
-//        Path pathToWrite = getFileURIFromResources("fileToWriteTo.txt");
-        try(FileChannel fileChannel = FileChannel.open(
-                Paths.get(fileUrl),
-                StandardOpenOption.READ, StandardOpenOption.WRITE)) {
-            long size = fileChannel.size();
-            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, size);
 
-        } catch (IOException e) {
+        try {
+            Path pathToWrite = Paths.get(fileUrl);
+            Files.createFile(pathToWrite);
+            CharBuffer charBuffer = CharBuffer.wrap(text);
+            FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToWrite, EnumSet.of(StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING));
+
+            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, charBuffer.length());
+
             if (mappedByteBuffer != null) {
-                mappedByteBuffer.put(
-                        Charset.forName("ASCII").encode(charBuffer));
+                mappedByteBuffer.put(Charset.forName("ASCII").encode(charBuffer));
             }
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
+        System.out.println(main.counter ++);
+
 
     }
     public static boolean isNumeric(String str) {
@@ -237,6 +220,7 @@ public class Indexer {
     private void postingFilesCreate(String path){
         boolean folder1 = new File(path+"/stem").mkdir();
         boolean folder2 = new File(path+"/noStem").mkdir();
+
         if(folder1 && folder2){
             File fileStem = new File(path+"/stem/"+"Numbers");
             try {
@@ -263,12 +247,49 @@ public class Indexer {
      * merge the posting files into sorting a-z/A-Z/Number posting files
      */
     public void merge(){
+        try {
+            Stream<Path> paths = Files.walk(Paths.get(this.pathCorpus + "/" + stemFolder));
+            Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
+            for( Path path :  filesPaths) {
+
+                readFile(path);
+
+
+
+                JSONObject posting = new JSONObject();
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        /*
         while (tempPostCounter > 1){
             for (int i = 0; i < tempPostCounter - 1; i = i+2){
                 mergePosting(String.valueOf(i),String.valueOf(i+1));
             }
             tempPostCounter = tempPostCounter/2;
         }
+        */
+    }
+
+    private String readFile(Path path){
+        CharBuffer charBuffer = null;
+
+        try{
+            FileChannel fileChannel = (FileChannel) Files.newByteChannel(path, EnumSet.of(StandardOpenOption.READ));
+
+            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
+
+            if (mappedByteBuffer != null) {
+                charBuffer = Charset.forName("ASCII").decode(mappedByteBuffer);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return charBuffer.toString();
     }
 
     /**
@@ -358,7 +379,6 @@ public class Indexer {
         for (String key : mapTermPosting.keySet()) {
             text = text + key + ":" +mapTermPosting.get(key)+";"+"\n";
         }
-        threadPool.shutdown();
         usingBufferedWritter(text,"Dictionary");
         mapTermPosting.clear();
     }
@@ -370,6 +390,6 @@ public class Indexer {
             text = text + key + "|" + listDocInfo.get(0) + "?" + listDocInfo.get(1) + ":" +listDocInfo.get(2) + "," + listDocInfo.get(3) + ";" + "\n";
         }
         usingBufferedWritter(text,"Doc");
-        mapDocID.clear();
+        mapTermPosting.clear();
     }
 }
