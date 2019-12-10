@@ -9,8 +9,8 @@ public class main {
 
         boolean stem = true;
         //String pathCorpus = "D:\\corpus";
-        String pathCorpus = "D:\\corpusTestD";
-        //String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
+        //String pathCorpus = "D:\\corpusTestD";
+        String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
         ReadFile rd = new ReadFile();
@@ -30,16 +30,17 @@ public class main {
             p.Parser(fullText, docName);
           //  p.getDocInfo();
 
-            //n.addTermToIndexer(p.getMapTerms());
+            n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
 
         }
 
-      //  n.reset(); // check if there is stell terms in the sorted map
-       // n.merge(); //merge the temp sorted files into A-Z sorted files
-       // n.saveDictionary();
+        n.reset(); // check if there is stell terms in the sorted map
+        n.merge(); //merge the temp sorted files into A-Z sorted files
+        n.saveDictionary();
+        n.saveDocInfo();
 
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;

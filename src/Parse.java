@@ -235,6 +235,8 @@ public class Parse {
     public void cleanParse(){
         this.mapTerms.clear();
         this.docInfo.clear();
+        counterMaxTf = 0;
+        termMaxTf = "";
         //threadPool.shutdown();
     }
 
