@@ -2,21 +2,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class main {
-    public static void main(String[] args){
+    //private ExecutorService threadPool = Executors.newCachedThreadPool();
+
+    public static void main(String[] args) {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-        String pathCorpus = "D:\\corpus";
-      //  String pathCorpus = "D:\\corpusTestD";
-      //  String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
+        //String pathCorpus = "D:\\corpus";
+        String pathCorpus = "D:\\corpusTestD";
+        //String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
         ReadFile rd = new ReadFile();
-        Indexer n = new Indexer();
         rd.filesSeparator(pathCorpus);
         Parse p = new Parse(pathStopWords, stem);
-
-       // int counter = 1;
+        Indexer n = new Indexer(pathCorpus, stem);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
@@ -28,22 +28,24 @@ public class main {
             }
 
             p.Parser(fullText, docName);
+            p.getDocInfo();
 
-
-            p.getMapTerms();
+            //n.addTermToIndexer(p.getMapTerms());
 
             rd.getListAllDocs().remove(0);
             p.cleanTerms();
 
-            //   System.out.println(counter);
-            //   counter ++;
         }
 
 
 
-        double endTime   = System.nanoTime();
-        double totalTime = (endTime - startTime) / 1000000000 ;
-        System.out.println(totalTime + " sec");
+      //  n.reset(); // check if there is stell terms in the sorted map
+       // n.merge(); //merge the temp sorted files into A-Z sorted files
+       // n.saveDictionary();
 
+        double endTime = System.nanoTime();
+        double totalTime = (endTime - startTime) / 1000000000;
+        System.out.println(totalTime + " sec");
+        System.out.println((totalTime)/60 + " minutes");
     }
 }
