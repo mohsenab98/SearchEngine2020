@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ir2020.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ir2020/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
@@ -28,52 +30,36 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="920">
-              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            <state relative-caret-position="966">
+              <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Parse.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1058">
-              <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#7906#7907#0" expanded="true" />
-                <element signature="e#7942#7943#0" expanded="true" />
-                <element signature="e#8161#8162#0" expanded="true" />
-                <element signature="e#8196#8197#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Indexer.java">
+        <entry file="file://$PROJECT_DIR$/src/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="292" column="5" lean-forward="true" selection-start-line="292" selection-start-column="5" selection-end-line="292" selection-end-column="5" />
+            <state relative-caret-position="276">
+              <caret line="103" column="46" selection-start-line="103" selection-start-column="46" selection-end-line="103" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#8237#8238#0" expanded="true" />
+                <element signature="e#8273#8274#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
+        <entry file="file://$PROJECT_DIR$/src/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="41" column="41" lean-forward="true" selection-start-line="41" selection-start-column="41" selection-end-line="41" selection-end-column="41" />
+            <state relative-caret-position="184">
+              <caret line="14" selection-start-line="14" selection-end-line="16" selection-end-column="7" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#573#574#0" expanded="true" />
-                <element signature="e#652#653#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -113,6 +99,8 @@
       <find>tempPostCounter</find>
       <find>reset</find>
       <find>usingBufferedWritter</find>
+      <find>mapTermPosting</find>
+      <find>docId</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -143,16 +131,16 @@
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Stemmer.java" />
         <option value="$PROJECT_DIR$/src/ReadFile.java" />
+        <option value="$PROJECT_DIR$/src/Indexer.java" />
         <option value="$PROJECT_DIR$/src/main.java" />
         <option value="$PROJECT_DIR$/src/Parse.java" />
-        <option value="$PROJECT_DIR$/src/Indexer.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="126" />
-    <option name="y" value="2" />
-    <option name="width" value="626" />
+    <option name="x" value="125" />
+    <option name="y" value="1" />
+    <option name="width" value="627" />
     <option name="height" value="670" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -190,7 +178,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576006993699" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576079145272" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/json-20190722.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -263,7 +251,8 @@
       <workItem from="1575558941101" duration="17817000" />
       <workItem from="1575740094199" duration="31153000" />
       <workItem from="1575921145830" duration="4067000" />
-      <workItem from="1575960774509" duration="34737000" />
+      <workItem from="1575960774509" duration="41559000" />
+      <workItem from="1576076712474" duration="2412000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -517,11 +506,18 @@
       <option name="project" value="LOCAL" />
       <updated>1575976945078</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Read file mapped">
+      <created>1576007184897</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1576007184897</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="289089000" />
+    <option name="totallyTimeSpent" value="298323000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -533,10 +529,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17750533" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17986578" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -544,18 +540,18 @@
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.5847548" weight="0.34901962" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.7148188" visible="true" weight="0.39313725" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49932885" visible="true" weight="0.329429" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.58315563" weight="0.34901962" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7137527" weight="0.39313725" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49932885" weight="0.32796487" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49932885" weight="0.32796487" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.28518122" side_tool="true" visible="true" weight="0.39313725" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50067115" side_tool="true" visible="true" weight="0.329429" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4946695" weight="0.32647058" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.45628998" weight="0.32352942" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.45309168" weight="0.32352942" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.24966443" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -635,7 +631,8 @@
     <MESSAGE value="-Indexer new&#10;-Parser &amp; ReadFile updated" />
     <MESSAGE value="-Updated Indexer" />
     <MESSAGE value="DocInfo" />
-    <option name="LAST_COMMIT_MESSAGE" value="DocInfo" />
+    <MESSAGE value="Read file mapped" />
+    <option name="LAST_COMMIT_MESSAGE" value="Read file mapped" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -647,9 +644,15 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Indexer.java</url>
-          <line>291</line>
+          <line>261</line>
           <properties />
-          <option name="timeStamp" value="48" />
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Indexer.java</url>
+          <line>257</line>
+          <properties />
+          <option name="timeStamp" value="70" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -775,20 +778,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Parse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1058">
-          <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#7906#7907#0" expanded="true" />
-            <element signature="e#7942#7943#0" expanded="true" />
-            <element signature="e#8161#8162#0" expanded="true" />
-            <element signature="e#8196#8197#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="308">
@@ -803,8 +792,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="920">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        <state relative-caret-position="966">
+          <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -813,10 +802,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="292" column="5" lean-forward="true" selection-start-line="292" selection-start-column="5" selection-end-line="292" selection-end-column="5" />
+        <state relative-caret-position="184">
+          <caret line="14" selection-start-line="14" selection-end-line="16" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Parse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="103" column="46" selection-start-line="103" selection-start-column="46" selection-end-line="103" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#8237#8238#0" expanded="true" />
+            <element signature="e#8273#8274#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -8,8 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.stream.Stream;
-import org.json.JSONObject;
 
 import static jdk.nashorn.internal.objects.NativeArray.map;
 
@@ -49,7 +47,6 @@ public class Indexer {
      */
     private Map<Integer, ArrayList<String>> mapDocID;
 
-    private String stemFolder = "";
     private static int docIDCounter = 0;
 
 
@@ -133,8 +130,8 @@ public class Indexer {
             //!isNumeric(temp)
             if(!(temp.charAt(0) == ';')){ // new Doc info
                 textToAdd = new StringBuilder( textToAdd + temp + ":"); // DOCID 2 +
-                    i++;
-                    textToAdd.append(listOfInfo.get(i)).append("?"); // tfi
+                i++;
+                textToAdd.append(listOfInfo.get(i)).append("?"); // tfi
 
             }else{
 //                textToAdd.append(temp).append(",");
@@ -168,23 +165,20 @@ public class Indexer {
         }
 
         String fileUrl = this.pathCorpus + "/" + stemFolder + "/" + filename;
-
+        File file =  new File(fileUrl);
+        BufferedWriter writer = null;
         try {
-            Path pathToWrite = Paths.get(fileUrl);
-            Files.createFile(pathToWrite);
-            CharBuffer charBuffer = CharBuffer.wrap(text);
-            FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToWrite, EnumSet.of(StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING));
-
-            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, charBuffer.length());
-
-            if (mappedByteBuffer != null) {
-                mappedByteBuffer.put(Charset.forName("ASCII").encode(charBuffer));
-            }
-        }
-        catch (Exception e){
+            file.createNewFile();
+            writer = new BufferedWriter(
+                    new FileWriter(fileUrl, true)  //Set true for append mode
+            );
+            writer.write(text);
+//            writer.newLine();   //Add new line
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(filename);
             e.printStackTrace();
         }
-        System.out.println(main.counter ++);
 
 
     }
@@ -220,7 +214,6 @@ public class Indexer {
     private void postingFilesCreate(String path){
         boolean folder1 = new File(path+"/stem").mkdir();
         boolean folder2 = new File(path+"/noStem").mkdir();
-
         if(folder1 && folder2){
             File fileStem = new File(path+"/stem/"+"Numbers");
             try {
@@ -247,49 +240,12 @@ public class Indexer {
      * merge the posting files into sorting a-z/A-Z/Number posting files
      */
     public void merge(){
-        try {
-            Stream<Path> paths = Files.walk(Paths.get(this.pathCorpus + "/" + stemFolder));
-            Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
-            for( Path path :  filesPaths) {
-
-                readFile(path);
-
-
-
-                JSONObject posting = new JSONObject();
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        /*
         while (tempPostCounter > 1){
             for (int i = 0; i < tempPostCounter - 1; i = i+2){
                 mergePosting(String.valueOf(i),String.valueOf(i+1));
             }
             tempPostCounter = tempPostCounter/2;
         }
-        */
-    }
-
-    private String readFile(Path path){
-        CharBuffer charBuffer = null;
-
-        try{
-            FileChannel fileChannel = (FileChannel) Files.newByteChannel(path, EnumSet.of(StandardOpenOption.READ));
-
-            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
-
-            if (mappedByteBuffer != null) {
-                charBuffer = Charset.forName("ASCII").decode(mappedByteBuffer);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return charBuffer.toString();
     }
 
     /**
@@ -306,28 +262,28 @@ public class Indexer {
         String pathPosting = pathCorpus + "/" + stemFolder;
         // go throw all temp posting files and start the merging
 //        for (int i = 0; i < tempPostCounter ; i = i++){
-            try {
-                // PrintWriter object for file3.txt
+        try {
+            // PrintWriter object for file3.txt
 //                PrintWriter pw = new PrintWriter(pathPosting+"/"+"new "+i);
 
-                // BufferedReader object for file1.txt
+            // BufferedReader object for file1.txt
 //                File file1 = new File(pathPosting+"/"+i);
 //                File file2 = new File(pathPosting+"/"+(i+1));
 
 //                BufferedReader br1 = new BufferedReader(new FileReader(pathPosting+"/"+file1));
 //                BufferedReader br2 = new BufferedReader(new FileReader(pathPosting+"/"+file2));
-                ArrayList<String> list = new ArrayList<>();
-                Scanner sc1 = new Scanner(new File(pathPosting+"/"+file1));
-                Scanner sc2 = new Scanner(new File(pathPosting+"/"+file2));
-                sc1.useDelimiter("<.+\\|");
-                sc2.useDelimiter("<.+\\|"); // need to clean first and last
+            ArrayList<String> list = new ArrayList<>();
+            Scanner sc1 = new Scanner(new File(pathPosting+"/"+file1));
+            Scanner sc2 = new Scanner(new File(pathPosting+"/"+file2));
+            sc1.useDelimiter("<.+\\|");
+            sc2.useDelimiter("<.+\\|"); // need to clean first and last
 
-                while (sc1 != null ){
-                    postingMap.put(sc1.next(), list);
-                }
-                while (sc2 != null ){
-                    postingMap.put(sc2.next(), list);
-                }
+            while (sc1 != null ){
+                postingMap.put(sc1.next(), list);
+            }
+            while (sc2 != null ){
+                postingMap.put(sc2.next(), list);
+            }
 
 //                String line1 = br1.readLine();
 //                String line2 = br2.readLine();
@@ -336,9 +292,9 @@ public class Indexer {
 //                    c = line1.toLowerCase().charAt(0);
 //                }
 //                PrintWriter pw = new PrintWriter(pathPosting+"/"+ c);
-                // loop to copy lines of
-                // file1.txt and file2.txt
-                // to  file3.txt alternatively
+            // loop to copy lines of
+            // file1.txt and file2.txt
+            // to  file3.txt alternatively
 //                while (line1 != null )
 //                {
 //                    if(line1 != null)
@@ -362,9 +318,9 @@ public class Indexer {
 //                pw.close();
 //                file1.delete();
 //                file2.delete();
-            }catch (Exception o){
+        }catch (Exception o){
 
-            }
+        }
 
 //        }
 

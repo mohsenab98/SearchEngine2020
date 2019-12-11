@@ -36,17 +36,17 @@ public class main {
             p.Parser(fullText, docName);
             //  p.getDocInfo();
 
-          //  n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
+            n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
 
         }
 
-     //   n.reset(); // check if there is stell terms in the sorted map
-       // n.merge(); //merge the temp sorted files into A-Z sorted files
-      //  n.saveDictionary();
-      //  n.saveDocInfo();
+        n.reset(); // check if there is still terms in the sorted map
+      //  n.merge(); //merge the temp sorted files into A-Z sorted files
+        n.saveDictionary();
+        n.saveDocInfo();
 
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
