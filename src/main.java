@@ -17,12 +17,11 @@ public class main {
         //String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
-        Indexer n = new Indexer(pathCorpus, stem);
-
         ReadFile rd = new ReadFile();
         rd.filesSeparator(pathCorpus);
-        Parse p = new Parse(pathStopWords, stem);
 
+        Indexer n = new Indexer(pathCorpus, stem);
+        Parse p = new Parse(pathStopWords, stem);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
