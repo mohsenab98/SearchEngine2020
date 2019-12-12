@@ -195,7 +195,8 @@ public class Parse {
      * @param term
      */
     private void addTermToMap(String term){
-        term = term.trim();
+        term = term.replaceAll("\\s*\n", "");
+        term = term.replaceAll("^_", "");
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());

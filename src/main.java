@@ -11,9 +11,9 @@ public class main {
         double startTime = System.nanoTime();
 
         boolean stem = true;
-        String pathCorpus = "D:\\corpus";
-       // String pathCorpus = "D:\\corpusTest1";
-       // String pathCorpus = "D:\\corpusTestD";
+        //String pathCorpus = "D:\\corpus";
+        String pathCorpus = "D:\\corpusTest1";
+        //String pathCorpus = "D:\\corpusTestD";
         //String pathCorpus = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest";
         String pathStopWords = "C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\corpusTest\\StopWords";
 
@@ -33,8 +33,6 @@ public class main {
             }
 
             p.Parser(fullText, docName);
-            //  p.getDocInfo();
-
             n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
 
             rd.getListAllDocs().remove(0);
@@ -44,8 +42,8 @@ public class main {
 
         n.reset(); // check if there is still terms in the sorted map
       //  n.merge(); //merge the temp sorted files into A-Z sorted files
-        n.saveDictionary();
-        n.saveDocInfo();
+      //  n.saveDictionary();
+     //   n.saveDocInfo();
 
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
