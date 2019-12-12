@@ -76,17 +76,19 @@ public class Indexer {
             if(this.mapSortedTerms.containsKey(key)){
                 //chain the new list of term to the original one
                 ArrayList<String> listOfInfo = termDoc.get(key);
-                listOfInfo.add(0, String.valueOf(docIDCounter));
-                String info = listOfInfo.get(0) + ":" + listOfInfo.get(1) + ";";
+                String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
                 ArrayList<String> originalList = mapSortedTerms.get(key);
-                String originalInfo = originalList.toString() + info;
+                String originalInfo = originalList.get(0) + info;
+                originalList.clear();
                 originalList.add(0, originalInfo);
                 mapSortedTerms.put(key, originalList);
             }
             else{
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = termDoc.get(key);
-                listOfInfo.add(0, String.valueOf(docIDCounter));
+                String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
+                listOfInfo.clear();
+                listOfInfo.add(0, info);
                 mapSortedTerms.put(key, listOfInfo);
             }
         }
@@ -181,7 +183,7 @@ public class Indexer {
     private String mapToFormatString(Map<String, ArrayList<String>> text){
         String textToPostFile = "";
         for (String key : text.keySet()) {
-            textToPostFile += key + "|" + textForPosting(text.get(key)) + "\n";
+            textToPostFile += key + "|" + text.get(key).get(0) + "\n";
             //mapTermPosting.put(key, String.valueOf(tempPostCounter));
         }
         return textToPostFile;
@@ -198,10 +200,20 @@ public class Indexer {
             if(termAndInfo.length < 2){
                 continue;
             }
+            if(termAndInfo[0].contains(" ")){
+                continue;
+            }
+
             ArrayList<String> info = new ArrayList<>();
             if(text.containsKey(termAndInfo[0])){
                 info = text.get(termAndInfo[0]);
-                info.add(2, termAndInfo[1]);
+                try {
+                    info.add(2, termAndInfo[1]);
+                }
+                catch(Exception e){
+                    System.out.println(termAndInfo[0] + " " + mapDocID.size());
+                    e.printStackTrace();
+                }
             }
             else{
                 try {
@@ -248,46 +260,6 @@ public class Indexer {
 
         return charBuffer.toString();
     }
-
-    /**
-     * func that turn the info of the term into string so we can write it to the posting file
-     * @param listOfInfo is the info of each term
-     * @return text for the posting file
-     */
-    private String textForPosting(ArrayList<String> listOfInfo){
-        StringBuilder textToAdd = new StringBuilder();
-        try {
-            textToAdd.append(listOfInfo.get(0)).append(":"); // DOCID
-            textToAdd.append(listOfInfo.get(1)); // tfi
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        if(listOfInfo.size() > 2){
-            textToAdd.append(";" + listOfInfo.get(2));
-        }
-
-
-        String temp;
-        for (int i = 2; i < listOfInfo.size(); i++) {
-            temp = listOfInfo.get(i);
-            //!isNumeric(temp)
-            if (!(temp.charAt(0) == ';')) { // new Doc info
-                textToAdd = new StringBuilder(textToAdd + temp + ":"); // DOCID 2 +
-                i++;
-                try {
-                    textToAdd.append(listOfInfo.get(i)); // tfi
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return textToAdd.toString();
-    }
-
-
 
     /**
      * append text to file
