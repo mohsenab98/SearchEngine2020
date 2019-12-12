@@ -1,7 +1,9 @@
+package Classes;
+
 import org.tartarus.snowball.ext.PorterStemmer;
 
 
-public class Stemmer {
+public class Stemmer extends PorterStemmer{
 
     private PorterStemmer stemmer;
     public Stemmer(){

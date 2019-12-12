@@ -1,3 +1,5 @@
+package Classes;
+
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -7,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static jdk.nashorn.internal.objects.NativeArray.map;
@@ -249,7 +253,7 @@ public class Indexer {
     }
 
     /**
-     * the main function of sorting two posting into one sorted file
+     * the Classes.main function of sorting two posting into one sorted file
      */
     private void mergePosting(String file1, String file2) {
         saveDictionary(); // saves the dictionary and delete the content
@@ -267,9 +271,8 @@ public class Indexer {
 //                PrintWriter pw = new PrintWriter(pathPosting+"/"+"new "+i);
 
                 // BufferedReader object for file1.txt
-//                File file1 = new File(pathPosting+"/"+i);
-//                File file2 = new File(pathPosting+"/"+(i+1));
 
+//                File file2 = new File(pathPosting+"/"+(i+1));
 //                BufferedReader br1 = new BufferedReader(new FileReader(pathPosting+"/"+file1));
 //                BufferedReader br2 = new BufferedReader(new FileReader(pathPosting+"/"+file2));
                 ArrayList<String> list = new ArrayList<>();
@@ -348,4 +351,6 @@ public class Indexer {
         usingBufferedWritter(text,"Doc");
         mapTermPosting.clear();
     }
+
+
 }
