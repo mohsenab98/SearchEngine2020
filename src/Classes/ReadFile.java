@@ -48,13 +48,13 @@ public class ReadFile{
             for( Path fileP :  filesPaths) {
                 String strFiles = fileIntoString(new File(fileP.toString()));
                 String strFilePath = fileP.toString();
-                threadPool.execute(() -> {
+//                threadPool.execute(() -> {
                     separatedFilesToArrayList(strFiles, strFilePath); // separate docs to list: doc per index
-                });
+//                });
             }
 
-            threadPool.awaitTermination(1, TimeUnit.SECONDS); // Wait for ending of threads
-            threadPool.shutdown(); // stop thread pool
+//            threadPool.awaitTermination(1, TimeUnit.SECONDS); // Wait for ending of threads
+//            threadPool.shutdown(); // stop thread pool
 
         }
         catch (Exception e){

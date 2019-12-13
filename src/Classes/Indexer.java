@@ -2,6 +2,7 @@ package Classes;
 
 import sun.misc.Cleaner;
 
+import javax.swing.text.html.ImageView;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -12,8 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-
-import static jdk.nashorn.internal.objects.NativeArray.map;
 
 public class Indexer {
     /**
@@ -41,7 +40,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~3000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 200000;
+    private final int MAX_POST_SIZE = 300000;
 
     /**
      * help us merge the posting
@@ -75,13 +74,13 @@ public class Indexer {
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
-        // mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
+         mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
                 //chain the new list of term to the original one
                 ArrayList<String> listOfInfo = termDoc.get(key);
-                String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
+                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 String originalInfo = originalList.get(0) + info;
 //                originalList.clear();
@@ -92,7 +91,7 @@ public class Indexer {
             else{
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = termDoc.get(key);
-                String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
+                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
 //                listOfInfo.clear();
                 listOfInfo = new ArrayList<>();
                 listOfInfo.add(0, info);
@@ -113,7 +112,7 @@ public class Indexer {
         String merged;
         String textToPostFile = "";
         String posting = "";
-        SortedMap<String, ArrayList<String>> text = new TreeMap<>();
+        SortedMap<String, String> text = new TreeMap<>();
 
         if(mapSortedTerms.firstKey().equals("")){
             mapSortedTerms.remove(mapSortedTerms.firstKey());
@@ -122,7 +121,12 @@ public class Indexer {
         posting = readFile("Numbers");
         while(isNumeric(mapSortedTerms.firstKey())){
             // textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-            text.put(mapSortedTerms.firstKey(), mapSortedTerms.get(mapSortedTerms.firstKey()));
+            ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
+            String s1 = "";
+            for(String key : s){
+                s1 = new StringBuilder().append(s1).append(key).toString();
+            }
+            text.put(mapSortedTerms.firstKey(), s1);
             mapSortedTerms.remove(mapSortedTerms.firstKey());
         }
         merged = merge(posting, text);
@@ -154,7 +158,12 @@ public class Indexer {
             posting = readFile(String.valueOf(Character.toLowerCase((char)i)));
             while(mapSortedTerms.firstKey().charAt(0) == (char)i){
                 //  textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-                text.put(mapSortedTerms.firstKey(), mapSortedTerms.get(mapSortedTerms.firstKey()));
+                ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
+                String s1 = "";
+                for(String key : s){
+                    s1 = new StringBuilder().append(s1).append(key).toString();
+                }
+                text.put(mapSortedTerms.firstKey(), s1);
                 mapSortedTerms.remove(mapSortedTerms.firstKey());
             }
             merged = merge(posting, text);
@@ -168,7 +177,12 @@ public class Indexer {
             posting = readFile(String.valueOf((char)i));
             while(!mapSortedTerms.isEmpty() && mapSortedTerms.firstKey().charAt(0) == (char)i){
                 //  textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-                text.put(mapSortedTerms.firstKey(), mapSortedTerms.get(mapSortedTerms.firstKey()));
+                ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
+                StringBuilder s1 = new StringBuilder();
+                for(String key : s){
+                    s1.append(key);
+                }
+                text.put(mapSortedTerms.firstKey(), s1.toString());
                 mapSortedTerms.remove(mapSortedTerms.firstKey());
             }
             merged = merge(posting, text);
@@ -177,29 +191,41 @@ public class Indexer {
             text = new TreeMap<>();
         }
 
-        /*
-        for (String key : mapSortedTerms.keySet()) {
-            textToPostFile = textToPostFile + key + "|" + textForPosting(mapSortedTerms.get(key)) + "\n";
-            mapTermPosting.put(key, String.valueOf(tempPostCounter));
+//         * DocInfo Index:
+//     *      0 - doc name
+//                *      1 - term max tf
+//     *      2 - count max tf
+//     *      3 - count uniq terms in doc
+        String textDoc = "";
+        posting ="";
+        posting = readFile("Doc");
+        for (Integer key : mapDocID.keySet()) {
+            ArrayList<String> info = mapDocID.get(key);
+            textDoc = textDoc + key + "|" + info.get(0) + ":" + info.get(1) + "?" +info.get(2) + "," + info.get(3)+ "\n";
+
         }
-        mapSortedTerms.clear();
-        */
+        mapDocID = new LinkedHashMap<>();
+        merged = posting+ textDoc;
+        usingBufferedWritter(merged, "Doc");
+
 
 
         //tempPostCounter++;
 
     }
 
-    private String mapToFormatString(Map<String, ArrayList<String>> text){
+
+    private String mapToFormatString(Map<String, String> text){
         String textToPostFile = "";
         for (String key : text.keySet()) {
-            textToPostFile += key + "|" + text.get(key).get(0) + "\n";
+                textToPostFile += new StringBuilder().append(key).append("|").append(text.get(key)).append("\n").toString();
+
             //mapTermPosting.put(key, String.valueOf(tempPostCounter));
         }
         return textToPostFile;
     }
 
-    public String merge(String posting, SortedMap<String, ArrayList<String>> text){
+    public String merge(String posting, SortedMap<String, String> text){
         if(posting.isEmpty()){
             return mapToFormatString(text);
         }
@@ -214,11 +240,11 @@ public class Indexer {
                 continue;
             }
 
-            ArrayList<String> info = new ArrayList<>();
+            String info = "";
             if(text.containsKey(termAndInfo[0])){
                 info = text.get(termAndInfo[0]);
                 try {
-                    info.add( termAndInfo[1]);
+                    info = info + termAndInfo[1];
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
@@ -229,7 +255,7 @@ public class Indexer {
                 try {
 //                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
 //                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
-                    info.add(termAndInfo[1]);
+                    info = info + termAndInfo[1];
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
@@ -293,7 +319,7 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
-        String fileUrl = this.pathPosting + "/" + stemFolder + "/" + filename;
+        String fileUrl = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/").append(filename).toString();
         //File file =  new File(fileUrl);
         BufferedWriter writer = null;
         try {
@@ -343,11 +369,16 @@ public class Indexer {
             File fileNames = new File(path+"/stem/" + "Names");
             File fileStemNoStem = new File(path+"/noStem/" + "Numbers");
             File fileNamesNoStem = new File(path+"/noStem/" + "Names");
+            File fileDocStem = new File(path+"/Stem/" + "Doc");
+            File fileDocNoStem = new File(path+"/noStem/" + "Doc");
             try {
                 fileStem.createNewFile();
                 fileNames.createNewFile();
                 fileNamesNoStem.createNewFile();
                 fileStemNoStem.createNewFile();
+                fileDocStem.createNewFile();
+                fileDocNoStem.createNewFile();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -372,7 +403,7 @@ public class Indexer {
     public void saveDictionary() {
         String text = "";
         for (String key : mapTermPosting.keySet()) {
-            text = text + key + ":" +mapTermPosting.get(key)+";"+"\n";
+            text = new StringBuilder().append(text).append(key).append(":").append(mapTermPosting.get(key)).append(";").append("\n").toString();
         }
         usingBufferedWritter(text,"Dictionary");
 //        mapTermPosting.clear();
@@ -380,12 +411,12 @@ public class Indexer {
     }
 
     public void saveDocInfo() {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter
-            text = text + key + "|" + listDocInfo.get(0) + "?" + listDocInfo.get(1) + ":" +listDocInfo.get(2) + "," + listDocInfo.get(3) + ";" + "\n";
+            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
         }
-        usingBufferedWritter(text,"Doc");
+        usingBufferedWritter(text.toString(),"Doc");
 //        mapTermPosting.clear();
         mapTermPosting = new LinkedHashMap<>();
     }
