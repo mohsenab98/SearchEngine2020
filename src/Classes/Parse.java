@@ -1,3 +1,7 @@
+package Classes;
+
+import Classes.Stemmer;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -240,8 +244,10 @@ public class Parse {
      * delete/clean data structures
      */
     public void cleanParse(){
-        this.mapTerms.clear();
-        this.docInfo.clear();
+//        this.mapTerms.clear();
+//        this.docInfo.clear();
+        this.mapTerms = new TreeMap<>();
+        this.docInfo = new ArrayList<>();
         //threadPool.shutdown();
     }
 

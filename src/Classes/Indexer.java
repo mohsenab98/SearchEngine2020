@@ -1,3 +1,5 @@
+package Classes;
+
 import sun.misc.Cleaner;
 
 import java.io.*;
@@ -25,6 +27,7 @@ public class Indexer {
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
 
     private String pathCorpus;
+    private String pathPosting;
     /**
      * isStem variable that we git from the user ( the parse send it to here)
      */
@@ -52,13 +55,14 @@ public class Indexer {
     private static int docIDCounter = 0;
 
 
-    public Indexer(String pathCorpus, boolean isStem) {
+    public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
         this.mapTermPosting = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
+        this.pathPosting = pathPosting;
         this.mapSortedTerms = new TreeMap<>();
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
-        postingFilesCreate(pathCorpus);
+        postingFilesCreate(pathPosting);
     }
 
     /**
@@ -70,7 +74,7 @@ public class Indexer {
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
-       // mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
+        // mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
@@ -79,7 +83,8 @@ public class Indexer {
                 String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 String originalInfo = originalList.get(0) + info;
-                originalList.clear();
+//                originalList.clear();
+                originalList = new ArrayList<>();
                 originalList.add(0, originalInfo);
                 mapSortedTerms.put(key, originalList);
             }
@@ -87,7 +92,8 @@ public class Indexer {
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = termDoc.get(key);
                 String info = docIDCounter + ":" + listOfInfo.get(0) + ";";
-                listOfInfo.clear();
+//                listOfInfo.clear();
+                listOfInfo = new ArrayList<>();
                 listOfInfo.add(0, info);
                 mapSortedTerms.put(key, listOfInfo);
             }
@@ -120,7 +126,8 @@ public class Indexer {
         }
         merged = merge(posting, text);
         usingBufferedWritter(merged, "Numbers");
-        text.clear();
+//        text.clear();
+        text = new TreeMap<>();
 
         /*
         posting = readFile("Names");
@@ -151,7 +158,8 @@ public class Indexer {
             }
             merged = merge(posting, text);
             usingBufferedWritter(merged, String.valueOf((char)i));
-            text.clear();
+//            text.clear();
+            text = new TreeMap<>();
         }
 
         for (int i = 'a'; i <= 'z'; i++){
@@ -164,7 +172,8 @@ public class Indexer {
             }
             merged = merge(posting, text);
             usingBufferedWritter(merged, String.valueOf((char)i));
-            text.clear();
+//            text.clear();
+            text = new TreeMap<>();
         }
 
         /*
@@ -208,7 +217,7 @@ public class Indexer {
             if(text.containsKey(termAndInfo[0])){
                 info = text.get(termAndInfo[0]);
                 try {
-                    info.add(2, termAndInfo[1]);
+                    info.add( termAndInfo[1]);
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
@@ -217,8 +226,9 @@ public class Indexer {
             }
             else{
                 try {
-                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
-                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
+//                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
+//                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
+                    info.add(termAndInfo[1]);
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
@@ -354,7 +364,8 @@ public class Indexer {
             text = text + key + ":" +mapTermPosting.get(key)+";"+"\n";
         }
         usingBufferedWritter(text,"Dictionary");
-        mapTermPosting.clear();
+//        mapTermPosting.clear();
+        mapTermPosting = new LinkedHashMap<>();
     }
 
     public void saveDocInfo() {
@@ -364,6 +375,7 @@ public class Indexer {
             text = text + key + "|" + listDocInfo.get(0) + "?" + listDocInfo.get(1) + ":" +listDocInfo.get(2) + "," + listDocInfo.get(3) + ";" + "\n";
         }
         usingBufferedWritter(text,"Doc");
-        mapTermPosting.clear();
+//        mapTermPosting.clear();
+        mapTermPosting = new LinkedHashMap<>();
     }
 }

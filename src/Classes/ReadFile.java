@@ -1,3 +1,5 @@
+package Classes;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,27 +20,28 @@ public class ReadFile{
      * content of all docs
      */
     private List<byte[]> allFiles;
-
+    private String path;
 
     // Constructor
-    public ReadFile(){
+    public ReadFile(String corpusPath){
+        this.path = corpusPath;
         this.allFiles = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
      * Separate files
-     * @param path - path of corpus
+     *
      */
-    public void filesSeparator(String path){
+    public void filesSeparator(){
         // create file from path of corpus
-        File files = new File(path);
+        File files = new File(this.path);
         if (files.listFiles() == null) {
             return;
         }
 
         try  {
             // create paths of docs
-            Stream<Path> paths = Files.walk(Paths.get(path));
+            Stream<Path> paths = Files.walk(Paths.get(this.path));
             Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
 
             // separate docs by paths
@@ -87,7 +90,8 @@ public class ReadFile{
     private void separatedFilesToArrayList(String fileString, String pathDirectory){
         // Content
 
-        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>",
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
         while (matcherFileContent.find()) {
             String content = matcherFileContent.group();
@@ -103,7 +107,8 @@ public class ReadFile{
      * @return
      */
     private String writeDocName(String content, String pathDirectory){
-        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>",
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(content);
         while (matcherFileContent.find()){
             if(!matcherFileContent.group(1).contains(pathDirectory)) {
