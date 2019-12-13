@@ -62,7 +62,7 @@ public class Indexer {
         this.mapSortedTerms = new TreeMap<>();
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
-        postingFilesCreate(this.pathPosting);
+        postingFilesCreate(pathPosting);
     }
 
     /**
@@ -217,7 +217,7 @@ public class Indexer {
             if(text.containsKey(termAndInfo[0])){
                 info = text.get(termAndInfo[0]);
                 try {
-                    info.add(2, termAndInfo[1]);
+                    info.add( termAndInfo[1]);
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
@@ -226,8 +226,9 @@ public class Indexer {
             }
             else{
                 try {
-                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
-                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
+//                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
+//                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
+                    info.add(termAndInfo[1]);
                 }
                 catch(Exception e){
                     System.out.println(termAndInfo[0] + " " + mapDocID.size());
