@@ -437,6 +437,7 @@ public class Parse {
             String name = matcherName.group().toUpperCase();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
+            name = name.replaceFirst("^\\w\\s", "");
 
             addTermToMap(name);
         }
