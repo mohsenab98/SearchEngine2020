@@ -71,6 +71,7 @@ public class Indexer {
      * @param termDoc , map that contain the term and list{DOCID , pos1 , pos2...}
      */
     public void addTermToIndexer(Map<String, ArrayList<String>>termDoc, ArrayList<String> docInfo){
+        int i = 0;
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
@@ -244,7 +245,13 @@ public class Indexer {
 
     private String readFile(String fileName){
         CharBuffer charBuffer = null;
-        Path path = Paths.get(this.pathPosting + "/stem/" + fileName);
+        String stemFolder = "";
+        if(isStem){
+            stemFolder = "stem";
+        }else {
+            stemFolder = "noStem";
+        }
+        Path path = Paths.get(this.pathPosting + "/" +stemFolder + "/" + fileName);
 
         try{
             FileChannel fileChannel = (FileChannel) Files.newByteChannel(path, EnumSet.of(StandardOpenOption.READ));
@@ -283,7 +290,7 @@ public class Indexer {
         if(isStem){
             stemFolder = "stem";
         }else {
-            stemFolder = "nostem";
+            stemFolder = "noStem";
         }
 
         String fileUrl = this.pathPosting + "/" + stemFolder + "/" + filename;
@@ -334,9 +341,13 @@ public class Indexer {
         if(folder1 && folder2){
             File fileStem = new File(path+"/stem/" + "Numbers");
             File fileNames = new File(path+"/stem/" + "Names");
+            File fileStemNoStem = new File(path+"/noStem/" + "Numbers");
+            File fileNamesNoStem = new File(path+"/noStem/" + "Names");
             try {
                 fileStem.createNewFile();
                 fileNames.createNewFile();
+                fileNamesNoStem.createNewFile();
+                fileStemNoStem.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
