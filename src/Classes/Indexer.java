@@ -244,7 +244,7 @@ public class Indexer {
 
     private String readFile(String fileName){
         CharBuffer charBuffer = null;
-        Path path = Paths.get(this.pathCorpus + "/stem/" + fileName);
+        Path path = Paths.get(this.pathPosting + "/stem/" + fileName);
 
         try{
             FileChannel fileChannel = (FileChannel) Files.newByteChannel(path, EnumSet.of(StandardOpenOption.READ));
@@ -286,7 +286,7 @@ public class Indexer {
             stemFolder = "nostem";
         }
 
-        String fileUrl = this.pathCorpus + "/" + stemFolder + "/" + filename;
+        String fileUrl = this.pathPosting + "/" + stemFolder + "/" + filename;
         //File file =  new File(fileUrl);
         BufferedWriter writer = null;
         try {
