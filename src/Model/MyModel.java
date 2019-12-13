@@ -49,10 +49,13 @@ public class MyModel extends Observable implements IModel {
         /// Clear Memory
     }
 
+
+    private double timeForIndexing;
+    private int docCounter;
     @Override
     public boolean startIndexing(boolean selected, TextField corpus_text, TextField posting_text) {
         double startTime = System.nanoTime();
-
+        docCounter = 0;
         boolean stem = selected;
         String pathCorpus = corpus_text.getText();
         String pathStopWords = corpus_text.getText()+"/StopWords";
@@ -61,7 +64,7 @@ public class MyModel extends Observable implements IModel {
         ReadFile rd = new ReadFile(pathCorpus);
         rd.filesSeparator();
         Parse p = new Parse(pathStopWords, stem);
-        Indexer n = new Indexer(pathCorpus, stem);
+        Indexer n = new Indexer(pathCorpus, pathPosting, stem);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
@@ -79,7 +82,7 @@ public class MyModel extends Observable implements IModel {
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
-
+            docCounter++;
         }
 
 
@@ -93,6 +96,15 @@ public class MyModel extends Observable implements IModel {
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
+        timeForIndexing = totalTime / 60;
         return true;
+    }
+
+    public double getTimeForIndexing() {
+        return timeForIndexing;
+    }
+
+    public int getDocCounter() {
+        return docCounter;
     }
 }

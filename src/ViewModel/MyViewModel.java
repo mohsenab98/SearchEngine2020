@@ -2,6 +2,8 @@ package ViewModel;
 
 import Model.IModel;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
@@ -39,5 +41,14 @@ public class MyViewModel extends Observable implements Observer {
     public boolean startIndexing(boolean selected, TextField corpus_text, TextField posting_text) {
         return model.startIndexing(selected, corpus_text, posting_text);
     }
+
+    public double getTimeForIndexing() {
+        return model.getTimeForIndexing();
+    }
+
+    public int getDocCounter() {
+        return model.getDocCounter();
+    }
+
 
 }

@@ -2,8 +2,12 @@ package View;
 
 import ViewModel.MyViewModel;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 
@@ -16,16 +20,19 @@ import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView ;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
  */
 
 
-public class MyViewController extends Canvas implements Observer, Initializable {
+public class MyViewController extends Canvas implements Observer {
     @FXML public ImageView image_view;
     @FXML public Button start_button;
     @FXML public CheckBox stem;
@@ -38,6 +45,41 @@ public class MyViewController extends Canvas implements Observer, Initializable 
     @FXML public Button  load_Dic_button;
     private MyViewModel viewModel;
 
+    static boolean isnewWindow = false;
+    private void newWindow(ActionEvent actionEvent){
+        if(!isnewWindow) {
+            isnewWindow = true;
+            start_button.setDisable(true);
+            try {
+//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newWindow.fxml"));
+//                fxmlLoader.setController(this);
+//                Parent root = fxmlLoader.load();
+                Stage stage = new Stage();
+                Label l =  new Label();
+                l.setText("Number of Docs that has indexed:  " +viewModel.getDocCounter()+"\n"+ "\n" +
+                        "The time that it tooks:  " +viewModel.getTimeForIndexing() + " minutes");
+
+
+                stage.setTitle("Indexing Info!");
+
+                Scene scene = new Scene(l, 600, 400);
+                stage.setScene(scene);
+                SetStageCloseEvent(stage);
+                stage.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void SetStageCloseEvent(Stage stage) {
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent windowEvent) {
+               start_button.setDisable(false);
+            }
+        });
+    }
     @Override
     public void update(Observable o, Object arg) {
 
@@ -51,7 +93,10 @@ public class MyViewController extends Canvas implements Observer, Initializable 
             File file2 = new File(posting_text.getText());
             if(file1.exists() && file2.exists()) {
                 start_button.setDisable(true);
-                viewModel.startIndexing(stem.isSelected(), corpus_text, posting_text);
+                if(viewModel.startIndexing(stem.isSelected(), corpus_text, posting_text)){
+                    ActionEvent event = new ActionEvent();
+                    newWindow(event);
+                }
 
             }else{
                 showAlert("Enter valid locations !!");
@@ -106,12 +151,7 @@ public class MyViewController extends Canvas implements Observer, Initializable 
         }
 //        mazeWindow(actionEvent, maze);
     }
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        File file = new File("src/resources/glassSearch.png");
-        Image image = new Image(file.toURI().toString());
-        image_view.setImage(image);
-    }
+
 
     public void start(ActionEvent actionEvent) {
         if( corpus_text.getText() != "" && posting_text.getText() != null) {
@@ -129,5 +169,9 @@ public class MyViewController extends Canvas implements Observer, Initializable 
             viewModel.loadDictionary(file);
         }
 //        mazeWindow(actionEvent, maze);
+    }
+
+    public void setImage(Image image) {
+        image_view.setImage(image);
     }
 }

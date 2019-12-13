@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
+
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
 /**
@@ -41,10 +43,14 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
 
         primaryStage.setScene(scene);
+        File file = new File("src/resources/glassSearch.png");
+        Image image = new Image(file.toURI().toString());
+//        image_view.setImage(image);
         //--------------
         MyViewController view = fxmlLoader.getController();
 
         view.setViewModel(viewModel);
+        view.setImage(image); // add image
         viewModel.addObserver(view);
 
 

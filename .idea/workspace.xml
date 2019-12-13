@@ -3,18 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Indexer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Parse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Parse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/ReadFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/ReadFile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/Stemmer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/Stemmer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ir2020/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ir2020/main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReadFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Stemmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stemmer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/IModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/IModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,10 +27,34 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main.java">
+        <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+            <state relative-caret-position="212">
+              <caret line="44" column="41" selection-start-line="44" selection-start-column="41" selection-end-line="44" selection-end-column="41" />
+              <folding>
+                <element signature="e#2325#2326#0" expanded="true" />
+                <element signature="e#2367#2368#0" expanded="true" />
+                <element signature="e#4816#4817#0" expanded="true" />
+                <element signature="e#4858#4859#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/View/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="52" column="42" selection-start-line="52" selection-start-column="42" selection-end-line="52" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="329" column="35" selection-start-line="329" selection-start-column="17" selection-end-line="329" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -44,13 +63,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Parse.java">
+        <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="103" column="19" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="110">
+              <caret line="66" column="55" selection-start-line="66" selection-start-column="55" selection-end-line="66" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -61,16 +77,12 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>million</find>
-      <find>5000</find>
-      <find>500000</find>
-      <find>500</find>
-      <find>map</find>
       <find>HashMap</find>
       <find>90</find>
       <find>70</find>
@@ -85,7 +97,6 @@
       <find>stemm</find>
       <find>tempPostCounter</find>
       <find>reset</find>
-      <find>usingBufferedWritter</find>
       <find>positionCounter</find>
       <find>get</find>
       <find>doc</find>
@@ -96,6 +107,12 @@
       <find>listOfLinesfromAllFiles</find>
       <find>threadPool</find>
       <find>stringToSetOfString</find>
+      <find>text</find>
+      <find>clear</find>
+      <find>usingBufferedWritter</find>
+      <find>Gligorov</find>
+      <find>postingFilesCreate</find>
+      <find>image_view</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -129,6 +146,15 @@
         <option value="$PROJECT_DIR$/src/ReadFile.java" />
         <option value="$PROJECT_DIR$/src/Stemmer.java" />
         <option value="$PROJECT_DIR$/src/Parse.java" />
+        <option value="$PROJECT_DIR$/src/Classes/main.java" />
+        <option value="$PROJECT_DIR$/src/Classes/Parse.java" />
+        <option value="$PROJECT_DIR$/src/View/Main.java" />
+        <option value="$PROJECT_DIR$/src/Model/IModel.java" />
+        <option value="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" />
+        <option value="$PROJECT_DIR$/src/View/newWindow.fxml" />
+        <option value="$PROJECT_DIR$/src/Model/MyModel.java" />
+        <option value="$PROJECT_DIR$/src/Classes/Indexer.java" />
+        <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
       </list>
     </option>
   </component>
@@ -162,6 +188,36 @@
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Classes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="View" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="ViewModel" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
             <path>
@@ -178,14 +234,19 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576185401420" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../onlineShoppingSystem" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576249280192" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ATP_Part_3" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15234375" />
     <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\src" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -265,7 +326,8 @@
       <workItem from="1575558941101" duration="17817000" />
       <workItem from="1575740094199" duration="61053000" />
       <workItem from="1576066944223" duration="8738000" />
-      <workItem from="1576144993293" duration="14870000" />
+      <workItem from="1576144993293" duration="15661000" />
+      <workItem from="1576235725347" duration="10239000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -491,11 +553,18 @@
       <option name="project" value="LOCAL" />
       <updated>1575979437999</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="-Gui">
+      <created>1576185484056</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1576185484057</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="303793000" />
+    <option name="totallyTimeSpent" value="314823000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -507,10 +576,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1860817" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18910742" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -518,9 +587,9 @@
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.09492635" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.35515547" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.11456628" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.3927987" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.328594" />
@@ -585,7 +654,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ReadFile class: &#10;+ field &quot;path&quot;&#10;+ Constructor for path&#10;+ envelope func for FileSeparator&#10;+ getter and setter for path" />
     <MESSAGE value="ReadFile class: &#10;+ Changed first letters of funcs to lower case&#10;+ printPath func" />
     <MESSAGE value="Map for all docs in Read an Parse" />
     <MESSAGE value="One line deleted" />
@@ -610,36 +678,41 @@
     <MESSAGE value="-Updated Indexer (Posting improved)" />
     <MESSAGE value="-Updated Indexer (time for 100 dic = 3.4 min)" />
     <MESSAGE value="-Updated Indexer (time for 100 dic = 3.4 min) FIXED" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Updated Indexer (time for 100 dic = 3.4 min) FIXED" />
+    <MESSAGE value="-Gui" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Gui" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ReadFile.java</url>
+          <url>file://$PROJECT_DIR$/src/Classes/ReadFile.java</url>
           <properties />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main.java</url>
+          <url>file://$PROJECT_DIR$/src/Classes/main.java</url>
           <line>43</line>
           <properties />
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ReadFile.java</url>
+          <url>file://$PROJECT_DIR$/src/Classes/ReadFile.java</url>
           <line>35</line>
           <properties />
           <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/View/MyViewController.java</url>
+          <line>53</line>
+          <properties />
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="p.getMapTerms()" />
-        <watch expression="mapTermPosting" />
+        <watch expression="mapSortedTerms" />
         <watch expression="termDoc" />
-        <watch expression="files.listFiles()" />
       </configuration>
     </watches-manager>
   </component>
@@ -666,6 +739,11 @@
       </expression>
     </expressions>
     <expressions id="watch">
+      <expression>
+        <expression-string>p.getMapTerms()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>matcherPercent.start()</expression-string>
         <language-id>JAVA</language-id>
@@ -711,15 +789,50 @@
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>matcherName.group()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>isNumeric(filename)</expression-string>
+        <expression-string>counter_label.setText(&quot;Number of Docs that has indexed:&quot; +String.valueOf(viewModel.getDocCounter()))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>viewModel.getTimeForIndexing()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>viewModel.getDocCounter()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>viewModel.getDocCounter())</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FXMLLoader(getClass().getResource(&quot;newWindow.fxml&quot;)).load()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FXMLLoader(getClass().getResource(&quot;src/View/newWindow.fxml&quot;)).load()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FXMLLoader(getClass().getResource(&quot;View/newWindow.fxml&quot;)).load()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>fxmlLoader.load()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FXMLLoader(getClass().getResource(&quot;newWindow.fxml&quot;))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -730,12 +843,8 @@
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$MountThreeChar.class" />
+    <entry file="file://$PROJECT_DIR$/out/production/ir2020/Parse$Mounth.class" />
     <entry file="jar://$PROJECT_DIR$/../lucene-snowball-3.0.2.jar!/org/tartarus/snowball/ext/PorterStemmer.class" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java" />
     <entry file="file://$PROJECT_DIR$/hs_err_pid2768.log" />
@@ -749,34 +858,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Indexer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6780">
-          <caret line="352" selection-start-line="352" selection-end-line="352" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_151/src.zip!/java/nio/file/Files.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1660">
           <caret line="89" column="19" selection-start-line="89" selection-start-column="19" selection-end-line="89" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="72" column="41" lean-forward="true" selection-start-line="72" selection-start-column="41" selection-end-line="72" selection-end-column="41" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Stemmer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="42" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -787,22 +872,108 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Parse.java">
+    <entry file="file://$PROJECT_DIR$/src/Classes/main.java" />
+    <entry file="file://$PROJECT_DIR$/src/Classes/ReadFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="103" column="19" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="19" />
+        <state relative-caret-position="194">
+          <caret line="122" selection-start-line="122" selection-end-line="122" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3953#3954#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/Parse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="251" selection-start-line="251" selection-end-line="251" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#8386#8387#0" expanded="true" />
+            <element signature="e#8422#8423#0" expanded="true" />
+            <element signature="e#8673#8674#0" expanded="true" />
+            <element signature="e#8708#8709#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/Stemmer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Model/IModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="21" column="4" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ViewModel/MyViewModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="49" column="36" selection-start-line="49" selection-start-column="36" selection-end-line="49" selection-end-column="36" />
+          <folding>
+            <element signature="e#993#994#0" expanded="true" />
+            <element signature="e#1031#1032#0" expanded="true" />
+            <element signature="e#1065#1066#0" expanded="true" />
+            <element signature="e#1098#1099#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/view.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="12" selection-start-line="13" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="52" column="42" selection-start-line="52" selection-start-column="42" selection-end-line="52" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="329" column="35" selection-start-line="329" selection-start-column="17" selection-end-line="329" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.java">
+    <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        <state relative-caret-position="110">
+          <caret line="66" column="55" selection-start-line="66" selection-start-column="55" selection-end-line="66" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/newWindow.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="44" column="41" selection-start-line="44" selection-start-column="41" selection-end-line="44" selection-end-column="41" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#2325#2326#0" expanded="true" />
+            <element signature="e#2367#2368#0" expanded="true" />
+            <element signature="e#4816#4817#0" expanded="true" />
+            <element signature="e#4858#4859#0" expanded="true" />
           </folding>
         </state>
       </provider>

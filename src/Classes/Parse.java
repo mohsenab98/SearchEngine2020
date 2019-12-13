@@ -1,5 +1,7 @@
 package Classes;
 
+import Classes.Stemmer;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -197,8 +199,8 @@ public class Parse {
      * @param term
      */
     private void addTermToMap(String term){
-        //removes white spaces from the string
-        term = term.trim();
+        term = term.replaceAll("\\s*\n", "");
+        term = term.replaceAll("^_", "");
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
@@ -206,13 +208,13 @@ public class Parse {
             return;
         }
 
-        int counter = Integer.parseInt(this.mapTerms.get(term).get(0)); // get the tf of the term
-        this.mapTerms.get(term).set(0, String.valueOf(counter + 1)); //update the tf of the term
+        int counter = Integer.parseInt(this.mapTerms.get(term).get(0)); // term with maxTF
+        this.mapTerms.get(term).set(0, String.valueOf(counter + 1)); // maxTF
 
         // check for max TF
         if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(0))){
-            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0)); // maxTF
-            this.termMaxTf = term;  // term with maxTF
+            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0));
+            this.termMaxTf = term;
         }
     }
 
@@ -242,8 +244,10 @@ public class Parse {
      * delete/clean data structures
      */
     public void cleanParse(){
-        this.mapTerms.clear();
-        this.docInfo.clear();
+//        this.mapTerms.clear();
+//        this.docInfo.clear();
+        this.mapTerms = new TreeMap<>();
+        this.docInfo = new ArrayList<>();
         //threadPool.shutdown();
     }
 

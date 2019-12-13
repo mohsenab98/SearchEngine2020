@@ -16,4 +16,9 @@ public interface IModel {
     void resetProcess(TextField posting_text);
 
     boolean startIndexing(boolean selected, TextField corpus_text, TextField posting_text);
+
+    double getTimeForIndexing();
+
+    int getDocCounter();
+
 }
