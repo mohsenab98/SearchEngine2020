@@ -65,6 +65,8 @@ public class MyModel extends Observable implements IModel {
         rd.filesSeparator();
         Parse p = new Parse(pathStopWords, stem);
         Indexer n = new Indexer(pathCorpus, pathPosting, stem);
+        n.setTermCounter(0);
+        n.setDocIDCounter(0);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
@@ -82,7 +84,7 @@ public class MyModel extends Observable implements IModel {
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
-            docCounter++;
+
         }
 
 
@@ -96,7 +98,10 @@ public class MyModel extends Observable implements IModel {
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
+        System.out.println(n.getTermCounter());
+        System.out.println(n.getDocIDCounter());
         timeForIndexing = totalTime / 60;
+        docCounter = n.getDocIDCounter();
         return true;
     }
 

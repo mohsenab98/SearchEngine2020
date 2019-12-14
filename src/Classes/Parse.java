@@ -105,7 +105,7 @@ public class Parse {
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
-        searchNames(fullText); // Entity/Names law
+//        searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);
@@ -201,6 +201,9 @@ public class Parse {
     private void addTermToMap(String term){
         term = term.replaceAll("\\s*\n", "");
         term = term.replaceAll("^_", "");
+        if(term.equals("")){
+            return;
+        }
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
@@ -292,17 +295,17 @@ public class Parse {
 
         switch (range) {
             case 1:
-                return String.format("%.03f", numberInTerm / 1000) + "K";
+                return new StringBuilder().append(String.format("%.03f", numberInTerm / 1000)).append("K").toString();
             case 2:
-                return String.format("%.03f", numberInTerm / 1000000) + "M";
+                return new StringBuilder().append(String.format("%.03f", numberInTerm / 1000000)).append("M").toString();
             case 3:
-                return String.format("%.03f", numberInTerm / 1000000000) + "B";
+                return new StringBuilder().append(String.format("%.03f", numberInTerm / 1000000000)).append("B").toString();
             case 4:
-                return numberInTerm + "K";
+                return new StringBuilder().append(numberInTerm).append("K").toString();
             case 5:
-                return numberInTerm + "M";
+                return new StringBuilder().append(numberInTerm).append("M").toString();
             case 6:
-                return numberInTerm + "B";
+                return new StringBuilder().append(numberInTerm).append("B").toString();
         }
 
         return token;
@@ -332,9 +335,10 @@ public class Parse {
      * @return
      */
     private String Price(String token) {
+
         if (token.contains("$")) {
             token = token.replace("$", "");
-            token = token + " Dollars";
+            token = new StringBuilder().append(token).append(" Dollars").toString();
         }
 
         if (token.contains("US")) {
@@ -350,15 +354,15 @@ public class Parse {
         }
 
         if (numberInTerm >= 1000000) {
-            return numberInTerm / 1000000 + " M" + " Dollars";
+            return new StringBuilder().append(numberInTerm / 1000000).append(" M").append(" Dollars").toString();
         }
 
         if (token.contains("million") || token.contains("m ")) {
-            return numberInTerm + " M" + " Dollars";
+            return new StringBuilder().append(numberInTerm).append(" M").append(" Dollars").toString();
         }
 
         if (token.contains("billion") || token.contains("bn ")) {
-            return numberInTerm * 1000 + " M" + " Dollars";
+            return new StringBuilder().append(numberInTerm * 1000).append(" M").append(" Dollars").toString();
         }
 
         return token;
@@ -379,7 +383,7 @@ public class Parse {
 
         float numberInTerm = Float.parseFloat(strWithDigitOnly);
         if (numberInTerm < 10) {
-            strWithDigitOnly = "0" + strWithDigitOnly;
+            strWithDigitOnly = new StringBuilder().append("0").append(strWithDigitOnly).toString();
         }
 
         strWithCharOnly = strWithCharOnly.replaceAll("[\\s]", "");
@@ -390,13 +394,13 @@ public class Parse {
         }
         String monthNumberStr = String.valueOf(monthNumber);
         if (monthNumber < 10) {
-            monthNumberStr = "0" + monthNumber;
+            monthNumberStr = new StringBuilder().append("0").append(monthNumber).toString();
         }
         // Month Number Could be a year
         if (strWithDigitOnly.contains("-") || Float.parseFloat(strWithDigitOnly) <= 31) {
-            return monthNumberStr + "-" + strWithDigitOnly;
+            return new StringBuilder().append(monthNumberStr).append("-").append(strWithDigitOnly).toString();
         } else {
-            return strWithDigitOnly + "-" + monthNumberStr;
+            return new StringBuilder().append(strWithDigitOnly).append("-").append(monthNumberStr).toString();
         }
     }
 
