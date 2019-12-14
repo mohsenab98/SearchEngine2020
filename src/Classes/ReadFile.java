@@ -25,7 +25,8 @@ public class ReadFile{
     // Constructor
     public ReadFile(String corpusPath){
         this.path = corpusPath;
-        this.allFiles = Collections.synchronizedList(new ArrayList<>());
+//        this.allFiles = Collections.synchronizedList(new ArrayList<>());
+        this.allFiles = new ArrayList<>();
     }
 
     /**
