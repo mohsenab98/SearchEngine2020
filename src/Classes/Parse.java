@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+////////
 public class Parse {
     //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming

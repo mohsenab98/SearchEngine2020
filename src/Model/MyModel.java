@@ -139,7 +139,7 @@ public class MyModel extends Observable implements IModel {
         System.out.println(n.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = n.getDocIDCounter();
-        return true;
+        return true;////////
     }
 
     public double getTimeForIndexing() {
