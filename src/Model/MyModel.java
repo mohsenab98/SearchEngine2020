@@ -5,11 +5,14 @@ import Classes.Parse;
 import Classes.ReadFile;
 import javafx.scene.control.TextField;
 
-import java.io.File;
+import java.awt.*;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,12 +24,36 @@ import java.util.regex.Pattern;
 public class MyModel extends Observable implements IModel {
     @Override
     public void loadDictionary(File file) {
-
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader( new FileReader( file ));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = null;
+        //TODO : use dictionary instead of this new Map
+        Map result = new HashMap();
+        while(true){
+            try {
+                if (!((line = reader.readLine()) != null)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String[] arr = line.split( "\\|" );
+            result.put( arr[0], arr[1] );
+        }
     }
 
     @Override
     public void showDictionary() {
-
+        //TODO : update the pathname
+        File file = new File ("C:\\Users\\mohse\\Desktop\\corpusTest2\\noStem\\Doc");
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

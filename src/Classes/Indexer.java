@@ -40,7 +40,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~3000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 250000;
+    private final int MAX_POST_SIZE = 400000;
 
     /**
      * help us merge the posting
@@ -72,6 +72,18 @@ public class Indexer {
     public void addTermToIndexer(Map<String, ArrayList<String>>termDoc, ArrayList<String> docInfo){
         int i = 0;
         if(mapSortedTerms.size() > MAX_POST_SIZE){
+            // Get current size of heap in bytes
+            long heapSize = Runtime.getRuntime().totalMemory();
+
+            // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+            long heapMaxSize = Runtime.getRuntime().maxMemory();
+
+            // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+            long heapFreeSize = Runtime.getRuntime().freeMemory();
+            System.out.println("Current heap size: " + heapSize);
+            System.out.println("Free heap size: " + heapFreeSize);
+            System.out.println("Total heap size: " + heapMaxSize);
+
             reset();
         }
          mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
@@ -144,7 +156,8 @@ public class Indexer {
         }
         termCounter = 0;
         posting = readFile("Numbers");
-        while(isNumeric(mapSortedTerms.firstKey())){
+
+        while(isNumeric(mapSortedTerms.firstKey()) || mapSortedTerms.firstKey().charAt(0) == '$'){
             // textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
             ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
             String s1 = "";
@@ -159,45 +172,19 @@ public class Indexer {
 //        text.clear();
         text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        /*
-        posting = readFile("Names");
+        //posting = readFile("Names");
         Set<String> keys = new LinkedHashSet<>(mapSortedTerms.keySet());
         for(String key : keys) {
-            if(Character.isLowerCase(key.charAt(0))){
-                break;
-            }
-            if(!key.contains(" ")){
+            if(!key.contains(" ") || !Character.isUpperCase(key.charAt(0))){
                 continue;
             }
-            //textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-            text.put(key, mapSortedTerms.get(key));
+            text.put(key, mapSortedTerms.get(key).get(0));
             mapSortedTerms.remove(key);
         }
-        keys.clear();
-        merged = merge(posting, text);
         usingBufferedWritter(merged, "Names");
-        text.clear();
-*/
 
-//        for (int i = 'A'; i <= 'Z'; i++){
-//            posting = "";
-//            posting = readFile(String.valueOf(Character.toLowerCase((char)i)));
-//            while(mapSortedTerms.firstKey().charAt(0) == (char)i){
-//                //  textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-//                ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
-//                String s1 = "";
-//                for(String key : s){
-//                    s1 = new StringBuilder().append(s1).append(key).toString();
-//                }
-//                text.put(mapSortedTerms.firstKey(), s1);
-//                mapSortedTerms.remove(mapSortedTerms.firstKey());
-//            }
-//            merged = merge(posting, text);
-//            usingBufferedWritter(merged, String.valueOf((char)i));
-////            text.clear();
-//            text = new TreeMap<>();
-//        }
 
+        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 'a'; i <= 'z'; i++){
             posting = "";
             posting = readFile(String.valueOf((char)i));
@@ -231,7 +218,7 @@ public class Indexer {
 
         }
         mapDocID = new LinkedHashMap<>();
-        merged = posting+ textDoc;
+        merged = posting + textDoc;
         usingBufferedWritter(merged, "Doc");
 
 

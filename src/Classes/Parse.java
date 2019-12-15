@@ -1,6 +1,10 @@
 package Classes;
 
 import Classes.Stemmer;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.CoreDocument;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -60,9 +64,9 @@ public class Parse {
         String lawBetween = "";
 
         // text without punctuation for token format
-        String tokensFullText = "";
+        ArrayList<String> tokensFullText = new ArrayList<>();
 
-        Pattern patternToken = Pattern.compile("(\\w+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*)((?:\\W|\\s+))", reOptions);
+        Pattern patternToken = Pattern.compile("([A-Za-z0-9%$]+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*(?:\\.\\w+)?)((?:\\W|\\s+))", reOptions);
         Matcher matcherToken = patternToken.matcher(fullText);
         while (matcherToken.find()) { // for each token
             String token = matcherToken.group(1);
@@ -89,23 +93,14 @@ public class Parse {
                 continue;
             }
 
-            tokensFullText += token + " ";
+            tokensFullText.add(token);
 
-            // Stemming
-            if (Character.isUpperCase(token.charAt(0))) {
-                if (this.stem) {
-                    token = this.stemmer.porterStemmer(token.toLowerCase());
-                }
-                token = token.toUpperCase();
-            } else if (this.stem) {
-                token = this.stemmer.porterStemmer(token);
-            }
 
-            addTermToMap(token); // add token as term to map
+           // addTermToMap(token); // add token as term to map
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
-//        searchNames(fullText); // Entity/Names law
+        searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);
@@ -118,7 +113,100 @@ public class Parse {
      *
      * @param fullText - text for parse
      */
-    private void tokenFormat(String fullText) {
+    private void tokenFormat(ArrayList<String> fullText) {
+        String preToken = "";
+
+        String postToken = "";
+        String token = "";
+        String number = "";
+        int size = fullText.size();
+
+        for (int i = 0; i < size; i++) {
+            token = fullText.get(i);
+            if (Character.isDigit(token.charAt(0))) {
+                if (i > 0) {
+                    preToken = fullText.get(i - 1);
+                }
+                if(i < size - 1) {
+                    postToken = fullText.get(i + 1);
+                }
+                else {
+                    postToken = "";
+                }
+                // % law
+                if(token.contains("%")){
+                    addTermToMap(token);
+                    continue;
+                }
+                else if (postToken.equalsIgnoreCase("percent")
+                        || postToken.equalsIgnoreCase("percentage")) {
+                    String percent = numWithPercent(token + " " + postToken);
+                    addTermToMap(percent);
+                    i++;
+                    continue;
+
+                }
+                // Month Law
+                else if (monthContains(preToken) != -1) {
+                    String date = numWithDates(preToken + " " + token);
+                    addTermToMap(date);
+                    continue;
+                }
+                else if(monthContains(postToken) != -1){
+                    String date = numWithDates(token + " " + postToken);
+                    addTermToMap(date);
+                    i++;
+                    continue;
+                }
+                // prices
+                else if(postToken.equalsIgnoreCase("dollars")){
+                    String price = price(token + " " + postToken);
+                    addTermToMap(price);
+                    continue;
+                }
+                else if (i < size - 2 && (postToken.equalsIgnoreCase("m")
+                        || postToken.equalsIgnoreCase("bn"))){
+                    String postPostToken = fullText.get(fullText.indexOf(postToken) + 1);
+                    if(postPostToken.equalsIgnoreCase("dollars")){
+                        String price = price(token + " " + postToken + " " + postPostToken);
+                        addTermToMap(price);
+                        i = i + 2;
+                        continue;
+                    }
+                }
+                else if(i < size - 3 && (postToken.equalsIgnoreCase("million")
+                        || postToken.equalsIgnoreCase("billion")
+                        || postToken.equalsIgnoreCase("trillion"))){
+                    String postPostToken = fullText.get(fullText.indexOf(postToken) + 1);
+                    String postPostPostToken = fullText.get(fullText.indexOf(postToken) + 2);
+                    if(postPostToken.equalsIgnoreCase("u.s")){
+                        String price = price(token + " " + postToken + " " + postPostToken + " " + postPostPostToken);
+                        addTermToMap(price);
+                        i = i + 3;
+                        continue;
+                    }
+                }
+                // without units
+                else{
+                    String num = numWithoutUnits(token);
+                    addTermToMap(num);
+                    continue;
+                }
+
+
+            } // if not number
+            else {
+                addTermToMap(token);
+            }
+
+            ///namessss
+        }
+    }
+
+
+
+
+        /*
         String token;
         // #4 Dates
         Pattern patternDate = Pattern.compile("(?:(?:\\d{1,2}-)?\\d{1,2}\\s*)(?:jan\\w*|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)|(?:jan\\w+|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)(?:\\s*\\d{1,4})", reOptions);
@@ -158,7 +246,7 @@ public class Parse {
             addTermToMap(Price(token));
         }
     }
-
+*/
     /**
      * check if token(lower and upper cases) is stop word
      * @param token
@@ -201,9 +289,23 @@ public class Parse {
     private void addTermToMap(String term){
         term = term.replaceAll("\\s*\n", "");
         term = term.replaceAll("^_", "");
-        if(term.equals("")){
+
+        if(term.equals("") || term.charAt(0) == '%'){
             return;
         }
+
+
+        // Stemming
+        if (Character.isUpperCase(term.charAt(0))) {
+            if (this.stem) {
+                term = this.stemmer.porterStemmer(term.toLowerCase());
+            }
+            term = term.toUpperCase();
+        } else if (this.stem) {
+            term = this.stemmer.porterStemmer(term);
+        }
+
+
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, new ArrayList<>());
@@ -334,7 +436,7 @@ public class Parse {
      * @param token
      * @return
      */
-    private String Price(String token) {
+    private String price(String token) {
 
         if (token.contains("$")) {
             token = token.replace("$", "");
@@ -434,16 +536,24 @@ public class Parse {
      * #6 NAMES
      * @param fullText
      */
-    private void searchNames(String fullText) {
-        Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,}", Pattern.MULTILINE);
+    private void searchNames(String fullText) {Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
-            String name = matcherName.group().toUpperCase();
+            String name = matcherName.group();
+            //String name = matcherName.group().toUpperCase();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
             name = name.replaceFirst("^\\w\\s", "");
 
-            addTermToMap(name);
+            if(stem && name.contains(" ")){
+                String[] tokens = name.split(" ");
+                String token1 = this.stemmer.porterStemmer(tokens[0].toLowerCase());
+                String token2 = this.stemmer.porterStemmer(tokens[1].toLowerCase());
+                name = token1 + " " + token2;
+            }
+
+            addTermToMap(name.toUpperCase());
         }
+
     }
 }
