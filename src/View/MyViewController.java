@@ -131,7 +131,7 @@ public class MyViewController extends Canvas implements Observer {
         File selectedDirectory = directoryChooser.showDialog(new Stage());
         // file == Dictionary
         if(selectedDirectory != null) {
-             viewModel.loadDictionary(selectedDirectory);
+//             viewModel.loadDictionary(selectedDirectory);
              posting_text.clear();
              posting_text.appendText(selectedDirectory.getPath());
 
@@ -144,7 +144,7 @@ public class MyViewController extends Canvas implements Observer {
         File selectedDirectory = directoryChooser.showDialog(new Stage());
         // file == Dictionary
         if(selectedDirectory != null) {
-            viewModel.loadDictionary(selectedDirectory);
+//            viewModel.loadDictionary(selectedDirectory);
             corpus_text.clear();
             corpus_text.appendText(selectedDirectory.getPath());
 

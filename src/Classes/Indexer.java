@@ -40,7 +40,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~3000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 250000;
+    private final int MAX_POST_SIZE = 200000;
 
     /**
      * help us merge the posting
@@ -52,7 +52,7 @@ public class Indexer {
     private Map<Integer, ArrayList<String>> mapDocID;
 
     private static int docIDCounter = 0;
-
+    private static int postIdCounter = 0;
 
     public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
         this.mapTermPosting = new LinkedHashMap<>();
@@ -72,6 +72,18 @@ public class Indexer {
     public void addTermToIndexer(Map<String, ArrayList<String>>termDoc, ArrayList<String> docInfo){
         int i = 0;
         if(mapSortedTerms.size() > MAX_POST_SIZE){
+            // Get current size of heap in bytes
+//            double heapSize = Runtime.getRuntime().totalMemory() / (double)(1024 * 1024);
+//
+//            // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+//            double heapMaxSize = Runtime.getRuntime().maxMemory() / (double)(1024 * 1024);
+//
+//            // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+//            double heapFreeSize = Runtime.getRuntime().freeMemory() / (double)(1024 * 1024);
+//            System.out.println("Current heap size: " + heapSize);
+//            System.out.println("Free heap size: " + heapFreeSize);
+//            System.out.println("Total heap size: " + heapMaxSize);
+
             reset();
         }
          mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
@@ -134,105 +146,82 @@ public class Indexer {
      * write the data to the posting file
      */
     public void reset(){
-        String merged;
-        String textToPostFile = "";
-        String posting = "";
-        SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        if(mapSortedTerms.firstKey().equals("")){
-            mapSortedTerms.remove(mapSortedTerms.firstKey());
-        }
-        termCounter = 0;
-        posting = readFile("Numbers");
-        while(isNumeric(mapSortedTerms.firstKey())){
-            // textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-            ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
-            String s1 = "";
-            for(String key : s){
-                s1 = new StringBuilder().append(s1).append(key).toString();
-            }
-            text.put(mapSortedTerms.firstKey(), s1);
-            mapSortedTerms.remove(mapSortedTerms.firstKey());
-        }
-        merged = merge(posting, text);
-        usingBufferedWritter(merged, "Numbers");
-//        text.clear();
-        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        /*
-        posting = readFile("Names");
-        Set<String> keys = new LinkedHashSet<>(mapSortedTerms.keySet());
-        for(String key : keys) {
-            if(Character.isLowerCase(key.charAt(0))){
-                break;
-            }
-            if(!key.contains(" ")){
-                continue;
-            }
-            //textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-            text.put(key, mapSortedTerms.get(key));
-            mapSortedTerms.remove(key);
-        }
-        keys.clear();
-        merged = merge(posting, text);
-        usingBufferedWritter(merged, "Names");
-        text.clear();
-*/
-
-//        for (int i = 'A'; i <= 'Z'; i++){
+        usingBufferedWritter(mapToFormatString(mapSortedTerms), String.valueOf(postIdCounter));
+        postIdCounter++;
+//        String merged;
+//        String textToPostFile = "";
+//        String posting = "";
+//        SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//
+//        if(mapSortedTerms.firstKey().equals("")){
+//            mapSortedTerms.remove(mapSortedTerms.firstKey());
+//        }
+//        termCounter = 0;
+//        posting = readFile("Numbers");
+//
+//        while(isNumeric(mapSortedTerms.firstKey()) || mapSortedTerms.firstKey().charAt(0) == '$'){
+//            // textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
+//            ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
+//            String s1 = "";
+//            for(String key : s){
+//                s1 = new StringBuilder().append(s1).append(key).toString();
+//            }
+//            text.put(mapSortedTerms.firstKey(), s1);
+//            mapSortedTerms.remove(mapSortedTerms.firstKey());
+//        }
+//        merged = merge(posting, text);
+//        usingBufferedWritter(merged, "Numbers");
+////        text.clear();
+//        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//
+//        //posting = readFile("Names");
+//        Set<String> keys = new LinkedHashSet<>(mapSortedTerms.keySet());
+//        for(String key : keys) {
+//            if(!key.contains(" ") || !Character.isUpperCase(key.charAt(0))){
+//                continue;
+//            }
+//            text.put(key, mapSortedTerms.get(key).get(0));
+//            mapSortedTerms.remove(key);
+//        }
+//        usingBufferedWritter(mapToFormatString(text), "Names");
+//
+//
+//        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//        for (int i = 'a'; i <= 'z'; i++){
 //            posting = "";
-//            posting = readFile(String.valueOf(Character.toLowerCase((char)i)));
-//            while(mapSortedTerms.firstKey().charAt(0) == (char)i){
+//            posting = readFile(String.valueOf((char)i));
+//            while(!mapSortedTerms.isEmpty() && mapSortedTerms.firstKey().toLowerCase().charAt(0) == (char)i){
 //                //  textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
 //                ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
-//                String s1 = "";
+//                StringBuilder s1 = new StringBuilder();
 //                for(String key : s){
-//                    s1 = new StringBuilder().append(s1).append(key).toString();
+//                    s1.append(key);
 //                }
-//                text.put(mapSortedTerms.firstKey(), s1);
+//                text.put(mapSortedTerms.firstKey(), s1.toString());
 //                mapSortedTerms.remove(mapSortedTerms.firstKey());
 //            }
 //            merged = merge(posting, text);
 //            usingBufferedWritter(merged, String.valueOf((char)i));
 ////            text.clear();
-//            text = new TreeMap<>();
+//            text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 //        }
-
-        for (int i = 'a'; i <= 'z'; i++){
-            posting = "";
-            posting = readFile(String.valueOf((char)i));
-            while(!mapSortedTerms.isEmpty() && mapSortedTerms.firstKey().toLowerCase().charAt(0) == (char)i){
-                //  textToPostFile += mapSortedTerms.firstKey() + "|" + textForPosting(mapSortedTerms.get(mapSortedTerms.firstKey())) + "\n";
-                ArrayList<String> s = mapSortedTerms.get(mapSortedTerms.firstKey());
-                StringBuilder s1 = new StringBuilder();
-                for(String key : s){
-                    s1.append(key);
-                }
-                text.put(mapSortedTerms.firstKey(), s1.toString());
-                mapSortedTerms.remove(mapSortedTerms.firstKey());
-            }
-            merged = merge(posting, text);
-            usingBufferedWritter(merged, String.valueOf((char)i));
-//            text.clear();
-            text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//         * DocInfo Index:
-//     *      0 - doc name
-//                *      1 - term max tf
-//     *      2 - count max tf
-//     *      3 - count uniq terms in doc
-        String textDoc = "";
-        posting ="";
-        posting = readFile("Doc");
-        for (Integer key : mapDocID.keySet()) {
-            ArrayList<String> info = mapDocID.get(key);
-            textDoc = textDoc + key + "|" + info.get(0) + ":" + info.get(1) + "?" +info.get(2) + "," + info.get(3)+ "\n";
-
-        }
-        mapDocID = new LinkedHashMap<>();
-        merged = posting+ textDoc;
-        usingBufferedWritter(merged, "Doc");
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////         * DocInfo Index:
+////     *      0 - doc name
+////                *      1 - term max tf
+////     *      2 - count max tf
+////     *      3 - count uniq terms in doc
+//        String textDoc = "";
+//        posting ="";
+//        posting = readFile("Doc");
+//        for (Integer key : mapDocID.keySet()) {
+//            ArrayList<String> info = mapDocID.get(key);
+//            textDoc = textDoc + key + "|" + info.get(0) + ":" + info.get(1) + "?" +info.get(2) + "," + info.get(3)+ "\n";
+//
+//        }
+//        mapDocID = new LinkedHashMap<>();
+//        merged = posting + textDoc;
+//        usingBufferedWritter(merged, "Doc");
 
 
 
@@ -240,8 +229,18 @@ public class Indexer {
 
     }
 
+    /*
+    private String namesToFile(Map<String, String> text){
+        String textToPostFile = "";
+        for (String key : text.keySet()) {
+            textToPostFile += new StringBuilder().append(key).append("|").append(text.get(key)).append("\n").toString();
 
-    private String mapToFormatString(Map<String, String> text){
+            //mapTermPosting.put(key, String.valueOf(tempPostCounter));
+        }
+        return textToPostFile;
+    }
+    */
+    private String mapToFormatString(Map<String, ArrayList<String>> text){
         String textToPostFile = "";
         for (String key : text.keySet()) {
                 textToPostFile += new StringBuilder().append(key).append("|").append(text.get(key)).append("\n").toString();
@@ -255,51 +254,51 @@ public class Indexer {
         return termCounter;
     }
 
-    public String merge(String posting, SortedMap<String, String> text){
-        if(posting.isEmpty()){
-            return mapToFormatString(text);
-        }
-
-        String[] arrPosting = posting.split("\n");
-        for(String term : arrPosting){
-            String[] termAndInfo = term.split("\\|");
-            if(termAndInfo.length < 2){
-                continue;
-            }
-            if(termAndInfo[0].contains(" ")){
-                continue;
-            }
-
-            String info = "";
-            if(text.containsKey(termAndInfo[0])){
-                info = text.get(termAndInfo[0]);
-                try {
-                    info = info + termAndInfo[1];
-                }
-                catch(Exception e){
-                    System.out.println(termAndInfo[0] + " " + mapDocID.size());
-                    e.printStackTrace();
-                }
-            }
-            else{
-                try {
-//                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
-//                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
-                    info = info + termAndInfo[1];
-
-                }
-                catch(Exception e){
-                    System.out.println(termAndInfo[0] + " " + mapDocID.size());
-                    e.printStackTrace();
-                }
-
-            }
-            termCounter++;
-            text.put(termAndInfo[0], info);
-        }
-
-        return mapToFormatString(text);
-    }
+//    public String merge(String posting, SortedMap<String, String> text){
+//        if(posting.isEmpty()){
+//            return mapToFormatString(text);
+//        }
+//
+//        String[] arrPosting = posting.split("\n");
+//        for(String term : arrPosting){
+//            String[] termAndInfo = term.split("\\|");
+//            if(termAndInfo.length < 2){
+//                continue;
+//            }
+//            if(termAndInfo[0].contains(" ")){
+//                continue;
+//            }
+//
+//            String info = "";
+//            if(text.containsKey(termAndInfo[0])){
+//                info = text.get(termAndInfo[0]);
+//                try {
+//                    info = info + termAndInfo[1];
+//                }
+//                catch(Exception e){
+//                    System.out.println(termAndInfo[0] + " " + mapDocID.size());
+//                    e.printStackTrace();
+//                }
+//            }
+//            else{
+//                try {
+////                    info.add(termAndInfo[1].substring(0, termAndInfo[1].indexOf(":")));
+////                    info.add(termAndInfo[1].substring(termAndInfo[1].indexOf(":") + 1));
+//                    info = info + termAndInfo[1];
+//
+//                }
+//                catch(Exception e){
+//                    System.out.println(termAndInfo[0] + " " + mapDocID.size());
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//            termCounter++;
+//            text.put(termAndInfo[0], info);
+//        }
+//
+//        return mapToFormatString(text);
+//    }
 
     private String readFile(String fileName){
         CharBuffer charBuffer = null;
@@ -414,17 +413,17 @@ public class Indexer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            for (int i = 'a'; i <= 'z'; i++){
-                try {
-                    fileStem = new File(path+"/stem/"+(char)i);
-                    fileStem.createNewFile();
-                    File fileNoStem = new File(path+"/noStem/"+(char)i);
-                    fileNoStem.createNewFile();
-//                    System.out.println("Empty File Created:- " + file.length());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            for (int i = 'a'; i <= 'z'; i++){
+//                try {
+//                    fileStem = new File(path+"/stem/"+(char)i);
+//                    fileStem.createNewFile();
+//                    File fileNoStem = new File(path+"/noStem/"+(char)i);
+//                    fileNoStem.createNewFile();
+////                    System.out.println("Empty File Created:- " + file.length());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 
