@@ -82,11 +82,24 @@ public class Indexer {
                 ArrayList<String> listOfInfo = termDoc.get(key);
                 String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
-                String originalInfo = originalList.get(0) + info;
+                // duplicates of docs 0:1;0:2 agent
+                if(!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
+                    String originalInfo = originalList.get(0) + info;
 //                originalList.clear();
-                originalList = new ArrayList<>();
-                originalList.add(0, originalInfo);
-                mapSortedTerms.put(key, originalList);
+                    originalList = new ArrayList<>();
+                    originalList.add(0, originalInfo);
+                }
+                else {
+                    originalList.clear();
+                    originalList.add(0, info);
+                }
+                if(Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
+                    mapSortedTerms.remove(key.toUpperCase());
+                    mapSortedTerms.put(key.toLowerCase(), originalList);
+                }
+                else {
+                    mapSortedTerms.put(key, originalList);
+                }
             }
             else{
                 //Add new term and it list of info to the Sorted map
