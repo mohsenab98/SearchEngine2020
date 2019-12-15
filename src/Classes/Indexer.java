@@ -40,7 +40,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~3000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 400000;
+    private final int MAX_POST_SIZE = 300000;
 
     /**
      * help us merge the posting
@@ -73,13 +73,13 @@ public class Indexer {
         int i = 0;
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             // Get current size of heap in bytes
-            long heapSize = Runtime.getRuntime().totalMemory();
+            double heapSize = Runtime.getRuntime().totalMemory() / (double)(1024 * 1024);
 
             // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
-            long heapMaxSize = Runtime.getRuntime().maxMemory();
+            double heapMaxSize = Runtime.getRuntime().maxMemory() / (double)(1024 * 1024);
 
             // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
-            long heapFreeSize = Runtime.getRuntime().freeMemory();
+            double heapFreeSize = Runtime.getRuntime().freeMemory() / (double)(1024 * 1024);
             System.out.println("Current heap size: " + heapSize);
             System.out.println("Free heap size: " + heapFreeSize);
             System.out.println("Total heap size: " + heapMaxSize);
@@ -181,7 +181,7 @@ public class Indexer {
             text.put(key, mapSortedTerms.get(key).get(0));
             mapSortedTerms.remove(key);
         }
-        usingBufferedWritter(merged, "Names");
+        usingBufferedWritter(mapToFormatString(text), "Names");
 
 
         text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -227,7 +227,17 @@ public class Indexer {
 
     }
 
+    /*
+    private String namesToFile(Map<String, String> text){
+        String textToPostFile = "";
+        for (String key : text.keySet()) {
+            textToPostFile += new StringBuilder().append(key).append("|").append(text.get(key)).append("\n").toString();
 
+            //mapTermPosting.put(key, String.valueOf(tempPostCounter));
+        }
+        return textToPostFile;
+    }
+    */
     private String mapToFormatString(Map<String, String> text){
         String textToPostFile = "";
         for (String key : text.keySet()) {

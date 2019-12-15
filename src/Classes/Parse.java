@@ -194,10 +194,37 @@ public class Parse {
                 }
 
 
-            } // if not number
-            else {
-                addTermToMap(token);
-            }
+            } // if  number END
+
+            if(!postToken.equals("") && Character.isUpperCase(token.charAt(0)) && Character.isUpperCase(postToken.charAt(0))){
+                if(i + 2 < size){
+                    String postPostTerm = fullText.get(i + 2);
+                    if(Character.isUpperCase(postPostTerm.charAt(0))){
+                        if(i + 3 < size){
+                            String postPostPostTerm = fullText.get(i + 3);
+                            if(Character.isUpperCase(postPostPostTerm.charAt(0))){
+                                String name = token + " " + postToken + " " + postPostTerm + " " + postPostPostTerm;
+                                addTermToMap(name);
+                                i = i + 3;
+                                continue;
+                            }
+                        } // if name Size 4 END
+                        String name = token + " " + postToken + " " + postPostTerm;
+                        addTermToMap(name);
+                        i = i + 2;
+                        continue;
+                    }
+
+                }// if name Size 3 END
+                String name = token + " " + postToken ;
+                addTermToMap(name);
+                i = i + 1;
+                continue;
+            } // If names END
+
+
+            addTermToMap(token);
+
 
             ///namessss
         }
@@ -289,6 +316,7 @@ public class Parse {
     private void addTermToMap(String term){
         term = term.replaceAll("\\s*\n", "");
         term = term.replaceAll("^_", "");
+        term = term.replaceAll("^\\w\\s", "");
 
         if(term.equals("") || term.charAt(0) == '%'){
             return;
