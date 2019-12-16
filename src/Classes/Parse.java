@@ -1,17 +1,12 @@
 package Classes;
 
 import Classes.Stemmer;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.CoreDocument;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+////////
 public class Parse {
     //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
@@ -29,7 +24,7 @@ public class Parse {
      *          Key: all original terms in a doc
      *          Value: list of properties of a doc
      */
-    private SortedMap<String, ArrayList<String>> mapTerms;
+    private SortedMap<String, String> mapTerms;
     /**
      * the list of the properties of a doc
      */
@@ -58,6 +53,8 @@ public class Parse {
      */
     public void Parser(String fullText, String docName) {
         this.docInfo.add(docName); // add doc's name in property-doc-list
+        this.counterMaxTf = 0;
+        this.termMaxTf = "";
 
         // between law values
         int betweenCounter = 0;
@@ -94,13 +91,11 @@ public class Parse {
             }
 
             tokensFullText.add(token);
-
-
-           // addTermToMap(token); // add token as term to map
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
-        searchNames(fullText); // Entity/Names law
+        //TODO : names !
+        //searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);
@@ -195,85 +190,39 @@ public class Parse {
 
 
             } // if  number END
-
-            if(!postToken.equals("") && Character.isUpperCase(token.charAt(0)) && Character.isUpperCase(postToken.charAt(0))){
-                if(i + 2 < size){
-                    String postPostTerm = fullText.get(i + 2);
-                    if(Character.isUpperCase(postPostTerm.charAt(0))){
-                        if(i + 3 < size){
-                            String postPostPostTerm = fullText.get(i + 3);
-                            if(Character.isUpperCase(postPostPostTerm.charAt(0))){
-                                String name = token + " " + postToken + " " + postPostTerm + " " + postPostPostTerm;
-                                addTermToMap(name);
-                                i = i + 3;
-                                continue;
-                            }
-                        } // if name Size 4 END
-                        String name = token + " " + postToken + " " + postPostTerm;
-                        addTermToMap(name);
-                        i = i + 2;
-                        continue;
-                    }
-
-                }// if name Size 3 END
-                String name = token + " " + postToken ;
-                addTermToMap(name);
-                i = i + 1;
-                continue;
-            } // If names END
+            //TODO:add names !
+//            if(!postToken.equals("") && Character.isUpperCase(token.charAt(0)) && Character.isUpperCase(postToken.charAt(0))){
+//                if(i + 2 < size){
+//                    String postPostTerm = fullText.get(i + 2);
+//                    if(Character.isUpperCase(postPostTerm.charAt(0))){
+//                        if(i + 3 < size){
+//                            String postPostPostTerm = fullText.get(i + 3);
+//                            if(Character.isUpperCase(postPostPostTerm.charAt(0))){
+//                                String name = token + " " + postToken + " " + postPostTerm + " " + postPostPostTerm;
+//                                addTermToMap(name);
+//                                i = i + 3;
+//                                continue;
+//                            }
+//                        } // if name Size 4 END
+//                        String name = token + " " + postToken + " " + postPostTerm;
+//                        addTermToMap(name);
+//                        i = i + 2;
+//                        continue;
+//                    }
+//
+//                }// if name Size 3 END
+//                String name = token + " " + postToken ;
+//                addTermToMap(name);
+//                i = i + 1;
+//                continue;
+//            } // If names END
 
 
             addTermToMap(token);
 
-
-            ///namessss
         }
     }
 
-
-
-
-        /*
-        String token;
-        // #4 Dates
-        Pattern patternDate = Pattern.compile("(?:(?:\\d{1,2}-)?\\d{1,2}\\s*)(?:jan\\w*|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)|(?:jan\\w+|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)(?:\\s*\\d{1,4})", reOptions);
-        Matcher matcherDate = patternDate.matcher(fullText);
-        while (matcherDate.find()) {
-            token = matcherDate.group().trim();
-            addTermToMap(numWithDates(token));
-        }
-        // #1 M/K/B
-        Pattern patternNumbers = Pattern.compile("(\\d+(?:[.,-]\\d+)*)((?:\\s*thousand)?(?:\\s*million)?(?:\\s*billion)?)", reOptions);
-        Matcher matcherNumbers = patternNumbers.matcher(fullText);
-        while (matcherNumbers.find()) {
-            token = (matcherNumbers.group(1) + " " + matcherNumbers.group(2)).trim();
-            if(token.contains("-")){
-                continue;
-            }
-            addTermToMap(numWithoutUnits(token));
-        }
-        // #3 %
-        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
-        Matcher matcherPercent = patternPercent.matcher(fullText);
-        while (matcherPercent.find()) {
-            token = (matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3)).trim();
-            addTermToMap(numWithPercent(token));
-        }
-        // #5 Prices: 2 patterns
-        Pattern patternPrice = Pattern.compile("\\$\\d+(?:[,.]+\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?", reOptions);
-        Matcher matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()) {
-            token = matcherPrice.group().trim();
-            addTermToMap(Price(token));
-        }
-        patternPrice = Pattern.compile("\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:U.S.)?\\s*(?:dollars)", reOptions);
-        matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()) {
-            token = matcherPrice.group().trim();
-            addTermToMap(Price(token));
-        }
-    }
-*/
     /**
      * check if token(lower and upper cases) is stop word
      * @param token
@@ -336,17 +285,17 @@ public class Parse {
 
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
-            this.mapTerms.put(term, new ArrayList<>());
-            this.mapTerms.get(term).add(String.valueOf(1)); // term counter = 1
+            this.mapTerms.put(term, "1"); // term counter = 1
             return;
         }
 
-        int counter = Integer.parseInt(this.mapTerms.get(term).get(0)); // term with maxTF
-        this.mapTerms.get(term).set(0, String.valueOf(counter + 1)); // maxTF
+        int counter = Integer.parseInt(this.mapTerms.get(term)); // term with tf
+        this.mapTerms.put(term, String.valueOf(counter + 1)); // term counter = 1
+
 
         // check for max TF
-        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(0))){
-            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0));
+        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term))){
+            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
     }
@@ -356,7 +305,7 @@ public class Parse {
      * getter for map of terms
      * @return mapTerms
      */
-    public Map<String, ArrayList<String>> getMapTerms(){
+    public Map<String, String> getMapTerms(){
         return this.mapTerms;
     }
 

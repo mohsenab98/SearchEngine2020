@@ -105,33 +105,17 @@ public class MyModel extends Observable implements IModel {
             }
 
             p.Parser(fullText, docName);
-
             n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
-
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
 
         }
 
-
-        // Get current size of heap in bytes
-        double heapSize = Runtime.getRuntime().totalMemory() / (double)(1024 * 1024);
-
-        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
-        double heapMaxSize = Runtime.getRuntime().maxMemory() / (double)(1024 * 1024);
-
-        // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
-        double heapFreeSize = Runtime.getRuntime().freeMemory() / (double)(1024 * 1024);
-        System.out.println("Current heap size: " + heapSize);
-        System.out.println("Free heap size: " + heapFreeSize);
-        System.out.println("Total heap size: " + heapMaxSize);
         n.reset(); // check if there is stell terms in the sorted map
-        //n.merge(); //merge the temp sorted files into A-Z sorted files
-//        n.saveDictionary();
-        n.saveDocInfo();
-//        n.mergeFiles();
-
+        //TODO : open merge to do all the final merge of files
+        int i = n.merge(); //merge the temp sorted files into A-Z sorted files
+        n.finalMerge(i);
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
@@ -139,7 +123,7 @@ public class MyModel extends Observable implements IModel {
         System.out.println(n.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = n.getDocIDCounter();
-        return true;
+        return true;////////
     }
 
     public double getTimeForIndexing() {

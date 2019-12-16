@@ -19,6 +19,5 @@
     </orderEntry>
     <orderEntry type="library" name="lucene-snowball-3.0.2" level="project" />
     <orderEntry type="library" name="opennlp-tools-1.8.0" level="project" />
-    <orderEntry type="library" name="stanford-corenlp-full-2018-10-05" level="project" />
   </component>
 </module>
