@@ -47,7 +47,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 50000;
+    private final int MAX_POST_SIZE = 15000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -149,7 +149,7 @@ public class Indexer {
         saveDocInfo();
 
     }
-
+    // TODO : deal with java heap Exception
     private String mapToFormatString(Map<String, String> text){
         StringBuilder textToPostFile = new StringBuilder();
         for (String key : text.keySet()) {
@@ -324,6 +324,7 @@ public class Indexer {
             File f2 = new File(fileUrl2);
             f1.delete();
             f2.delete();
+            // TODO : deal with java heap Exception
             usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
             postIdCounter++;
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
