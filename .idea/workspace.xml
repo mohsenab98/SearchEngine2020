@@ -46,8 +46,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="43">
-              <caret line="155" selection-start-line="155" selection-end-line="155" />
+            <state relative-caret-position="144">
+              <caret line="50" column="7" lean-forward="true" selection-start-line="50" selection-start-column="7" selection-end-line="50" selection-end-column="7" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4151#4152#0" expanded="true" />
@@ -56,8 +56,7 @@
                 <element signature="e#4280#4281#0" expanded="true" />
                 <element signature="e#4338#4339#0" expanded="true" />
                 <element signature="e#4387#4388#0" expanded="true" />
-                <element signature="e#5511#5512#0" expanded="true" />
-                <element signature="e#5545#5546#0" expanded="true" />
+                <element signature="e#5847#5848#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -141,7 +140,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mapTerms</find>
       <find>date</find>
       <find>listOfLinesfromAllFiles</find>
       <find>stringToSetOfString</find>
@@ -171,6 +169,7 @@
       <find>counterMaxTf</find>
       <find>termMaxTf</find>
       <find>Character</find>
+      <find>TODO</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -270,7 +269,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576525655572" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576531614028" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -369,13 +368,6 @@
       <workItem from="1576338213505" duration="5786000" />
       <workItem from="1576410999610" duration="13810000" />
       <workItem from="1576479307530" duration="17757000" />
-    </task>
-    <task id="LOCAL-00003" summary="ReadFile class">
-      <created>1574204260676</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1574204260676</updated>
     </task>
     <task id="LOCAL-00004" summary="ReadFile class: &#10;+ field &quot;path&quot;&#10;+ Constructor for path&#10;+ envelope func for FileSeparator&#10;+ getter and setter for path">
       <created>1574210427705</created>
@@ -713,11 +705,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576524148135</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="- Ready V1.2">
+      <created>1576525820321</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1576525820321</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="402578000" />
+    <option name="totallyTimeSpent" value="408372000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -730,6 +729,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="696" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11345219" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -740,8 +740,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.45825604" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.3967789" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.18738404" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.28014842" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7512275" />
@@ -895,6 +895,18 @@
           <line>42</line>
           <properties />
           <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Classes/Indexer.java</url>
+          <line>160</line>
+          <properties />
+          <option name="timeStamp" value="148" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Classes/Indexer.java</url>
+          <line>324</line>
+          <properties />
+          <option name="timeStamp" value="149" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1132,8 +1144,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="43">
-          <caret line="155" selection-start-line="155" selection-end-line="155" />
+        <state relative-caret-position="144">
+          <caret line="50" column="7" lean-forward="true" selection-start-line="50" selection-start-column="7" selection-end-line="50" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4151#4152#0" expanded="true" />
@@ -1142,8 +1154,7 @@
             <element signature="e#4280#4281#0" expanded="true" />
             <element signature="e#4338#4339#0" expanded="true" />
             <element signature="e#4387#4388#0" expanded="true" />
-            <element signature="e#5511#5512#0" expanded="true" />
-            <element signature="e#5545#5546#0" expanded="true" />
+            <element signature="e#5847#5848#0" expanded="true" />
           </folding>
         </state>
       </provider>

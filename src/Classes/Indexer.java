@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +24,7 @@ public class Indexer {
     /**
      * will Save the terms of the index and will save a pointer to the match posting file
      */
-    private Map<String, String> mapTermPosting;
+    private Map<String, String> mapDictionary;
     /**
      * will save the term and its info for each doc in a sorted map (A-Z) list[0] = DocID (according to the mapDocID)
      * list[1] = tf . list[2] = delimiter
@@ -47,7 +49,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 15000;
+    private final int MAX_POST_SIZE = 5000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -57,9 +59,8 @@ public class Indexer {
     private static int docIDCounter = 0;
     private static int postIdCounter = 0;
 
-
     public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
-        this.mapTermPosting = new LinkedHashMap<>();
+        this.mapDictionary = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
         this.pathPosting = pathPosting;
         this.mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -153,7 +154,12 @@ public class Indexer {
     private String mapToFormatString(Map<String, String> text){
         StringBuilder textToPostFile = new StringBuilder();
         for (String key : text.keySet()) {
-            textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
+            try {
+                textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return textToPostFile.toString();
     }
@@ -249,19 +255,6 @@ public class Indexer {
         }
     }
 
-
-    /**
-     * Save the term map at the end of the indexing because we need it in the second part when we will search
-     */
-    public void saveDictionary() {
-        String text = "";
-        for (String key : mapTermPosting.keySet()) {
-            text = new StringBuilder().append(text).append(key).append(":").append(mapTermPosting.get(key)).append(";").append("\n").toString();
-        }
-        usingBufferedWritter(text,"Dictionary");
-        mapTermPosting = new LinkedHashMap<>();
-    }
-
     public void saveDocInfo() {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
@@ -325,7 +318,13 @@ public class Indexer {
             f1.delete();
             f2.delete();
             // TODO : deal with java heap Exception
-            usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+            try {
+                usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
             postIdCounter++;
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
@@ -336,8 +335,6 @@ public class Indexer {
     }
 
     public void finalMerge(int intFileName) {
-        // TODO : fill the function
-        createAZPostingFiles();
         String stemFolder;
         if(isStem){
             stemFolder = "stem";
@@ -379,6 +376,7 @@ public class Indexer {
                 }
             }
             usingBufferedWritter(mapToFormatString(text), "Numbers");
+            termToDictionary(text);
 //////////////////////////////////////////////////////////////////////////////////////
             for(int i = 'a'; i <= 'z'; i++) {
                 Stream<String> lines11 = Files.lines( path1, StandardCharsets.US_ASCII );
@@ -410,6 +408,7 @@ public class Indexer {
                     }
                 }
                 usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
+                termToDictionary(text);
 
             }
 
@@ -423,7 +422,24 @@ public class Indexer {
         }
     }
 
-    private void createAZPostingFiles() {
+    private void termToDictionary(Map<String, String> text) {
+        Set<String> terms = text.keySet();
+        int lineCounter = 1;
+        for(String term : terms){
+            int df = 0;
+            String infoText = text.get(term);
+            Pattern dfPattern = Pattern.compile("(;)");
+            Matcher dfMatcher = dfPattern.matcher(infoText);
+            while (dfMatcher.find()){
+                df++;
+            }
 
+            String infoDic = "" + df + ";" + lineCounter;
+            lineCounter ++;
+
+            this.mapDictionary.put(term, infoDic);
+        }
+        usingBufferedWritter(mapToFormatString(this.mapDictionary), "Dictionary");
+        this.mapDictionary = new LinkedHashMap<>();
     }
 }
