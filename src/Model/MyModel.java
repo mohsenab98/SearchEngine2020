@@ -105,9 +105,10 @@ public class MyModel extends Observable implements IModel {
             }
 
             p.Parser(fullText, docName);
-
+//            System.out.println((System.nanoTime() - startTime)/ 1000000000);
             n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
-
+//            System.out.println((System.nanoTime() - startTime)/ 1000000000);
+//            System.out.println("-----------------------------------------");
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
@@ -127,7 +128,8 @@ public class MyModel extends Observable implements IModel {
 //        System.out.println("Free heap size: " + heapFreeSize);
 //        System.out.println("Total heap size: " + heapMaxSize);
         n.reset(); // check if there is stell terms in the sorted map
-        //n.merge(); //merge the temp sorted files into A-Z sorted files
+        //TODO : open merge to do all the final merge of files
+//        n.merge(); //merge the temp sorted files into A-Z sorted files
 //        n.saveDictionary();
         n.saveDocInfo();
 //        n.mergeFiles();

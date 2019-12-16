@@ -95,7 +95,7 @@ public class Parse {
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
-        searchNames(fullText); // Entity/Names law
+        //searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);
@@ -190,7 +190,7 @@ public class Parse {
 
 
             } // if  number END
-
+            //TODO:add names !
 //            if(!postToken.equals("") && Character.isUpperCase(token.charAt(0)) && Character.isUpperCase(postToken.charAt(0))){
 //                if(i + 2 < size){
 //                    String postPostTerm = fullText.get(i + 2);
