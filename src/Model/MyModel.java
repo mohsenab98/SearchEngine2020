@@ -105,35 +105,16 @@ public class MyModel extends Observable implements IModel {
             }
 
             p.Parser(fullText, docName);
-//            System.out.println((System.nanoTime() - startTime)/ 1000000000);
             n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
-//            System.out.println((System.nanoTime() - startTime)/ 1000000000);
-//            System.out.println("-----------------------------------------");
 
             rd.getListAllDocs().remove(0);
             p.cleanParse();
 
         }
 
-
-//        // Get current size of heap in bytes
-//        double heapSize = Runtime.getRuntime().totalMemory() / (double)(1024 * 1024);
-//
-//        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
-//        double heapMaxSize = Runtime.getRuntime().maxMemory() / (double)(1024 * 1024);
-//
-//        // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
-//        double heapFreeSize = Runtime.getRuntime().freeMemory() / (double)(1024 * 1024);
-//        System.out.println("Current heap size: " + heapSize);
-//        System.out.println("Free heap size: " + heapFreeSize);
-//        System.out.println("Total heap size: " + heapMaxSize);
         n.reset(); // check if there is stell terms in the sorted map
         //TODO : open merge to do all the final merge of files
         n.merge(); //merge the temp sorted files into A-Z sorted files
-//        n.finalPostingMerge();
-//        n.saveDictionary();
-        n.saveDocInfo();
-//        n.mergeFiles();
 
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;

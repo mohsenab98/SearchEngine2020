@@ -25,7 +25,10 @@ public class Indexer {
      */
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
 
+    //TODO : delete path if we dont use it
     private String pathCorpus;
+
+
     private String pathPosting;
     /**
      * isStem variable that we git from the user ( the parse send it to here)
@@ -42,10 +45,6 @@ public class Indexer {
      */
     private final int MAX_POST_SIZE = 10000;
 
-    /**
-     * help us merge the posting
-     */
-    private Map<String, ArrayList<String>> postingMap;
     /**
      * help us to save id/maxtf/counter for each doc in the posting
      */
@@ -80,14 +79,11 @@ public class Indexer {
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
                 //chain the new list of term to the original one
-//                ArrayList<String> listOfInfo = termDoc.get(key);
-//                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
                 String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 // duplicates of docs 0:1;0:2 agent
                 if(!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
                     String originalInfo = originalList.get(0) + info;
-//                originalList.clear();
                     originalList = new ArrayList<>();
                     originalList.add(0, originalInfo);
                 }
@@ -107,8 +103,6 @@ public class Indexer {
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = new ArrayList<>();
                 String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
-//                listOfInfo.clear();
-//                listOfInfo = new ArrayList<>();
                 listOfInfo.add(0, info);
                 mapSortedTerms.put(key, listOfInfo);
             }
@@ -136,7 +130,7 @@ public class Indexer {
      * write the data to the posting file
      */
     public void reset(){
-        //mapSortedTerms  ---- save & clear
+        //mapSortedTerms  ---- save to temp posting & clear
         SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for(String term : mapSortedTerms.keySet()){
             ArrayList<String> s = mapSortedTerms.get(term);
@@ -146,7 +140,8 @@ public class Indexer {
         usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
         postIdCounter++;
         mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // save to DOC file
         saveDocInfo();
 
     }
@@ -228,25 +223,7 @@ public class Indexer {
 
 
     }
-    public static boolean isNumeric(String str) {
-        return Character.isDigit(str.charAt(0));
-    }
 
-
-    /**
-     * Get the number of the line that the new term is going to be in the posting
-     * @param path of the file
-     * @return the line of the new term
-     * @throws IOException
-     */
-    private int lineOfNewTerm(String path) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(path));
-        int i = 1;
-        while (r.readLine() != null){
-            i++;
-        }
-        return i;
-    }
 
     /**
      * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
@@ -288,29 +265,22 @@ public class Indexer {
             text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
         }
         usingBufferedWritter(text.toString(),"Doc");
-        mapTermPosting = new LinkedHashMap<>();
+        mapDocID = new LinkedHashMap<>();
     }
 
     public void merge() {
-        // postIdCounter --- number of posting
         String stemFolder = "";
         if(isStem){
             stemFolder = "stem";
         }else {
             stemFolder = "noStem";
         }
-//        StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
-//        StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
         String filePath1 = this.pathPosting + "/" + stemFolder + "/";
         String filePath2 = this.pathPosting+ "/" + stemFolder + "/";
         String fileUrl1 = "";
         String fileUrl2 = "";
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         for(int i = 0; numberOfposting > 2 ; i++){
-//            if(i >= postIdCounter){
-//                i = 0;
-//            }
-            //TODO: counters !
             fileUrl1 = filePath1 + "/" + i;
             fileUrl2 = filePath2 + "/" + (i+1);
             SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -343,8 +313,7 @@ public class Indexer {
                 }
 
             } catch (IOException ioe){
-//                ioe.printStackTrace();
-                continue;
+                ioe.printStackTrace();
             }
             File f1 = new File(String.valueOf(fileUrl1));
             File f2 = new File(String.valueOf(fileUrl2));
@@ -360,46 +329,4 @@ public class Indexer {
 
     }
 
-    public void finalPostingMerge() {
-        //TODO : need to concatenate values if there is duplicatess
-        String merged;
-        String posting = "";
-        SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        termCounter = 0;
-        posting = readFile("Numbers");
-        String [] splitPosting = posting.split("\n");
-        for (int i = 0; i < splitPosting.length; i++){
-            String [] splitPostingLine = splitPosting[i].split("\\|");
-            text.put(splitPostingLine[0], splitPostingLine[1]);
-        }
-//        merged = merge(posting, text);
-        usingBufferedWritter(mapToFormatString(text), "Numbers");
-        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-//        posting = readFile("Names");
-//        mapfirstKey = mapSortedTerms.firstKey();
-//        Set<String> keys = new LinkedHashSet<>(mapSortedTerms.keySet());
-//        for(String key : keys) {
-//            if(!key.contains(" ") || !Character.isUpperCase(key.charAt(0))){
-//                continue;
-//            }
-//            text.put(key, mapSortedTerms.get(key).get(0));
-//            mapSortedTerms.remove(key);
-//        }
-//        merged = merge(posting, text);
-//        usingBufferedWritter(mapToFormatString(text), "Names");
-//        text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (int i = 'a'; i <= 'z'; i++){
-            posting = "";
-            posting = readFile(String.valueOf((char)i));
-            splitPosting = posting.split("\n");
-            for (int j = 0; j < splitPosting.length; j++){
-                String [] splitPostingLine = splitPosting[j].split("\\|");
-                text.put(splitPostingLine[0], splitPostingLine[1]);
-            }
-            usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
-//            text.clear();
-            text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        }
-    }
 }

@@ -53,6 +53,8 @@ public class Parse {
      */
     public void Parser(String fullText, String docName) {
         this.docInfo.add(docName); // add doc's name in property-doc-list
+        this.counterMaxTf = 0;
+        this.termMaxTf = "";
 
         // between law values
         int betweenCounter = 0;
@@ -89,12 +91,10 @@ public class Parse {
             }
 
             tokensFullText.add(token);
-
-
-           // addTermToMap(token); // add token as term to map
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
+        //TODO : names !
         //searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
@@ -220,53 +220,9 @@ public class Parse {
 
             addTermToMap(token);
 
-
-            ///namessss
         }
     }
 
-
-        /*
-        String token;
-        // #4 Dates
-        Pattern patternDate = Pattern.compile("(?:(?:\\d{1,2}-)?\\d{1,2}\\s*)(?:jan\\w*|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)|(?:jan\\w+|feb\\w*|mar\\w*|apr\\w*|may|jun\\w?|jul\\w?|aug\\w*|sep\\w*|oct\\w*|nov\\w*|dec\\w*)(?:\\s*\\d{1,4})", reOptions);
-        Matcher matcherDate = patternDate.matcher(fullText);
-        while (matcherDate.find()) {
-            token = matcherDate.group().trim();
-            addTermToMap(numWithDates(token));
-        }
-        // #1 M/K/B
-        Pattern patternNumbers = Pattern.compile("(\\d+(?:[.,-]\\d+)*)((?:\\s*thousand)?(?:\\s*million)?(?:\\s*billion)?)", reOptions);
-        Matcher matcherNumbers = patternNumbers.matcher(fullText);
-        while (matcherNumbers.find()) {
-            token = (matcherNumbers.group(1) + " " + matcherNumbers.group(2)).trim();
-            if(token.contains("-")){
-                continue;
-            }
-            addTermToMap(numWithoutUnits(token));
-        }
-        // #3 %
-        Pattern patternPercent = Pattern.compile("(\\d+(?:\\.\\d+)?)(\\s*)(%|(?:percentage?)|(?:percent))", reOptions);
-        Matcher matcherPercent = patternPercent.matcher(fullText);
-        while (matcherPercent.find()) {
-            token = (matcherPercent.group(1) + matcherPercent.group(2) + matcherPercent.group(3)).trim();
-            addTermToMap(numWithPercent(token));
-        }
-        // #5 Prices: 2 patterns
-        Pattern patternPrice = Pattern.compile("\\$\\d+(?:[,.]+\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?", reOptions);
-        Matcher matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()) {
-            token = matcherPrice.group().trim();
-            addTermToMap(Price(token));
-        }
-        patternPrice = Pattern.compile("\\d+(?:.\\d+)?\\s*(?:(?:million)|(?:billion)|(?:trillion)|(?:m)|(?:bn))?\\s*(?:U.S.)?\\s*(?:dollars)", reOptions);
-        matcherPrice = patternPrice.matcher(fullText);
-        while (matcherPrice.find()) {
-            token = matcherPrice.group().trim();
-            addTermToMap(Price(token));
-        }
-    }
-*/
     /**
      * check if token(lower and upper cases) is stop word
      * @param token

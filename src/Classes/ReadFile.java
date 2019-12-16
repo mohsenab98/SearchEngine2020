@@ -6,16 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class ReadFile{
     // Fields
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
     /**
      * content of all docs
      */
@@ -25,7 +21,6 @@ public class ReadFile{
     // Constructor
     public ReadFile(String corpusPath){
         this.path = corpusPath;
-//        this.allFiles = Collections.synchronizedList(new ArrayList<>());
         this.allFiles = new ArrayList<>();
     }
 
@@ -49,14 +44,8 @@ public class ReadFile{
             for( Path fileP :  filesPaths) {
                 String strFiles = fileIntoString(new File(fileP.toString()));
                 String strFilePath = fileP.toString();
-                //threadPool.execute(() -> {
-                    separatedFilesToArrayList(strFiles, strFilePath); // separate docs to list: doc per index
-                //});
+                separatedFilesToArrayList(strFiles, strFilePath); // separate docs to list: doc per index
             }
-
-           //threadPool.awaitTermination(1, TimeUnit.SECONDS); // Wait for ending of threads/
-           //threadPool.shutdown(); // stop thread pool
-
         }
         catch (Exception e){
             e.printStackTrace();
