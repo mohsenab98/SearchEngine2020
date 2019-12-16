@@ -366,7 +366,7 @@ public class Indexer {
             postIdCounter++;
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
-
+            numberOfposting = new File(this.pathCorpus + "/" + stemFolder).listFiles().length;
         }
 
 
