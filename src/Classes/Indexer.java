@@ -1,18 +1,18 @@
 package Classes;
 
 import sun.misc.Cleaner;
-
-import javax.swing.text.html.ImageView;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Indexer {
     /**
@@ -318,10 +318,55 @@ public class Indexer {
         }
         StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
         StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
-
-        for(int i = 0; i < postIdCounter; i++){
+        int numberOfposting = new File(this.pathCorpus + "/" + stemFolder).listFiles().length;
+        for(int i = 0; numberOfposting > 2 ; i++){
+//            if(i >= postIdCounter){
+//                i = 0;
+//            }
+            //TODO: counters !
             fileUrl1 = fileUrl1.append((i));
             fileUrl2 = fileUrl2.append((i+1));
+            SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            termCounter = 0;
+            Path path1 = Paths.get(String.valueOf(fileUrl1));
+            Path path2 = Paths.get(String.valueOf(fileUrl2));
+            try
+            {
+                Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
+                Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
+
+                for( String line : (Iterable<String>) lines1::iterator ){
+                    String term = line.substring(0, line.indexOf("|"));
+                    String info = line.substring(line.indexOf("|") + 1);
+                    text.put(term, info);
+                }
+
+                for( String line : (Iterable<String>) lines2::iterator )
+                {
+                    String term = line.substring(0, line.indexOf("|"));
+                    String info = line.substring(line.indexOf("|") + 1);
+
+                    if(!text.containsKey(term)){
+                        text.put(term, info);
+                    }
+                    else{
+                        String preInfo = text.get(term);
+                        text.put(term, preInfo + info);
+                    }
+                }
+
+            } catch (IOException ioe){
+                ioe.printStackTrace();
+            }
+            File f1 = new File(String.valueOf(fileUrl1));
+            File f2 = new File(String.valueOf(fileUrl2));
+            f1.delete();
+            f2.delete();
+            usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+            postIdCounter++;
+            text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            i++; // two files each time
+
         }
 
 
