@@ -130,6 +130,7 @@ public class MyModel extends Observable implements IModel {
         n.reset(); // check if there is stell terms in the sorted map
         //TODO : open merge to do all the final merge of files
 //        n.merge(); //merge the temp sorted files into A-Z sorted files
+//        n.finalPostingMerge();
 //        n.saveDictionary();
         n.saveDocInfo();
 //        n.mergeFiles();
