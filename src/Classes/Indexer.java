@@ -147,24 +147,7 @@ public class Indexer {
         postIdCounter++;
         mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//         * DocInfo Index:
-//     *      0 - doc name
-//                *      1 - term max tf
-//     *      2 - count max tf
-//     *      3 - count uniq terms in doc
-        String textDoc = "";
-        String posting ="";
-        String merged = "";
-        posting = readFile("Doc");
-        for (Integer key : mapDocID.keySet()) {
-            ArrayList<String> info = mapDocID.get(key);
-            textDoc = textDoc + key + "|" + info.get(0) + ":" + info.get(1) + "?" +info.get(2) + "," + info.get(3)+ "\n";
-
-        }
-        mapDocID = new LinkedHashMap<>();
-        merged = posting + textDoc;
-        usingBufferedWritter(merged, "Doc");
-        //tempPostCounter++;
+        saveDocInfo();
 
     }
 
@@ -273,7 +256,7 @@ public class Indexer {
         boolean folder1 = new File(path+"/stem").mkdir();
         boolean folder2 = new File(path+"/noStem").mkdir();
         if(folder1 && folder2){
-            File fileDocStem = new File(path+"/Stem/" + "Doc");
+            File fileDocStem = new File(path+"/stem/" + "Doc");
             File fileDocNoStem = new File(path+"/noStem/" + "Doc");
             try {
                 fileDocStem.createNewFile();
@@ -316,16 +299,20 @@ public class Indexer {
         }else {
             stemFolder = "noStem";
         }
-        StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
-        StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
+//        StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
+//        StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
+        String filePath1 = this.pathCorpus + "/" + stemFolder + "/";
+        String filePath2 = this.pathCorpus + "/" + stemFolder + "/";
+        String fileUrl1 = "";
+        String fileUrl2 = "";
         int numberOfposting = new File(this.pathCorpus + "/" + stemFolder).listFiles().length;
         for(int i = 0; numberOfposting > 2 ; i++){
 //            if(i >= postIdCounter){
 //                i = 0;
 //            }
             //TODO: counters !
-            fileUrl1 = fileUrl1.append((i));
-            fileUrl2 = fileUrl2.append((i+1));
+            fileUrl1 = filePath1 + "/" + i;
+            fileUrl2 = filePath2 + "/" + (i+1);
             SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             termCounter = 0;
             Path path1 = Paths.get(String.valueOf(fileUrl1));
@@ -356,7 +343,8 @@ public class Indexer {
                 }
 
             } catch (IOException ioe){
-                ioe.printStackTrace();
+//                ioe.printStackTrace();
+                continue;
             }
             File f1 = new File(String.valueOf(fileUrl1));
             File f2 = new File(String.valueOf(fileUrl2));
