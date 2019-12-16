@@ -40,7 +40,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 50000;
+    private final int MAX_POST_SIZE = 10000;
 
     /**
      * help us merge the posting
@@ -70,7 +70,7 @@ public class Indexer {
      * send the info for the posting files
      * @param termDoc , map that contain the term and list{DOCID , pos1 , pos2...}
      */
-    public void addTermToIndexer(Map<String, ArrayList<String>>termDoc, ArrayList<String> docInfo){
+    public void addTermToIndexer(Map<String, String>termDoc, ArrayList<String> docInfo){
         int i = 0;
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
@@ -80,8 +80,9 @@ public class Indexer {
         for (String key : termDoc.keySet()) {
             if(this.mapSortedTerms.containsKey(key)){
                 //chain the new list of term to the original one
-                ArrayList<String> listOfInfo = termDoc.get(key);
-                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
+//                ArrayList<String> listOfInfo = termDoc.get(key);
+//                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
+                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 // duplicates of docs 0:1;0:2 agent
                 if(!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
@@ -104,10 +105,10 @@ public class Indexer {
             }
             else{
                 //Add new term and it list of info to the Sorted map
-                ArrayList<String> listOfInfo = termDoc.get(key);
-                String info = new StringBuilder().append(docIDCounter).append(":").append(listOfInfo.get(0)).append(";").toString();
+                ArrayList<String> listOfInfo = new ArrayList<>();
+                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
 //                listOfInfo.clear();
-                listOfInfo = new ArrayList<>();
+//                listOfInfo = new ArrayList<>();
                 listOfInfo.add(0, info);
                 mapSortedTerms.put(key, listOfInfo);
             }
@@ -135,23 +136,16 @@ public class Indexer {
      * write the data to the posting file
      */
     public void reset(){
-    //mapSortedTerms  ---- save & clear
+        //mapSortedTerms  ---- save & clear
         SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        String mapfirstKey = mapSortedTerms.firstKey();
-        while(!mapSortedTerms.isEmpty()){
-            ArrayList<String> s = mapSortedTerms.get(mapfirstKey);
-            StringBuilder s1 = new StringBuilder();
-            for(String key : s){
-                s1.append(key);
-            }
-            text.put(mapfirstKey, s1.toString());
-            mapSortedTerms.remove(mapfirstKey);
-            if (!mapSortedTerms.isEmpty()){
-                mapfirstKey = mapSortedTerms.firstKey();
-            }
+        for(String term : mapSortedTerms.keySet()){
+            ArrayList<String> s = mapSortedTerms.get(term);
+            String s1 = s.get(0);
+            text.put(term, s1);
         }
-        usingBufferedWritter(mapToFormatString(text),String.valueOf(postIdCounter));
+        usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
         postIdCounter++;
+        mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //         * DocInfo Index:
 //     *      0 - doc name
@@ -175,11 +169,11 @@ public class Indexer {
     }
 
     private String mapToFormatString(Map<String, String> text){
-        String textToPostFile = "";
+        StringBuilder textToPostFile = new StringBuilder();
         for (String key : text.keySet()) {
-                textToPostFile += new StringBuilder().append(key).append("|").append(text.get(key)).append("\n").toString();
+            textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
         }
-        return textToPostFile;
+        return textToPostFile.toString();
     }
 
     public static int getTermCounter() {
@@ -315,7 +309,26 @@ public class Indexer {
     }
 
     public void merge() {
-        //TODO : need to concatenate values if there is duplicates
+        // postIdCounter --- number of posting
+        String stemFolder = "";
+        if(isStem){
+            stemFolder = "stem";
+        }else {
+            stemFolder = "noStem";
+        }
+        StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
+        StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
+
+        for(int i = 0; i < postIdCounter; i++){
+            fileUrl1 = fileUrl1.append((i));
+            fileUrl2 = fileUrl2.append((i+1));
+        }
+
+
+    }
+
+    public void finalPostingMerge() {
+        //TODO : need to concatenate values if there is duplicatess
         String merged;
         String posting = "";
         SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -346,7 +359,7 @@ public class Indexer {
         for (int i = 'a'; i <= 'z'; i++){
             posting = "";
             posting = readFile(String.valueOf((char)i));
-             splitPosting = posting.split("\n");
+            splitPosting = posting.split("\n");
             for (int j = 0; j < splitPosting.length; j++){
                 String [] splitPostingLine = splitPosting[j].split("\\|");
                 text.put(splitPostingLine[0], splitPostingLine[1]);
@@ -355,8 +368,5 @@ public class Indexer {
 //            text.clear();
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
-    }
-
-    public void finalPostingMerge() {
     }
 }

@@ -24,7 +24,7 @@ public class Parse {
      *          Key: all original terms in a doc
      *          Value: list of properties of a doc
      */
-    private SortedMap<String, ArrayList<String>> mapTerms;
+    private SortedMap<String, String> mapTerms;
     /**
      * the list of the properties of a doc
      */
@@ -329,17 +329,17 @@ public class Parse {
 
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
-            this.mapTerms.put(term, new ArrayList<>());
-            this.mapTerms.get(term).add(String.valueOf(1)); // term counter = 1
+            this.mapTerms.put(term, "1"); // term counter = 1
             return;
         }
 
-        int counter = Integer.parseInt(this.mapTerms.get(term).get(0)); // term with maxTF
-        this.mapTerms.get(term).set(0, String.valueOf(counter + 1)); // maxTF
+        int counter = Integer.parseInt(this.mapTerms.get(term)); // term with tf
+        this.mapTerms.put(term, String.valueOf(counter + 1)); // term counter = 1
+
 
         // check for max TF
-        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term).get(0))){
-            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term).get(0));
+        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term))){
+            this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
     }
@@ -349,7 +349,7 @@ public class Parse {
      * getter for map of terms
      * @return mapTerms
      */
-    public Map<String, ArrayList<String>> getMapTerms(){
+    public Map<String, String> getMapTerms(){
         return this.mapTerms;
     }
 
