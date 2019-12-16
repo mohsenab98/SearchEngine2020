@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Indexer {
@@ -45,7 +47,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 10000;
+    private final int MAX_POST_SIZE = 50000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -311,7 +313,7 @@ public class Indexer {
                     }
                     else{
                         String preInfo = text.get(term);
-                        text.put(term, preInfo + info);
+                        text.put(term, info + preInfo);
                     }
                 }
 
@@ -351,60 +353,69 @@ public class Indexer {
             Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
             Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
             //////////////////////////////////////////////////
-            while(lines1.iterator().hasNext()) {
-                String line = lines1.iterator().next();
-                if(line.toLowerCase().charAt(0) != 'a'){
+
+            List<String> listLines1 = lines1
+                    .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                    .collect(Collectors.toList());
+            List<String> listLines2 = lines2
+                    .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                    .collect(Collectors.toList());
+            for(String line : listLines1) {
+                String term = line.substring(0, line.indexOf("|"));
+                String info = line.substring(line.indexOf("|") + 1);
+                text.put(term, info);
+            }
+            for(String line : listLines2){
+                String term = line.substring(0, line.indexOf("|"));
+                String info = line.substring(line.indexOf("|") + 1);
+
+                if(!text.containsKey(term)){
+                    text.put(term, info);
+                }
+                else{
+                    String preInfo = text.get(term);
+                    text.put(term, info + preInfo);
+                }
+            }
+            usingBufferedWritter(mapToFormatString(text), "Numbers");
+//////////////////////////////////////////////////////////////////////////////////////
+            for(int i = 'a'; i <= 'z'; i++) {
+                Stream<String> lines11 = Files.lines( path1, StandardCharsets.US_ASCII );
+                Stream<String> lines22 = Files.lines( path2, StandardCharsets.US_ASCII );
+                text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                int ch = i;
+                List<String> listLines11 = lines11
+                        .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                        .collect(Collectors.toList());
+                List<String> listLines22 = lines22
+                        .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                        .collect(Collectors.toList());
+
+                for(String line : listLines11) {
                     String term = line.substring(0, line.indexOf("|"));
                     String info = line.substring(line.indexOf("|") + 1);
                     text.put(term, info);
-                }else{
-                    break;
                 }
-            }
-            while(lines2.iterator().hasNext()) {
-                String line = lines2.iterator().next();
-                if(line.toLowerCase().charAt(0) != 'a'){
+                for(String line : listLines22){
                     String term = line.substring(0, line.indexOf("|"));
                     String info = line.substring(line.indexOf("|") + 1);
-                    if (!text.containsKey(term)) {
+
+                    if(!text.containsKey(term)){
                         text.put(term, info);
-                    } else {
-                        String preInfo = text.get(term);
-                        text.put(term, preInfo + info);
                     }
-                }else{
-                    break;
+                    else{
+                        String preInfo = text.get(term);
+                        text.put(term, info + preInfo);
+                    }
                 }
+                usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
+
             }
 
-            ///////////////////////////////////////////////////////
-            for(int i = 'a'; i <= 'z'; i++) {
-                while(lines1.iterator().hasNext()) {
-                    String line = lines1.iterator().next();
-                    if(line.toLowerCase().charAt(0) == i){
-                        String term = line.substring(0, line.indexOf("|"));
-                        String info = line.substring(line.indexOf("|") + 1);
-                        text.put(term, info);
-                    }else{
-                        break;
-                    }
-                }
-                while(lines2.iterator().hasNext()) {
-                    String line = lines2.iterator().next();
-                    if(line.toLowerCase().charAt(0) == i) {
-                        String term = line.substring(0, line.indexOf("|"));
-                        String info = line.substring(line.indexOf("|") + 1);
-                        if (!text.containsKey(term)) {
-                            text.put(term, info);
-                        } else {
-                            String preInfo = text.get(term);
-                            text.put(term, preInfo + info);
-                        }
-                    }else{
-                        break;
-                    }
-                }
-            }
+            File f1 = new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
+            File f2 = new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
+            f1.delete();
+            f2.delete();
 
         } catch (IOException ioe){
             ioe.printStackTrace();
