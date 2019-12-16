@@ -301,11 +301,11 @@ public class Indexer {
         }
 //        StringBuilder fileUrl1 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
 //        StringBuilder fileUrl2 = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/");
-        String filePath1 = this.pathCorpus + "/" + stemFolder + "/";
-        String filePath2 = this.pathCorpus + "/" + stemFolder + "/";
+        String filePath1 = this.pathPosting + "/" + stemFolder + "/";
+        String filePath2 = this.pathPosting+ "/" + stemFolder + "/";
         String fileUrl1 = "";
         String fileUrl2 = "";
-        int numberOfposting = new File(this.pathCorpus + "/" + stemFolder).listFiles().length;
+        int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         for(int i = 0; numberOfposting > 2 ; i++){
 //            if(i >= postIdCounter){
 //                i = 0;
@@ -354,7 +354,7 @@ public class Indexer {
             postIdCounter++;
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
-            numberOfposting = new File(this.pathCorpus + "/" + stemFolder).listFiles().length;
+            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
 
 

@@ -32,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="314" column="42" selection-start-line="314" selection-start-column="42" selection-end-line="314" selection-end-column="42" />
+            <state relative-caret-position="184">
+              <caret line="356" column="55" selection-start-line="356" selection-start-column="55" selection-end-line="356" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5167#5168#0" expanded="true" />
@@ -254,7 +254,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576506301733" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576507242807" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -351,7 +351,7 @@
       <workItem from="1576310501527" duration="11651000" />
       <workItem from="1576338213505" duration="5786000" />
       <workItem from="1576410999610" duration="13810000" />
-      <workItem from="1576479307530" duration="14877000" />
+      <workItem from="1576479307530" duration="15794000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -682,11 +682,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576504965249</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="- Second version -- merge WORKING">
+      <created>1576506380991</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1576506380991</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="386300000" />
+    <option name="totallyTimeSpent" value="387217000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -710,8 +717,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.602118" weight="0.43023255" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" visible="true" weight="0.39700997" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.15116279" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.39700997" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7512275" />
@@ -776,7 +783,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Upper case and Between" />
     <MESSAGE value="terms format" />
     <MESSAGE value="merge indexer and parser" />
     <MESSAGE value="Main and Read file" />
@@ -801,7 +807,8 @@
     <MESSAGE value="- Second version --&#10;- improved indexer&#10;- improved parser (string instead of arrayList)" />
     <MESSAGE value="- Second version --&#10;- counters on merge not good" />
     <MESSAGE value="- Second version --&#10;- need to deal with finalMerge" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Second version --&#10;- need to deal with finalMerge" />
+    <MESSAGE value="- Second version -- merge WORKING" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Second version -- merge WORKING" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1101,8 +1108,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="314" column="42" selection-start-line="314" selection-start-column="42" selection-end-line="314" selection-end-column="42" />
+        <state relative-caret-position="184">
+          <caret line="356" column="55" selection-start-line="356" selection-start-column="55" selection-end-line="356" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5167#5168#0" expanded="true" />
