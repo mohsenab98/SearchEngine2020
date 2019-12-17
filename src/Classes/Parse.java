@@ -95,7 +95,7 @@ public class Parse {
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
         //TODO : names !
-        //searchNames(fullText); // Entity/Names law
+        searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);

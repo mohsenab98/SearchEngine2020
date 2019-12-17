@@ -2,7 +2,6 @@ package Classes;
 
 import sun.misc.Cleaner;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -49,7 +48,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 5000;
+    private final int MAX_POST_SIZE = 10000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -81,35 +80,38 @@ public class Indexer {
         }
          mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
+        termDoc.remove("");
         for (String key : termDoc.keySet()) {
-            if(this.mapSortedTerms.containsKey(key)){
-                //chain the new list of term to the original one
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
-                ArrayList<String> originalList = mapSortedTerms.get(key);
-                // duplicates of docs 0:1;0:2 agent
-                if(!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
-                    String originalInfo = originalList.get(0) + info;
-                    originalList = new ArrayList<>();
-                    originalList.add(0, originalInfo);
-                }
-                else {
-                    originalList.clear();
-                    originalList.add(0, info);
-                }
-                if(Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
-                    mapSortedTerms.remove(key.toUpperCase());
-                    mapSortedTerms.put(key.toLowerCase(), originalList);
-                }
-                else {
-                    mapSortedTerms.put(key, originalList);
+            try {
+                if (this.mapSortedTerms.containsKey(key)) {
+                    //chain the new list of term to the original one
+                    String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                    ArrayList<String> originalList = mapSortedTerms.get(key);
+                    // duplicates of docs 0:1;0:2 agent
+                    if (!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
+                        String originalInfo = originalList.get(0) + info;
+                        originalList = new ArrayList<>();
+                        originalList.add(0, originalInfo);
+                    } else {
+                        originalList.clear();
+                        originalList.add(0, info);
+                    }
+                    if (!key.contains(" ") && Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
+                        mapSortedTerms.remove(key.toUpperCase());
+                        mapSortedTerms.put(key.toLowerCase(), originalList);
+                    } else {
+                        mapSortedTerms.put(key, originalList);
+                    }
+                } else {
+                    //Add new term and it list of info to the Sorted map
+                    ArrayList<String> listOfInfo = new ArrayList<>();
+                    String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                    listOfInfo.add(0, info);
+                    mapSortedTerms.put(key, listOfInfo);
                 }
             }
-            else{
-                //Add new term and it list of info to the Sorted map
-                ArrayList<String> listOfInfo = new ArrayList<>();
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
-                listOfInfo.add(0, info);
-                mapSortedTerms.put(key, listOfInfo);
+            catch (Exception e){
+                e.printStackTrace();
             }
         }
         docIDCounter++;
@@ -407,6 +409,24 @@ public class Indexer {
                         text.put(term, info + preInfo);
                     }
                 }
+
+                // Names
+                // iterator avoids Exception in thread "JavaFX Application Thread" java.util.ConcurrentModificationException
+                for(Iterator<Map.Entry<String, String>> it = text.entrySet().iterator(); it.hasNext(); ) {
+                    Map.Entry<String, String> entry = it.next();
+                    if(entry.getKey().contains(" ")){
+                        int counter = 0;
+                        Pattern dfPattern = Pattern.compile("(;)");
+                        Matcher dfMatcher = dfPattern.matcher(entry.getValue());
+                        while (dfMatcher.find()){
+                            counter++;
+                        }
+                        if(counter < 2){
+                            it.remove();
+                        }
+                    }
+                }
+
                 usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
                 termToDictionary(text);
 
