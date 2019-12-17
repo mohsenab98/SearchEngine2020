@@ -44,22 +44,25 @@ public class MyViewController extends Canvas implements Observer {
     @FXML public Button  show_Dic_button;
     @FXML public Button  load_Dic_button;
     private MyViewModel viewModel;
-
     static boolean isnewWindow = false;
+
+    /**
+     * opens new window when the indexing process is over and print:
+     * 1.Number of docs
+     * 2.Time that takes for indexing
+     * 3.Number of terms in our dictionary
+     * @param actionEvent
+     */
     private void newWindow(ActionEvent actionEvent){
         if(!isnewWindow) {
             isnewWindow = true;
             start_button.setDisable(true);
             try {
-//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newWindow.fxml"));
-//                fxmlLoader.setController(this);
-//                Parent root = fxmlLoader.load();
                 Stage stage = new Stage();
                 Label l =  new Label();
                 l.setText("Number of Docs that has indexed:  " +viewModel.getDocCounter()+"\n"+ "\n" +
-                        "The time that it tooks:  " +viewModel.getTimeForIndexing() + " minutes");
-
-
+                        "The time that it tooks:  " +viewModel.getTimeForIndexing() + " minutes"
+                        +"\n"+ "\n" + "Numbers of terms: " + viewModel.getNumberOfTerms());
                 stage.setTitle("Indexing Info!");
 
                 Scene scene = new Scene(l, 600, 400);
@@ -73,10 +76,15 @@ public class MyViewController extends Canvas implements Observer {
         }
     }
 
+    /**
+     * when we close the new window it reopen the start button
+     * @param stage
+     */
     private void SetStageCloseEvent(Stage stage) {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent windowEvent) {
                start_button.setDisable(false);
+                isnewWindow = false;
             }
         });
     }
@@ -85,9 +93,14 @@ public class MyViewController extends Canvas implements Observer {
 
     }
 
+    /**
+     * set the view model
+     * @param viewModel
+     */
     public void setViewModel(MyViewModel viewModel) {
         this.viewModel = viewModel;
 
+        // when start button is pressed start indexing
         start_button.setOnAction(e ->{
             File file1 = new File(corpus_text.getText());
             File file2 = new File(posting_text.getText());
@@ -105,6 +118,10 @@ public class MyViewController extends Canvas implements Observer {
 
     }
 
+    /**
+     * show the content of the message as an alert message to the user
+     * @param alertMessage
+     */
     private void showAlert(String alertMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(alertMessage);
@@ -112,65 +129,66 @@ public class MyViewController extends Canvas implements Observer {
 
     }
 
-
-    public void setStart_button() {
-        this.start_button.setDisable(false);
-    }
-
+    /**
+     * when reset button is pressed
+     * @param actionEvent
+     */
     public void resetProcess(ActionEvent actionEvent) {
         viewModel.resetProcess(posting_text);
     }
-
+    /**
+     * when reset show Dictionary is pressed
+     * @param actionEvent
+     */
     public void showDictionary(ActionEvent actionEvent) {
-        viewModel.showDictionary();
+        viewModel.showDictionary(posting_text, stem.isSelected());
 
     }
-
+    /**
+     * load the text field of the posting path
+     * @param actionEvent
+     */
     public void loadDirectory2(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(new Stage());
-        // file == Dictionary
-        if(selectedDirectory != null) {
-//             viewModel.loadDictionary(selectedDirectory); //////
+        File postingDirectory = directoryChooser.showDialog(new Stage());
+        if(postingDirectory != null) {
              posting_text.clear();
-             posting_text.appendText(selectedDirectory.getPath());
+             posting_text.appendText(postingDirectory.getPath());
 
         }
-//        mazeWindow(actionEvent, maze);
     }
-
+    /**
+     * load the text field of the corpus path
+     * @param actionEvent
+     */
     public void loadDirectory1(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(new Stage());
-        // file == Dictionary
-        if(selectedDirectory != null) {
-//            viewModel.loadDictionary(selectedDirectory);
+        File corpusDirectory = directoryChooser.showDialog(new Stage());
+        if(corpusDirectory != null) {
             corpus_text.clear();
-            corpus_text.appendText(selectedDirectory.getPath());
+            corpus_text.appendText(corpusDirectory.getPath());
 
         }
-//        mazeWindow(actionEvent, maze);
     }
 
 
-    public void start(ActionEvent actionEvent) {
-        if( corpus_text.getText() != "" && posting_text.getText() != null) {
-        }
 
-    }
-
-
+    /**
+     * load the the dictionary file that the user choose and load it to the main memory
+     * @param actionEvent
+     */
     public void loadFile(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Dictionary");
         File file = fc.showOpenDialog(new Stage());
-        // file == Dictionary
         if(file != null) {
             viewModel.loadDictionary(file);
         }
-//        mazeWindow(actionEvent, maze);
     }
-
+    /**
+     * load the image that show on our main window
+     * @param image
+     */
     public void setImage(Image image) {
         image_view.setImage(image);
     }

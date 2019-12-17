@@ -10,10 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +19,19 @@ import java.util.regex.Pattern;
  */
 
 public class MyModel extends Observable implements IModel {
+    /**
+     * map to load the posting of the dictionary
+     */
+    private Map<String,String> mapDictionary ;
+
+    public MyModel() {
+        this.mapDictionary = new LinkedHashMap<>();
+    }
+
+    /**
+     * opens the file we choose and load it to the mapDictionary
+     * @param file
+     */
     @Override
     public void loadDictionary(File file) {
         BufferedReader reader = null;
@@ -31,8 +41,6 @@ public class MyModel extends Observable implements IModel {
             e.printStackTrace();
         }
         String line = null;
-        //TODO : use dictionary instead of this new Map
-        Map result = new HashMap();
         while(true){
             try {
                 if (!((line = reader.readLine()) != null)) break;
@@ -40,22 +48,36 @@ public class MyModel extends Observable implements IModel {
                 e.printStackTrace();
             }
             String[] arr = line.split( "\\|" );
-            result.put( arr[0], arr[1] );
+            mapDictionary.put( arr[0], arr[1] );
         }
     }
 
+    /**
+     * opens the file that contains the dictionary in new window
+     * @param posting_text
+     * @param isSelected
+     */
     @Override
-    public void showDictionary() {
-        //TODO : update the pathname
-        File file = new File ("C:\\Users\\mohse\\Desktop\\corpusTest2\\noStem\\Doc");
+    public void showDictionary(TextField posting_text, boolean isSelected) {
+        String stemFolder = "";
+        if(isSelected){
+            stemFolder = "stem";
+        }else{
+            stemFolder = "noStem";
+        }
+        File file = new File (posting_text.getText() + "\\" + stemFolder + "\\Dictionary");
         Desktop desktop = Desktop.getDesktop();
         try {
             desktop.open(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            // if path isnt right or there no stem/nostem directories dont do anything
         }
     }
 
+    /**
+     * delete all dataSet we have worked with
+     * @param posting_text
+     */
     @Override
     public void resetProcess(TextField posting_text) {
         try {
@@ -71,14 +93,20 @@ public class MyModel extends Observable implements IModel {
         }catch (Exception o){
             // if path isnt right or there no stem/nostem directories dont do anything
         }
-
-
-        /// Clear Memory
     }
 
 
     private double timeForIndexing;
     private int docCounter;
+    private int termNumbers;
+
+    /**
+     * Indexing process, include reading files, parsing, indexing...
+     * @param selected
+     * @param corpus_text
+     * @param posting_text
+     * @return
+     */
     @Override
     public boolean startIndexing(boolean selected, TextField corpus_text, TextField posting_text) {
         double startTime = System.nanoTime();
@@ -92,7 +120,6 @@ public class MyModel extends Observable implements IModel {
         rd.filesSeparator();
         Parse p = new Parse(pathStopWords, stem);
         Indexer n = new Indexer(pathCorpus, pathPosting, stem);
-        n.setTermCounter(0);
         n.setDocIDCounter(0);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
@@ -113,24 +140,37 @@ public class MyModel extends Observable implements IModel {
         }
 
         n.reset(); // check if there is stell terms in the sorted map
-        //TODO : open merge to do all the final merge of files
         int i = n.merge(); //merge the temp sorted files into A-Z sorted files
         n.finalMerge(i);
+        termNumbers = n.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
-        System.out.println(n.getTermCounter());
+        System.out.println(termNumbers);
         System.out.println(n.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = n.getDocIDCounter();
         return true;////////
     }
 
+    /**
+     *
+     * @return time for indexing
+     */
     public double getTimeForIndexing() {
         return timeForIndexing;
     }
 
+    /**
+     *
+     * @return number of docs indexed
+     */
     public int getDocCounter() {
         return docCounter;
+    }
+
+    @Override
+    public int getNumberOfTerms() {
+        return termNumbers;
     }
 }
