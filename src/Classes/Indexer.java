@@ -143,7 +143,7 @@ public class Indexer {
             String s1 = s.get(0);
             text.put(term, s1);
         }
-        usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+        usingBufferedWritter(mapToFormatString(text, this.pathPosting + "/" + postIdCounter), String.valueOf(postIdCounter));
         postIdCounter++;
         mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -152,15 +152,14 @@ public class Indexer {
 
     }
     // TODO : deal with java heap Exception
-    private String mapToFormatString(Map<String, String> text){
+    private String mapToFormatString(Map<String, String> text, String path){
         StringBuilder textToPostFile = new StringBuilder();
         for (String key : text.keySet()) {
-            try {
-                textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
+            if(textToPostFile.length() >= 200000000) {
+                usingBufferedWritter(textToPostFile.toString(), path);
+                textToPostFile.setLength(0);
             }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
         }
         return textToPostFile.toString();
     }
@@ -208,7 +207,7 @@ public class Indexer {
      * @param text for the posting file
      * @throws IOException if the file or directory wasn't found
      */
-    public void usingBufferedWritter(String text, String filename)
+    private void usingBufferedWritter(String text, String filename)
     {
         String stemFolder = "";
         if(isStem){
@@ -253,7 +252,7 @@ public class Indexer {
         }
     }
 
-    public void saveDocInfo() {
+    private void saveDocInfo() {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
@@ -311,7 +310,7 @@ public class Indexer {
                         .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
                         .collect(Collectors.toList());
                 SortedMap<String, String> termsNumbers = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1Numbers, listLinesFile2Numbers);
-                usingBufferedWritter(mapToFormatString(termsNumbers), String.valueOf(postIdCounter));
+                usingBufferedWritter(mapToFormatString(termsNumbers, this.pathPosting + "/" + postIdCounter), String.valueOf(postIdCounter));
                 /////////////////////////////////////////////////////////////////////
                 for(int j = 'a'; j <= 'z'; j++) {
                     Stream<String> linesFile1AZ = Files.lines(path1, StandardCharsets.US_ASCII);
@@ -325,7 +324,7 @@ public class Indexer {
                             .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
                             .collect(Collectors.toList());
                     SortedMap<String, String> termsAB = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1AZ, listLinesFile2AZ);
-                    usingBufferedWritter(mapToFormatString(termsAB), String.valueOf(postIdCounter));
+                    usingBufferedWritter(mapToFormatString(termsAB, this.pathPosting + "/" + postIdCounter), String.valueOf(postIdCounter));
 
                 }
 
@@ -372,7 +371,8 @@ public class Indexer {
                     .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
                     .collect(Collectors.toList());
             SortedMap<String, String> termsNumbers = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1Numbers, listLinesFile2Numbers);
-            usingBufferedWritter(mapToFormatString(termsNumbers), "Numbers");
+            String toFileNumbers = mapToFormatString(termsNumbers, "Numbers");
+            usingBufferedWritter(toFileNumbers, "Numbers");
             termToDictionary(termsNumbers);
 //////////////////////////////////////////////////////////////////////////////////////
             // merge a-z lower and upper cases
@@ -405,7 +405,8 @@ public class Indexer {
                         }
                     }
                 }
-                usingBufferedWritter(mapToFormatString(termsAB), String.valueOf((char)i));
+                String toFileAB = mapToFormatString(termsAB, String.valueOf((char)i));
+                usingBufferedWritter(toFileAB, String.valueOf((char)i));
                 termToDictionary(termsAB);
             }
 
@@ -464,7 +465,7 @@ public class Indexer {
             this.mapDictionary.put(term, infoDic);
             sizeDictionary++;
         }
-        usingBufferedWritter(mapToFormatString(this.mapDictionary), "Dictionary");
+        usingBufferedWritter(mapToFormatString(this.mapDictionary, this.pathPosting + "/" + "Dictionary"), "Dictionary");
         this.mapDictionary = new LinkedHashMap<>();
     }
 
