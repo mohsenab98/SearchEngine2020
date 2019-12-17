@@ -233,7 +233,6 @@ public class Indexer {
 
     }
 
-
     /**
      * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
      * @param path where we want to save the index files
