@@ -34,7 +34,7 @@
             <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-            <Button fx:id="start_button" onAction="#start" text="Start" />
+            <Button fx:id="start_button"  text="Start" />
 
          <columnConstraints>
             <ColumnConstraints />

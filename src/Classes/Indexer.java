@@ -1,6 +1,8 @@
 package Classes;
 
 import sun.misc.Cleaner;
+
+import java.awt.*;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -12,13 +14,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Indexer {
     /**
      * will Save the terms of the index and will save a pointer to the match posting file
      */
-    private Map<String, String> mapTermPosting;
+    private Map<String, String> mapDictionary;
     /**
      * will save the term and its info for each doc in a sorted map (A-Z) list[0] = DocID (according to the mapDocID)
      * list[1] = tf . list[2] = delimiter
@@ -36,14 +42,9 @@ public class Indexer {
     private boolean isStem;
 
     /**
-     * name of the temp file
-     */
-    private static int termCounter = 0;
-
-    /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 10000;
+    private final int MAX_POST_SIZE = 5000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -53,9 +54,11 @@ public class Indexer {
     private static int docIDCounter = 0;
     private static int postIdCounter = 0;
 
-
     public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
-        this.mapTermPosting = new LinkedHashMap<>();
+        sizeDictionary = 0;
+        docIDCounter = 0;
+        postIdCounter = 0;
+        this.mapDictionary = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
         this.pathPosting = pathPosting;
         this.mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -118,10 +121,6 @@ public class Indexer {
         return docIDCounter;
     }
 
-    public static void setTermCounter(int termCounter) {
-        Indexer.termCounter = termCounter;
-    }
-
     /**
      * delete the mapSorted data
      * docCounter = 0
@@ -145,18 +144,21 @@ public class Indexer {
         saveDocInfo();
 
     }
-
+    // TODO : deal with java heap Exception
     private String mapToFormatString(Map<String, String> text){
         StringBuilder textToPostFile = new StringBuilder();
         for (String key : text.keySet()) {
-            textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
+            try {
+                textToPostFile.append(key).append("|").append(text.get(key)).append("\n");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return textToPostFile.toString();
     }
 
-    public static int getTermCounter() {
-        return termCounter;
-    }
+
 
     private String readFile(String fileName){
         CharBuffer charBuffer = null;
@@ -245,19 +247,6 @@ public class Indexer {
         }
     }
 
-
-    /**
-     * Save the term map at the end of the indexing because we need it in the second part when we will search
-     */
-    public void saveDictionary() {
-        String text = "";
-        for (String key : mapTermPosting.keySet()) {
-            text = new StringBuilder().append(text).append(key).append(":").append(mapTermPosting.get(key)).append(";").append("\n").toString();
-        }
-        usingBufferedWritter(text,"Dictionary");
-        mapTermPosting = new LinkedHashMap<>();
-    }
-
     public void saveDocInfo() {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
@@ -268,8 +257,8 @@ public class Indexer {
         mapDocID = new LinkedHashMap<>();
     }
 
-    public void merge() {
-        String stemFolder = "";
+    public int merge() {
+        String stemFolder;
         if(isStem){
             stemFolder = "stem";
         }else {
@@ -279,14 +268,14 @@ public class Indexer {
         String filePath2 = this.pathPosting+ "/" + stemFolder + "/";
         String fileUrl1 = "";
         String fileUrl2 = "";
+        int i;
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
-        for(int i = 0; numberOfposting > 2 ; i++){
+        for( i = 0; numberOfposting - 1 > 2 ; i++){
             fileUrl1 = filePath1 + "/" + i;
             fileUrl2 = filePath2 + "/" + (i+1);
             SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            termCounter = 0;
-            Path path1 = Paths.get(String.valueOf(fileUrl1));
-            Path path2 = Paths.get(String.valueOf(fileUrl2));
+            Path path1 = Paths.get(fileUrl1);
+            Path path2 = Paths.get(fileUrl2);
             try
             {
                 Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
@@ -308,25 +297,147 @@ public class Indexer {
                     }
                     else{
                         String preInfo = text.get(term);
-                        text.put(term, preInfo + info);
+                        text.put(term, info + preInfo);
                     }
                 }
 
             } catch (IOException ioe){
                 ioe.printStackTrace();
             }
-            File f1 = new File(String.valueOf(fileUrl1));
-            File f2 = new File(String.valueOf(fileUrl2));
+            File f1 = new File(fileUrl1);
+            File f2 = new File(fileUrl2);
             f1.delete();
             f2.delete();
-            usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+            // TODO : deal with java heap Exception
+            try {
+                usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
             postIdCounter++;
             text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
             numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
 
+        return i;
+    }
+
+    public void finalMerge(int intFileName) {
+        String stemFolder;
+        if(isStem){
+            stemFolder = "stem";
+        }else {
+            stemFolder = "noStem";
+        }
+
+        SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
+        Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
+        try
+        {
+            Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
+            Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
+            //////////////////////////////////////////////////
+
+            List<String> listLines1 = lines1
+                    .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                    .collect(Collectors.toList());
+            List<String> listLines2 = lines2
+                    .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                    .collect(Collectors.toList());
+            for(String line : listLines1) {
+                String term = line.substring(0, line.indexOf("|"));
+                String info = line.substring(line.indexOf("|") + 1);
+                text.put(term, info);
+            }
+            for(String line : listLines2){
+                String term = line.substring(0, line.indexOf("|"));
+                String info = line.substring(line.indexOf("|") + 1);
+
+                if(!text.containsKey(term)){
+                    text.put(term, info);
+                }
+                else{
+                    String preInfo = text.get(term);
+                    text.put(term, info + preInfo);
+                }
+            }
+            usingBufferedWritter(mapToFormatString(text), "Numbers");
+            termToDictionary(text);
+//////////////////////////////////////////////////////////////////////////////////////
+            for(int i = 'a'; i <= 'z'; i++) {
+                Stream<String> lines11 = Files.lines( path1, StandardCharsets.US_ASCII );
+                Stream<String> lines22 = Files.lines( path2, StandardCharsets.US_ASCII );
+                text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                int ch = i;
+                List<String> listLines11 = lines11
+                        .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                        .collect(Collectors.toList());
+                List<String> listLines22 = lines22
+                        .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                        .collect(Collectors.toList());
+
+                for(String line : listLines11) {
+                    String term = line.substring(0, line.indexOf("|"));
+                    String info = line.substring(line.indexOf("|") + 1);
+                    text.put(term, info);
+                }
+                for(String line : listLines22){
+                    String term = line.substring(0, line.indexOf("|"));
+                    String info = line.substring(line.indexOf("|") + 1);
+
+                    if(!text.containsKey(term)){
+                        text.put(term, info);
+                    }
+                    else{
+                        String preInfo = text.get(term);
+                        text.put(term, info + preInfo);
+                    }
+                }
+                usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
+                termToDictionary(text);
+
+            }
+
+            File f1 = new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
+            File f2 = new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
+            f1.delete();
+            f2.delete();
+
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
 
     }
 
+    private void termToDictionary(Map<String, String> text) {
+        Set<String> terms = text.keySet();
+        int lineCounter = 1;
+        for(String term : terms){
+            int df = 0;
+            String infoText = text.get(term);
+            Pattern dfPattern = Pattern.compile("(;)");
+            Matcher dfMatcher = dfPattern.matcher(infoText);
+            while (dfMatcher.find()){
+                df++;
+            }
+
+            String infoDic = "" + df + ";" + lineCounter;
+            lineCounter ++;
+
+            this.mapDictionary.put(term, infoDic);
+            sizeDictionary++;
+        }
+        usingBufferedWritter(mapToFormatString(this.mapDictionary), "Dictionary");
+        this.mapDictionary = new LinkedHashMap<>();
+    }
+
+    private static int sizeDictionary = 0;
+
+    public int getDictionarySize(){
+        return sizeDictionary;
+    }
 }

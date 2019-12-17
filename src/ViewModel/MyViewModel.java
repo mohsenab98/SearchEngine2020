@@ -2,8 +2,6 @@ package ViewModel;
 
 import Model.IModel;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,8 +28,8 @@ public class MyViewModel extends Observable implements Observer {
         model.loadDictionary(file);
     }
 
-    public void showDictionary() {
-        model.showDictionary();
+    public void showDictionary(TextField posting_text, boolean isSelected) {
+        model.showDictionary(posting_text, isSelected);
     }
 
     public void resetProcess(TextField posting_text){
@@ -51,4 +49,7 @@ public class MyViewModel extends Observable implements Observer {
     }
 
 
+    public int getNumberOfTerms() {
+        return model.getNumberOfTerms();
+    }
 }
