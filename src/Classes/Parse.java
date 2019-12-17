@@ -1,12 +1,11 @@
 package Classes;
 
-import Classes.Stemmer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-////////
+
 public class Parse {
     //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
@@ -106,12 +105,10 @@ public class Parse {
             if (isStopWord(token)) {
                 continue;
             }
-
             tokensFullText.add(token);
         }
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
-        //TODO : names !
         searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
@@ -205,32 +202,6 @@ public class Parse {
 
 
             } // if  number END
-            //TODO:add names !
-//            if(!postToken.equals("") && Character.isUpperCase(token.charAt(0)) && Character.isUpperCase(postToken.charAt(0))){
-//                if(i + 2 < size){
-//                    String postPostTerm = fullText.get(i + 2);
-//                    if(Character.isUpperCase(postPostTerm.charAt(0))){
-//                        if(i + 3 < size){
-//                            String postPostPostTerm = fullText.get(i + 3);
-//                            if(Character.isUpperCase(postPostPostTerm.charAt(0))){
-//                                String name = token + " " + postToken + " " + postPostTerm + " " + postPostPostTerm;
-//                                addTermToMap(name);
-//                                i = i + 3;
-//                                continue;
-//                            }
-//                        } // if name Size 4 END
-//                        String name = token + " " + postToken + " " + postPostTerm;
-//                        addTermToMap(name);
-//                        i = i + 2;
-//                        continue;
-//                    }
-//
-//                }// if name Size 3 END
-//                String name = token + " " + postToken ;
-//                addTermToMap(name);
-//                i = i + 1;
-//                continue;
-//            } // If names END
 
             // words to numbers
             String numbers = "";
@@ -304,7 +275,6 @@ public class Parse {
             term = this.stemmer.porterStemmer(term);
         }
 
-
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, "1"); // term counter = 1
@@ -314,49 +284,12 @@ public class Parse {
         int counter = Integer.parseInt(this.mapTerms.get(term)); // term with tf
         this.mapTerms.put(term, String.valueOf(counter + 1)); // term counter = 1
 
-
         // check for max TF
         if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term))){
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
     }
-
-    /**
-     * clean law
-     * @param term
-     * @return
-     */
-    private String cleanTerm(String term){
-        if(term.isEmpty()){
-            return "";
-        }
-        term = term.replaceAll("\\s*\n", "");
-        term = term.replaceAll("^_", "");
-        term = term.replaceAll("^\\w\\s", "");
-        term = term.replaceAll("-\\s+", "-");
-
-        try {
-            /*
-            if(term.charAt(0) == '%') {
-                term = Pattern.compile("%*(%.*)", reOptions).matcher(term).group(1);
-            }
-            if(term.charAt(0) == '$') {
-                term = Pattern.compile("\\$*(\\$.*)", reOptions).matcher(term).group(1);
-            }
-            */
-            if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
-                return "";
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        return term;
-    }
-
 
     /**
      * getter for map of terms
@@ -383,15 +316,9 @@ public class Parse {
      * delete/clean data structures
      */
     public void cleanParse(){
-//        this.mapTerms.clear();
-//        this.docInfo.clear();
         this.mapTerms = new TreeMap<>();
         this.docInfo = new ArrayList<>();
-        //threadPool.shutdown();
     }
-
-
-
 
 ////////////////////////////// LAWS //////////////////////////////
 
@@ -574,7 +501,6 @@ public class Parse {
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
-            //String name = matcherName.group().toUpperCase();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
             name = name.replaceFirst("^\\w\\s", "");
@@ -585,12 +511,9 @@ public class Parse {
                 String token2 = this.stemmer.porterStemmer(tokens[1].toLowerCase());
                 name = token1 + " " + token2;
             }
-
             addTermToMap(name.toUpperCase());
         }
-
     }
-
 
     /**
      * Our's law: words to numbers
@@ -739,6 +662,26 @@ public class Parse {
             }
         }
         return text;
+    }
 
+    /**
+     * clean law
+     * @param term
+     * @return
+     */
+    private String cleanTerm(String term){
+        if(term.isEmpty()){
+            return "";
+        }
+        term = term.replaceAll("\\s*\n", "");
+        term = term.replaceAll("^_", "");
+        term = term.replaceAll("^\\w\\s", "");
+        term = term.replaceAll("-\\s+", "-");
+
+        if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
+            return "";
+        }
+
+        return term;
     }
 }
