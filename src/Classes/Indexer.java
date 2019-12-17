@@ -78,7 +78,7 @@ public class Indexer {
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
-         mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
+        mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
         termDoc.remove("");
         for (String key : termDoc.keySet()) {
@@ -228,8 +228,8 @@ public class Indexer {
         int i;
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         for( i = 0; numberOfposting - 1 > 2 ; i++){
-            fileUrl1 = filePath1 + "/" + i;
-            fileUrl2 = filePath2 + "/" + (i+1);
+            fileUrl1 = filePath1  + i;
+            fileUrl2 = filePath2 + (i+1);
             SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             termCounter = 0;
             Path path1 = Paths.get(fileUrl1);
@@ -258,11 +258,13 @@ public class Indexer {
             File f2 = new File(fileUrl2);
             f1.delete();
             f2.delete();
+            numberOfposting = numberOfposting - 2;
 
             writePosting(terms);
+            numberOfposting++;
             terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
-            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
+//            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
 
         return i;
