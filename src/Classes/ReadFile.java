@@ -1,60 +1,51 @@
+package Classes;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class ReadFile{
     // Fields
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
+    /**
+     * content of all docs
+     */
     private List<byte[]> allFiles;
-
+    private String path;
 
     // Constructor
-    public ReadFile(){
-        this.allFiles = Collections.synchronizedList(new ArrayList<>());
+    public ReadFile(String corpusPath){
+        this.path = corpusPath;
+        this.allFiles = new ArrayList<>();
     }
 
     /**
-     * Separate files and parse terms(?)
-     * @param path
+     * Separate files
+     *
      */
-    public void filesSeparator(String path){
-        File files = new File(path);
+    public void filesSeparator(){
+        // create file from path of corpus
+        File files = new File(this.path);
         if (files.listFiles() == null) {
             return;
         }
 
         try  {
-            Stream<Path> paths = Files.walk(Paths.get(path));
+            // create paths of docs
+            Stream<Path> paths = Files.walk(Paths.get(this.path));
             Path[] filesPaths = paths.filter(Files::isRegularFile).toArray(Path[]::new);
 
+            // separate docs by paths
             for( Path fileP :  filesPaths) {
                 String strFiles = fileIntoString(new File(fileP.toString()));
                 String strFilePath = fileP.toString();
-                threadPool.submit(() -> {
-                    separatedFilesToArrayList(strFiles, strFilePath);
-                });
+                separatedFilesToArrayList(strFiles, strFilePath); // separate docs to list: doc per index
             }
-
-
-            // Wait for ending of threads
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-           threadPool.shutdown();
-
         }
         catch (Exception e){
             e.printStackTrace();
@@ -89,7 +80,8 @@ public class ReadFile{
     private void separatedFilesToArrayList(String fileString, String pathDirectory){
         // Content
 
-        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>",
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
         while (matcherFileContent.find()) {
             String content = matcherFileContent.group();
@@ -98,8 +90,15 @@ public class ReadFile{
         }
     }
 
+    /**
+     * Save docs's folder's name to tag <DOCNO></DOCNO>
+     * @param content
+     * @param pathDirectory
+     * @return
+     */
     private String writeDocName(String content, String pathDirectory){
-        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>",
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcherFileContent = patternFileContent.matcher(content);
         while (matcherFileContent.find()){
             if(!matcherFileContent.group(1).contains(pathDirectory)) {
@@ -109,6 +108,7 @@ public class ReadFile{
         return content;
     }
 
+    // getter for docs
     public List<byte[]> getListAllDocs() {
         return allFiles;
     }
