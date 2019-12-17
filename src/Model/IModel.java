@@ -11,7 +11,7 @@ import java.io.File;
 public interface IModel {
     void loadDictionary(File file);
 
-    void showDictionary();
+    void showDictionary(TextField posting_text, boolean isSelected);
 
     void resetProcess(TextField posting_text);
 
@@ -21,4 +21,5 @@ public interface IModel {
 
     int getDocCounter();
 
+    int getNumberOfTerms();
 }
