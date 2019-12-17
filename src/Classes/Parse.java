@@ -30,17 +30,34 @@ public class Parse {
      */
     private ArrayList<String> docInfo;
 
+    /**
+     *  words to numbers
+     */
+    private List<String> listNumbersAsWords;
+    private Set<String> setNumbersAsWords;
+
     //Constructor
     public Parse(String stopWordsPath, boolean stem) {
         this.stem = stem;
         this.stemmer = new Stemmer();
         this.mapTerms = new TreeMap<>();
         this.docInfo = new ArrayList<>();
+        listNumbersAsWords = Arrays.asList
+                (
+                        "zero","one","two","three","four","five","six","seven",
+                        "eight","nine","ten","eleven","twelve","thirteen","fourteen",
+                        "fifteen","sixteen","seventeen","eighteen","nineteen","twenty",
+                        "thirty","forty","fifty","sixty","seventy","eighty","ninety",
+                        "hundred","thousand","million","billion","trillion"
+                );
 
+        setNumbersAsWords = new HashSet<>(listNumbersAsWords);
         // charge stop words from file on hard disk to set in RAM
         try {
             String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
+            // for words to numbers law
+            this.setStopWords.removeAll(setNumbersAsWords);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +80,7 @@ public class Parse {
         // text without punctuation for token format
         ArrayList<String> tokensFullText = new ArrayList<>();
 
-        Pattern patternToken = Pattern.compile("([A-Za-z0-9%$]+(?:\\.\\d+)?(?:[-/]\\s*\\w+)*(?:\\.\\w+)?)((?:\\W|\\s+))", reOptions);
+        Pattern patternToken = Pattern.compile("([A-Za-z0-9%$]+(?:[.,]\\d+)?(?:[-/]\\s*\\w+)*(?:\\.\\w+)?)((?:\\W|\\s+))", reOptions);
         Matcher matcherToken = patternToken.matcher(fullText);
         while (matcherToken.find()) { // for each token
             String token = matcherToken.group(1);
@@ -95,7 +112,7 @@ public class Parse {
 
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
         //TODO : names !
-        //searchNames(fullText); // Entity/Names law
+        searchNames(fullText); // Entity/Names law
 
         // add properties to property-doc-list
         this.docInfo.add(this.termMaxTf);
@@ -110,10 +127,8 @@ public class Parse {
      */
     private void tokenFormat(ArrayList<String> fullText) {
         String preToken = "";
-
-        String postToken = "";
-        String token = "";
-        String number = "";
+        String postToken;
+        String token;
         int size = fullText.size();
 
         for (int i = 0; i < size; i++) {
@@ -217,9 +232,21 @@ public class Parse {
 //                continue;
 //            } // If names END
 
+            // words to numbers
+            String numbers = "";
+            if(setNumbersAsWords.contains(fullText.get(i))) {
+                while (i < size && setNumbersAsWords.contains(fullText.get(i))) {
+                    numbers += fullText.get(i) + " ";
+                    i++;
+                }
+                i--;
+
+                String tokenNum = wordsToNum(numbers.trim(), listNumbersAsWords);
+                addTermToMap(numWithoutUnits(tokenNum));
+                continue;
+            }
 
             addTermToMap(token);
-
         }
     }
 
@@ -299,6 +326,9 @@ public class Parse {
             this.termMaxTf = term;
         }
     }
+
+
+
 
 
     /**
@@ -531,6 +561,157 @@ public class Parse {
 
             addTermToMap(name.toUpperCase());
         }
+
+    }
+
+
+    /**
+     * Our's law: words to numbers
+     * Source: https://stackoverflow.com/questions/26948858/converting-words-to-numbers-in-java
+     * @param text
+     * @param allowedStrings
+     * @return
+     */
+    private String wordsToNum(String text, List<String> allowedStrings){
+        boolean isValidInput = true;
+        long result = 0;
+        long finalResult = 0;
+
+        String input = text;
+
+        if(input != null && input.length()> 0)
+        {
+            input = input.replaceAll("-", " ");
+            input = input.toLowerCase().replaceAll(" and", " ");
+            String[] splittedParts = input.trim().split("\\s+");
+
+            for(String str : splittedParts)
+            {
+                if(!allowedStrings.contains(str))
+                {
+                    isValidInput = false;
+                    System.out.println("Invalid word found : "+str);
+                    break;
+                }
+            }
+            if(isValidInput)
+            {
+                for(String str : splittedParts)
+                {
+                    if(str.equalsIgnoreCase("zero")) {
+                        result += 0;
+                    }
+                    else if(str.equalsIgnoreCase("one")) {
+                        result += 1;
+                    }
+                    else if(str.equalsIgnoreCase("two")) {
+                        result += 2;
+                    }
+                    else if(str.equalsIgnoreCase("three")) {
+                        result += 3;
+                    }
+                    else if(str.equalsIgnoreCase("four")) {
+                        result += 4;
+                    }
+                    else if(str.equalsIgnoreCase("five")) {
+                        result += 5;
+                    }
+                    else if(str.equalsIgnoreCase("six")) {
+                        result += 6;
+                    }
+                    else if(str.equalsIgnoreCase("seven")) {
+                        result += 7;
+                    }
+                    else if(str.equalsIgnoreCase("eight")) {
+                        result += 8;
+                    }
+                    else if(str.equalsIgnoreCase("nine")) {
+                        result += 9;
+                    }
+                    else if(str.equalsIgnoreCase("ten")) {
+                        result += 10;
+                    }
+                    else if(str.equalsIgnoreCase("eleven")) {
+                        result += 11;
+                    }
+                    else if(str.equalsIgnoreCase("twelve")) {
+                        result += 12;
+                    }
+                    else if(str.equalsIgnoreCase("thirteen")) {
+                        result += 13;
+                    }
+                    else if(str.equalsIgnoreCase("fourteen")) {
+                        result += 14;
+                    }
+                    else if(str.equalsIgnoreCase("fifteen")) {
+                        result += 15;
+                    }
+                    else if(str.equalsIgnoreCase("sixteen")) {
+                        result += 16;
+                    }
+                    else if(str.equalsIgnoreCase("seventeen")) {
+                        result += 17;
+                    }
+                    else if(str.equalsIgnoreCase("eighteen")) {
+                        result += 18;
+                    }
+                    else if(str.equalsIgnoreCase("nineteen")) {
+                        result += 19;
+                    }
+                    else if(str.equalsIgnoreCase("twenty")) {
+                        result += 20;
+                    }
+                    else if(str.equalsIgnoreCase("thirty")) {
+                        result += 30;
+                    }
+                    else if(str.equalsIgnoreCase("forty")) {
+                        result += 40;
+                    }
+                    else if(str.equalsIgnoreCase("fifty")) {
+                        result += 50;
+                    }
+                    else if(str.equalsIgnoreCase("sixty")) {
+                        result += 60;
+                    }
+                    else if(str.equalsIgnoreCase("seventy")) {
+                        result += 70;
+                    }
+                    else if(str.equalsIgnoreCase("eighty")) {
+                        result += 80;
+                    }
+                    else if(str.equalsIgnoreCase("ninety")) {
+                        result += 90;
+                    }
+                    else if(str.equalsIgnoreCase("hundred")) {
+                        result *= 100;
+                    }
+                    else if(str.equalsIgnoreCase("thousand")) {
+                        result *= 1000;
+                        finalResult += result;
+                        result=0;
+                    }
+                    else if(str.equalsIgnoreCase("million")) {
+                        result *= 1000000;
+                        finalResult += result;
+                        result=0;
+                    }
+                    else if(str.equalsIgnoreCase("billion")) {
+                        result *= 1000000000;
+                        finalResult += result;
+                        result=0;
+                    }
+                    else if(str.equalsIgnoreCase("trillion")) {
+                        result *= 1000000000000L;
+                        finalResult += result;
+                        result=0;
+                    }
+                }
+
+                finalResult += result;
+                return String.valueOf(finalResult);
+            }
+        }
+        return text;
 
     }
 }

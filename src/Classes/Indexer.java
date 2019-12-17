@@ -2,7 +2,6 @@ package Classes;
 
 import sun.misc.Cleaner;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -42,9 +41,14 @@ public class Indexer {
     private boolean isStem;
 
     /**
+     * name of the temp file
+     */
+    private static int termCounter = 0;
+
+    /**
      * will determinate the size of the posting (~50000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 5000;
+    private final int MAX_POST_SIZE = 10000;
 
     /**
      * help us to save id/maxtf/counter for each doc in the posting
@@ -79,35 +83,38 @@ public class Indexer {
         }
          mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
 
+        termDoc.remove("");
         for (String key : termDoc.keySet()) {
-            if(this.mapSortedTerms.containsKey(key)){
-                //chain the new list of term to the original one
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
-                ArrayList<String> originalList = mapSortedTerms.get(key);
-                // duplicates of docs 0:1;0:2 agent
-                if(!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
-                    String originalInfo = originalList.get(0) + info;
-                    originalList = new ArrayList<>();
-                    originalList.add(0, originalInfo);
-                }
-                else {
-                    originalList.clear();
-                    originalList.add(0, info);
-                }
-                if(Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
-                    mapSortedTerms.remove(key.toUpperCase());
-                    mapSortedTerms.put(key.toLowerCase(), originalList);
-                }
-                else {
-                    mapSortedTerms.put(key, originalList);
+            try {
+                if (this.mapSortedTerms.containsKey(key)) {
+                    //chain the new list of term to the original one
+                    String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                    ArrayList<String> originalList = mapSortedTerms.get(key);
+                    // duplicates of docs 0:1;0:2 agent
+                    if (!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
+                        String originalInfo = originalList.get(0) + info;
+                        originalList = new ArrayList<>();
+                        originalList.add(0, originalInfo);
+                    } else {
+                        originalList.clear();
+                        originalList.add(0, info);
+                    }
+                    if (!key.contains(" ") && Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
+                        mapSortedTerms.remove(key.toUpperCase());
+                        mapSortedTerms.put(key.toLowerCase(), originalList);
+                    } else {
+                        mapSortedTerms.put(key, originalList);
+                    }
+                } else {
+                    //Add new term and it list of info to the Sorted map
+                    ArrayList<String> listOfInfo = new ArrayList<>();
+                    String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                    listOfInfo.add(0, info);
+                    mapSortedTerms.put(key, listOfInfo);
                 }
             }
-            else{
-                //Add new term and it list of info to the Sorted map
-                ArrayList<String> listOfInfo = new ArrayList<>();
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
-                listOfInfo.add(0, info);
-                mapSortedTerms.put(key, listOfInfo);
+            catch (Exception e){
+                e.printStackTrace();
             }
         }
         docIDCounter++;
@@ -226,7 +233,6 @@ public class Indexer {
 
     }
 
-
     /**
      * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
      * @param path where we want to save the index files
@@ -264,60 +270,76 @@ public class Indexer {
         }else {
             stemFolder = "noStem";
         }
+        SortedMap<String, String> terms = new TreeMap<>();
         String filePath1 = this.pathPosting + "/" + stemFolder + "/";
         String filePath2 = this.pathPosting+ "/" + stemFolder + "/";
-        String fileUrl1 = "";
-        String fileUrl2 = "";
+        String fileUrl1;
+        String fileUrl2;
         int i;
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         for( i = 0; numberOfposting - 1 > 2 ; i++){
             fileUrl1 = filePath1 + "/" + i;
             fileUrl2 = filePath2 + "/" + (i+1);
-            SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            termCounter = 0;
             Path path1 = Paths.get(fileUrl1);
             Path path2 = Paths.get(fileUrl2);
             try
             {
-                Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
-                Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
+//                Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
+//                Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
+//
+//                for( String line : (Iterable<String>) lines1::iterator ){
+//                    String term = line.substring(0, line.indexOf("|"));
+//                    String info = line.substring(line.indexOf("|") + 1);
+//                    rawTerms.put(term, info);
+//                }
+//
+//                for( String line : (Iterable<String>) lines2::iterator )
+//                {
+//                    terms = mergeTermsToMap(rawTerms, line);
+//
+//                }
+                Stream<String> linesFile1Numbers = Files.lines( path1, StandardCharsets.US_ASCII );
+                Stream<String> linesFile2Numbers = Files.lines( path2, StandardCharsets.US_ASCII );
+                //////////////////////////////////////////////////
+                // merge numbers
+                List<String> listLinesFile1Numbers = linesFile1Numbers
+                        .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                        .collect(Collectors.toList());
+                List<String> listLinesFile2Numbers = linesFile2Numbers
+                        .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
+                        .collect(Collectors.toList());
+                SortedMap<String, String> termsNumbers = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1Numbers, listLinesFile2Numbers);
+                usingBufferedWritter(mapToFormatString(termsNumbers), String.valueOf(postIdCounter));
+                /////////////////////////////////////////////////////////////////////
+                for(int j = 'a'; j <= 'z'; j++) {
+                    Stream<String> linesFile1AZ = Files.lines(path1, StandardCharsets.US_ASCII);
+                    Stream<String> linesFile2AZ = Files.lines(path2, StandardCharsets.US_ASCII);
+                    rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                    int ch = j;
+                    List<String> listLinesFile1AZ = linesFile1AZ
+                            .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                            .collect(Collectors.toList());
+                    List<String> listLinesFile2AZ = linesFile2AZ
+                            .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
+                            .collect(Collectors.toList());
+                    SortedMap<String, String> termsAB = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1AZ, listLinesFile2AZ);
+                    usingBufferedWritter(mapToFormatString(termsAB), String.valueOf(postIdCounter));
 
-                for( String line : (Iterable<String>) lines1::iterator ){
-                    String term = line.substring(0, line.indexOf("|"));
-                    String info = line.substring(line.indexOf("|") + 1);
-                    text.put(term, info);
                 }
 
-                for( String line : (Iterable<String>) lines2::iterator )
-                {
-                    String term = line.substring(0, line.indexOf("|"));
-                    String info = line.substring(line.indexOf("|") + 1);
-
-                    if(!text.containsKey(term)){
-                        text.put(term, info);
-                    }
-                    else{
-                        String preInfo = text.get(term);
-                        text.put(term, info + preInfo);
-                    }
-                }
-
-            } catch (IOException ioe){
+                } catch (IOException ioe){
                 ioe.printStackTrace();
             }
             File f1 = new File(fileUrl1);
             File f2 = new File(fileUrl2);
             f1.delete();
             f2.delete();
-            // TODO : deal with java heap Exception
-            try {
-                usingBufferedWritter(mapToFormatString(text), String.valueOf(postIdCounter));
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+//            usingBufferedWritter(mapToFormatString(terms), String.valueOf(postIdCounter));
 
             postIdCounter++;
-            text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
             i++; // two files each time
             numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
@@ -333,73 +355,58 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
-        SortedMap<String, String> text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        termCounter = 0;
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
         try
         {
-            Stream<String> lines1 = Files.lines( path1, StandardCharsets.US_ASCII );
-            Stream<String> lines2 = Files.lines( path2, StandardCharsets.US_ASCII );
+            Stream<String> linesFile1Numbers = Files.lines( path1, StandardCharsets.US_ASCII );
+            Stream<String> linesFile2Numbers = Files.lines( path2, StandardCharsets.US_ASCII );
             //////////////////////////////////////////////////
-
-            List<String> listLines1 = lines1
+            // merge numbers
+            List<String> listLinesFile1Numbers = linesFile1Numbers
                     .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
                     .collect(Collectors.toList());
-            List<String> listLines2 = lines2
+            List<String> listLinesFile2Numbers = linesFile2Numbers
                     .filter(s -> s.charAt(0) == '$' || Character.isDigit(s.charAt(0)))
                     .collect(Collectors.toList());
-            for(String line : listLines1) {
-                String term = line.substring(0, line.indexOf("|"));
-                String info = line.substring(line.indexOf("|") + 1);
-                text.put(term, info);
-            }
-            for(String line : listLines2){
-                String term = line.substring(0, line.indexOf("|"));
-                String info = line.substring(line.indexOf("|") + 1);
-
-                if(!text.containsKey(term)){
-                    text.put(term, info);
-                }
-                else{
-                    String preInfo = text.get(term);
-                    text.put(term, info + preInfo);
-                }
-            }
-            usingBufferedWritter(mapToFormatString(text), "Numbers");
-            termToDictionary(text);
+            SortedMap<String, String> termsNumbers = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1Numbers, listLinesFile2Numbers);
+            usingBufferedWritter(mapToFormatString(termsNumbers), "Numbers");
+            termToDictionary(termsNumbers);
 //////////////////////////////////////////////////////////////////////////////////////
+            // merge a-z lower and upper cases
             for(int i = 'a'; i <= 'z'; i++) {
-                Stream<String> lines11 = Files.lines( path1, StandardCharsets.US_ASCII );
-                Stream<String> lines22 = Files.lines( path2, StandardCharsets.US_ASCII );
-                text = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                Stream<String> linesFile1AZ = Files.lines( path1, StandardCharsets.US_ASCII );
+                Stream<String> linesFile2AZ = Files.lines( path2, StandardCharsets.US_ASCII );
+                rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
                 int ch = i;
-                List<String> listLines11 = lines11
+                List<String> listLinesFile1AZ = linesFile1AZ
                         .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
                         .collect(Collectors.toList());
-                List<String> listLines22 = lines22
+                List<String> listLinesFile2AZ = linesFile2AZ
                         .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
                         .collect(Collectors.toList());
+                SortedMap<String, String> termsAB = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1AZ, listLinesFile2AZ);
 
-                for(String line : listLines11) {
-                    String term = line.substring(0, line.indexOf("|"));
-                    String info = line.substring(line.indexOf("|") + 1);
-                    text.put(term, info);
-                }
-                for(String line : listLines22){
-                    String term = line.substring(0, line.indexOf("|"));
-                    String info = line.substring(line.indexOf("|") + 1);
-
-                    if(!text.containsKey(term)){
-                        text.put(term, info);
+                // Names: check if a name in 2 or more docs
+                // the iterator avoids: Exception in thread "JavaFX Application Thread" java.util.ConcurrentModificationException
+                for(Iterator<Map.Entry<String, String>> it = termsAB.entrySet().iterator(); it.hasNext(); ) {
+                    Map.Entry<String, String> entry = it.next();
+                    if(entry.getKey().contains(" ")){
+                        int counter = 0;
+                        Pattern dfPattern = Pattern.compile("(;)");
+                        Matcher dfMatcher = dfPattern.matcher(entry.getValue());
+                        while (dfMatcher.find()){
+                            counter++;
+                        }
+                        if(counter < 2){
+                            it.remove();
+                        }
                     }
-                    else{
-                        String preInfo = text.get(term);
-                        text.put(term, info + preInfo);
-                    }
                 }
-                usingBufferedWritter(mapToFormatString(text), String.valueOf((char)i));
-                termToDictionary(text);
-
+                usingBufferedWritter(mapToFormatString(termsAB), String.valueOf((char)i));
+                termToDictionary(termsAB);
             }
 
             File f1 = new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
@@ -410,15 +417,41 @@ public class Indexer {
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
-
     }
 
-    private void termToDictionary(Map<String, String> text) {
-        Set<String> terms = text.keySet();
+    private SortedMap<String, String> mergeTermsToMap(SortedMap<String, String> rawTerms, String line) {
+        String term = line.substring(0, line.indexOf("|"));
+        String info = line.substring(line.indexOf("|") + 1);
+
+        if(!rawTerms.containsKey(term)){
+            rawTerms.put(term, info);
+        }
+        else{
+            String preInfo = rawTerms.get(term);
+            rawTerms.put(term, info + preInfo);
+        }
+        return rawTerms;
+    }
+
+    private SortedMap<String, String> finaleMergeTermsFromTwoFilesToMap(SortedMap<String, String> rawTerms, List<String> file1, List<String> file2){
+        SortedMap<String, String> terms = new TreeMap<>();
+        for(String line : file1) {
+            String term = line.substring(0, line.indexOf("|"));
+            String info = line.substring(line.indexOf("|") + 1);
+            rawTerms.put(term, info);
+        }
+        for(String line : file2){
+            terms = mergeTermsToMap(rawTerms, line);
+        }
+        return terms;
+    }
+
+    private void termToDictionary(Map<String, String> termsToDict) {
+        Set<String> terms = termsToDict.keySet();
         int lineCounter = 1;
         for(String term : terms){
             int df = 0;
-            String infoText = text.get(term);
+            String infoText = termsToDict.get(term);
             Pattern dfPattern = Pattern.compile("(;)");
             Matcher dfMatcher = dfPattern.matcher(infoText);
             while (dfMatcher.find()){

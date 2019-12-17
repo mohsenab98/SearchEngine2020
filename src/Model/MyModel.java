@@ -66,12 +66,15 @@ public class MyModel extends Observable implements IModel {
             stemFolder = "noStem";
         }
         File file = new File (posting_text.getText() + "\\" + stemFolder + "\\Dictionary");
-        Desktop desktop = Desktop.getDesktop();
-        try {
-            desktop.open(file);
-        } catch (IOException e) {
-            // if path isnt right or there no stem/nostem directories dont do anything
+        if(file.exists()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.open(file);
+            } catch (IOException e) {
+                // if path isnt right or there no stem/nostem directories dont do anything
+            }
         }
+
     }
 
     /**
