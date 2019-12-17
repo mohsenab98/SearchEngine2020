@@ -290,15 +290,10 @@ public class Parse {
      * @param term
      */
     private void addTermToMap(String term){
-        term = term.replaceAll("\\s*\n", "");
-        term = term.replaceAll("^_", "");
-        term = term.replaceAll("^\\w\\s", "");
-
-        if(term.equals("") || term.charAt(0) == '%'){
+        term = cleanTerm(term);
+        if(term.isEmpty()){
             return;
         }
-
-
         // Stemming
         if (Character.isUpperCase(term.charAt(0))) {
             if (this.stem) {
@@ -327,8 +322,40 @@ public class Parse {
         }
     }
 
+    /**
+     * clean law
+     * @param term
+     * @return
+     */
+    private String cleanTerm(String term){
+        if(term.isEmpty()){
+            return "";
+        }
+        term = term.replaceAll("\\s*\n", "");
+        term = term.replaceAll("^_", "");
+        term = term.replaceAll("^\\w\\s", "");
+        term = term.replaceAll("-\\s+", "-");
+
+        try {
+            /*
+            if(term.charAt(0) == '%') {
+                term = Pattern.compile("%*(%.*)", reOptions).matcher(term).group(1);
+            }
+            if(term.charAt(0) == '$') {
+                term = Pattern.compile("\\$*(\\$.*)", reOptions).matcher(term).group(1);
+            }
+            */
+            if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
+                return "";
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
+        return term;
+    }
 
 
     /**
