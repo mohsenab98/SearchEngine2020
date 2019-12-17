@@ -4,7 +4,6 @@
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -47,12 +46,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="163" column="9" lean-forward="true" selection-start-line="163" selection-start-column="9" selection-end-line="163" selection-end-column="9" />
+            <state relative-caret-position="23">
+              <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4635#4636#0" expanded="true" />
-                <element signature="e#4713#4714#0" expanded="true" />
+                <element signature="e#4435#4436#0" expanded="true" />
+                <element signature="e#4513#4514#0" expanded="true" />
                 <element signature="e#17638#17639#0" expanded="true" />
                 <element signature="e#17675#17676#0" expanded="true" />
               </folding>
@@ -277,7 +276,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576597990801" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576600038957" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -376,14 +375,7 @@
       <workItem from="1576338213505" duration="5786000" />
       <workItem from="1576410999610" duration="13810000" />
       <workItem from="1576479307530" duration="17757000" />
-      <workItem from="1576541593777" duration="23569000" />
-    </task>
-    <task id="LOCAL-00009" summary="removePunctuationAndSpaces">
-      <created>1574705607900</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1574705607900</updated>
+      <workItem from="1576541593777" duration="24287000" />
     </task>
     <task id="LOCAL-00010" summary="termIdentifier:&#10;+ Numbers&#10;+ Percentage">
       <created>1574798367839</created>
@@ -721,11 +713,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576594010610</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="- Final version not clear code">
+      <created>1576599887299</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1576599887299</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="433219000" />
+    <option name="totallyTimeSpent" value="433937000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -846,7 +845,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Updated Indexer (time for 100 dic = 3.4 min)" />
     <MESSAGE value="-Updated Indexer (time for 100 dic = 3.4 min) FIXED" />
     <MESSAGE value="-Gui" />
     <MESSAGE value="-Gui updated&#10;-Indexer posting path updated" />
@@ -871,7 +869,8 @@
     <MESSAGE value="- Ready with gui complete and without duplicates in Indexer" />
     <MESSAGE value="- Ready with law num words" />
     <MESSAGE value="- Ready sorted merge(old)" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Ready sorted merge(old)" />
+    <MESSAGE value="- Final version not clear code" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Final version not clear code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -907,7 +906,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Classes/Indexer.java</url>
-          <line>116</line>
+          <line>109</line>
           <properties />
           <option name="timeStamp" value="154" />
         </line-breakpoint>
@@ -1168,12 +1167,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="163" column="9" lean-forward="true" selection-start-line="163" selection-start-column="9" selection-end-line="163" selection-end-column="9" />
+        <state relative-caret-position="23">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4635#4636#0" expanded="true" />
-            <element signature="e#4713#4714#0" expanded="true" />
+            <element signature="e#4435#4436#0" expanded="true" />
+            <element signature="e#4513#4514#0" expanded="true" />
             <element signature="e#17638#17639#0" expanded="true" />
             <element signature="e#17675#17676#0" expanded="true" />
           </folding>

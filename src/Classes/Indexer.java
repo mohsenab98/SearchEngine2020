@@ -1,17 +1,10 @@
 package Classes;
 
-import sun.misc.Cleaner;
-
 import java.io.*;
-import java.nio.CharBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -165,50 +158,13 @@ public class Indexer {
         return textToPostFile.toString();
     }
 
-
-
-    private String readFile(String fileName){
-        CharBuffer charBuffer = null;
-        String stemFolder = "";
-        if(isStem){
-            stemFolder = "stem";
-        }else {
-            stemFolder = "noStem";
-        }
-        Path path = Paths.get(this.pathPosting + "/" +stemFolder + "/" + fileName);
-
-        try{
-            FileChannel fileChannel = (FileChannel) Files.newByteChannel(path, EnumSet.of(StandardOpenOption.READ));
-
-            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
-
-            if (mappedByteBuffer != null) {
-                charBuffer = Charset.forName("ASCII").decode(mappedByteBuffer);
-            }
-
-            Cleaner cleaner = ((sun.nio.ch.DirectBuffer) mappedByteBuffer).cleaner();
-            if (cleaner != null) {
-                cleaner.clean();
-            }
-
-            PrintWriter writer = new PrintWriter(new File(path.toString()));
-            writer.print("");
-            writer.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return charBuffer.toString();
-    }
-
     /**
      * append text to file
      * this function code was take from "https://howtodoinjava.com/java/io/java-append-to-file/"
      * @param text for the posting file
      * @throws IOException if the file or directory wasn't found
      */
-    public void usingBufferedWritter(String text, String filename)
+    private void usingBufferedWritter(String text, String filename)
     {
         String stemFolder = "";
         if(isStem){
@@ -253,7 +209,7 @@ public class Indexer {
         }
     }
 
-    public void saveDocInfo() {
+    private void saveDocInfo() {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
