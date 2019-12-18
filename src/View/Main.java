@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -19,6 +18,7 @@ import java.io.File;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
 /**
+ * Information Retrieval - Search Engine
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
  */
 
@@ -40,20 +40,16 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 1100, 600);
-        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
 
         primaryStage.setScene(scene);
-        File file = new File("src/resources/glassSearch.png");
+        File file = new File("resources/glassSearch.png");
         Image image = new Image(file.toURI().toString());
-//        image_view.setImage(image);
         //--------------
         MyViewController view = fxmlLoader.getController();
-
         view.setViewModel(viewModel);
         view.setImage(image); // add image
         viewModel.addObserver(view);
-
-
         //--------------
         SetStageCloseEvent(primaryStage);
 

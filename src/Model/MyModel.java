@@ -4,8 +4,6 @@ import Classes.Indexer;
 import Classes.Parse;
 import Classes.ReadFile;
 import javafx.scene.control.TextField;
-
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +27,7 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     * opens the file we choose and load it to the mapDictionary
+     * opens the file(Dictionary) and load it to the mapDictionary
      * @param file
      */
     @Override
@@ -52,37 +50,14 @@ public class MyModel extends Observable implements IModel {
         }
     }
 
-    /**
-     * opens the file that contains the dictionary in new window
-     * @param posting_text
-     * @param isSelected
-     */
-    @Override
-    public void showDictionary(TextField posting_text, boolean isSelected) {
-        String stemFolder = "";
-        if(isSelected){
-            stemFolder = "stem";
-        }else{
-            stemFolder = "noStem";
-        }
-        File file = new File (posting_text.getText() + "\\" + stemFolder + "\\Dictionary");
-        if(file.exists()){
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.open(file);
-            } catch (IOException e) {
-                // if path isnt right or there no stem/nostem directories dont do anything
-            }
-        }
-
-    }
 
     /**
-     * delete all dataSet we have worked with
+     * delete all dataSet(Posting files) we have worked with
      * @param posting_text
      */
     @Override
     public void resetProcess(TextField posting_text) {
+
         try {
             Files.walk(Paths.get(posting_text.getText() + "/stem"))
                     .sorted(Comparator.reverseOrder())
@@ -94,7 +69,7 @@ public class MyModel extends Observable implements IModel {
                     .map(Path::toFile)
                     .forEach(File::delete);
         }catch (Exception o){
-            // if path isnt right or there no stem/nostem directories dont do anything
+//            o.printStackTrace();
         }
     }
 
@@ -157,7 +132,6 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     *
      * @return time for indexing
      */
     public double getTimeForIndexing() {
@@ -165,7 +139,6 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     *
      * @return number of docs indexed
      */
     public int getDocCounter() {

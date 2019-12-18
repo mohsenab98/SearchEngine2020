@@ -11,11 +11,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane fx:id="Board" stylesheets="@view.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MyViewController">
+<BorderPane fx:id="Board" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MyViewController">
     <top>
-        <!--<VBox fx:id="pic_vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">-->
-            <ImageView fx:id="image_view" fitHeight="200.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
-        <!--</VBox>-->
+        <ImageView fx:id="image_view" fitHeight="200.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </top>
 
     <left>
@@ -49,6 +47,7 @@
         </GridPane>
 
     </right>
+
     <center>
         <GridPane fx:id="center_grid" alignment="TOP_CENTER">
 
