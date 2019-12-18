@@ -243,6 +243,9 @@ public class MyViewController extends Canvas implements Observer {
      * @param actionEvent
      */
     public void loadFile(ActionEvent actionEvent) {
+        if(posting_text.getText().equals("")){
+            return;
+        }
         String stemFolder = "";
         if(stem.isSelected()){
             stemFolder = "stem";
