@@ -282,10 +282,14 @@ public class Indexer {
         termCounter = 0;
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
+        if(!(new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1)).exists())){
+            return;
+        }
         try
         {
             Stream<String> linesFile1Numbers = Files.lines( path1, StandardCharsets.US_ASCII );
             Stream<String> linesFile2Numbers = Files.lines( path2, StandardCharsets.US_ASCII );
+
             //////////////////////////////////////////////////
             // merge numbers
             List<String> listLinesFile1Numbers = linesFile1Numbers
@@ -374,16 +378,20 @@ public class Indexer {
     private void termToDictionary(Map<String, String> termsToDict) {
         Set<String> terms = termsToDict.keySet();
         int lineCounter = 1;
+        int total = 0;
         for(String term : terms){
             int df = 0;
+            total = 0;
             String infoText = termsToDict.get(term);
-            Pattern dfPattern = Pattern.compile("(;)");
+
+            Pattern dfPattern = Pattern.compile("(\\d+);");
             Matcher dfMatcher = dfPattern.matcher(infoText);
             while (dfMatcher.find()){
+                total += Integer.parseInt(dfMatcher.group(1));
                 df++;
             }
 
-            String infoDic = "" + df + ";" + lineCounter;
+            String infoDic = "" + total + ":" + df + ";" + lineCounter;
             lineCounter ++;
 
             this.mapDictionary.put(term, infoDic);

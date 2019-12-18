@@ -180,7 +180,7 @@ public class MyViewController extends Canvas implements Observer {
                     e.printStackTrace();
                 }
                 String[] arr = line.split( "\\|" );
-                mapDictionary.put( arr[0], arr[1] );
+                mapDictionary.put( arr[0], arr[1].split(":")[0]);
             }
             JTable table=new JTable(toTableModel(mapDictionary)); //receiving the table from toTbleModel function
             JFrame frame=new JFrame();
@@ -203,7 +203,7 @@ public class MyViewController extends Canvas implements Observer {
      */
     public static TableModel toTableModel(Map<String,String> map) {
         DefaultTableModel model = new DefaultTableModel(
-                new Object[] { "Term", "df;pointer" }, 0
+                new Object[] { "Term", "Total Appearance" }, 0
         );
         for (Map.Entry<String,String> entry : map.entrySet()) {
             model.addRow(new Object[] { entry.getKey(), entry.getValue() });
