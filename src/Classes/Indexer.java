@@ -23,9 +23,6 @@ public class Indexer {
      */
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
 
-    //TODO : delete path if we dont use it
-    private String pathCorpus;
-
 
     private String pathPosting;
     /**
@@ -56,12 +53,11 @@ public class Indexer {
     private static int postIdCounter = 0; // name to temp posting file
     private static int sizeDictionary = 0; // size of dictionary
 
-    public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
+    public Indexer(String pathPosting, boolean isStem) {
         sizeDictionary = 0;
         docIDCounter = 0;
         postIdCounter = 0;
         this.mapDictionary = new LinkedHashMap<>();
-        this.pathCorpus = pathCorpus;
         this.pathPosting = pathPosting;
         this.mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         this.isStem = isStem;

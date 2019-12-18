@@ -97,7 +97,7 @@ public class MyModel extends Observable implements IModel {
         ReadFile rd = new ReadFile(pathCorpus);
         rd.filesSeparator();
         Parse p = new Parse(pathStopWords, stem);
-        Indexer n = new Indexer(pathCorpus, pathPosting, stem);
+        Indexer n = new Indexer(pathPosting, stem);
         n.setDocIDCounter(0);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
