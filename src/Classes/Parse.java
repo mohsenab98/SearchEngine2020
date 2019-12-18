@@ -503,7 +503,6 @@ public class Parse {
             String name = matcherName.group();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
-            name = name.replaceFirst("^\\w\\s", "");
 
             if(stem && name.contains(" ")){
                 String[] tokens = name.split(" ");
@@ -673,7 +672,7 @@ public class Parse {
         if(term.isEmpty()){
             return "";
         }
-
+/*
         term = term.replaceAll("^\\w\\s", "");
         if(term.contains("_")) {
             term = term.replaceAll("^_", "");
@@ -688,6 +687,38 @@ public class Parse {
 
         if(term.contains("- ")) {
             term = term.replaceAll("-\\s+", "-");
+        }
+        */
+
+
+        if(term.contains("_")) {
+            Pattern startLine = Pattern.compile("^_\\s*");
+            term = startLine.matcher(term).replaceAll("");
+        }
+
+        term = term.replaceAll("^\\w\\s", "");
+        if(term.contains("_") || term.contains("/") || term.contains("-")) {
+            Pattern endLine = Pattern.compile("[/_-]$");
+            term = endLine.matcher(term).replaceAll("");
+        }
+        if(term.contains("\n")) {
+            Pattern cleanLine = Pattern.compile("\\s*\n");
+            term = cleanLine.matcher(term).replaceAll("");
+        }
+        if(term.contains("- ")) {
+            Pattern cleanSpace = Pattern.compile("-\\s+");
+            term = cleanSpace.matcher(term).replaceAll("-");
+        }
+        if(term.contains("$$")){
+            Pattern cleanDollar = Pattern.compile("\\${2,}");
+            term = cleanDollar.matcher(term).replaceAll("\\$");
+        }
+        if(term.contains("%%")){
+            Pattern cleanPercent = Pattern.compile("%{2,}");
+            term = cleanPercent.matcher(term).replaceAll("%");
+        }
+        if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
+            return "";
         }
 
         return term;

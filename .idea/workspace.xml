@@ -3,17 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/IModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/IModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/IView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/view.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/resources/glassSearch.png" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -121,8 +111,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Classes/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="499" column="131" selection-start-line="499" selection-start-column="131" selection-end-line="499" selection-end-column="131" />
+            <state relative-caret-position="149">
+              <caret line="504" column="94" selection-start-line="504" selection-start-column="94" selection-end-line="504" selection-end-column="94" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -292,7 +282,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576696836695" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576698942416" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -394,14 +384,7 @@
       <workItem from="1576541593777" duration="29554000" />
       <workItem from="1576618876603" duration="707000" />
       <workItem from="1576669512353" duration="12252000" />
-      <workItem from="1576682864557" duration="8187000" />
-    </task>
-    <task id="LOCAL-00013" summary="functions for Names">
-      <created>1574871080952</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1574871080952</updated>
+      <workItem from="1576682864557" duration="9052000" />
     </task>
     <task id="LOCAL-00014" summary="New Read file, ArrayList in map">
       <created>1574887717346</created>
@@ -739,11 +722,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576618215519</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="- Final version with names{2,4}">
+      <created>1576696941253</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1576696941254</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="460350000" />
+    <option name="totallyTimeSpent" value="461215000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -864,7 +854,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Gui updated&#10;-Indexer posting path updated" />
     <MESSAGE value="- gui bug(pathPosting) fixed" />
     <MESSAGE value="- Indexer bug(readFile) fixed" />
     <MESSAGE value="- read without threading (~5min for 100 Files)&#10;- Indexer Update for doc writing" />
@@ -889,7 +878,8 @@
     <MESSAGE value="- Final version not clear code" />
     <MESSAGE value="- Final version more clear code." />
     <MESSAGE value="- Final version" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Final version" />
+    <MESSAGE value="- Final version with names{2,4}" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Final version with names{2,4}" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1187,8 +1177,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="499" column="131" selection-start-line="499" selection-start-column="131" selection-end-line="499" selection-end-column="131" />
+        <state relative-caret-position="149">
+          <caret line="504" column="94" selection-start-line="504" selection-start-column="94" selection-end-line="504" selection-end-column="94" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
