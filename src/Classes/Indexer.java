@@ -63,10 +63,17 @@ public class Indexer {
         this.mapDictionary = new LinkedHashMap<>();
         this.pathCorpus = pathCorpus;
         this.pathPosting = pathPosting;
-        this.mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
         postingFilesCreate(pathPosting);
+    }
+
+    public static int compare(String o1, String o2) {
+        int cmp = o1.compareToIgnoreCase(o2);
+        if (cmp != 0) return cmp;
+
+        return o1.compareTo(o2);
     }
 
     /**
@@ -120,7 +127,7 @@ public class Indexer {
      */
     public void reset(){
         //mapSortedTerms  ---- save to temp posting & clear
-        SortedMap<String, String> terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        SortedMap<String, String> terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         for(String term : mapSortedTerms.keySet()){
             ArrayList<String> listInfo = mapSortedTerms.get(term);
             String info= listInfo.get(0);
@@ -128,7 +135,7 @@ public class Indexer {
         }
 
         writePosting(terms);
-        mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
 
         // save to DOC file
         saveDocInfo();
@@ -230,7 +237,7 @@ public class Indexer {
         for( i = 0; numberOfposting - 1 > 2 ; i++){
             fileUrl1 = filePath1  + i;
             fileUrl2 = filePath2 + (i+1);
-            SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
             termCounter = 0;
             Path path1 = Paths.get(fileUrl1);
             Path path2 = Paths.get(fileUrl2);
@@ -262,7 +269,7 @@ public class Indexer {
 
             writePosting(terms);
             numberOfposting++;
-            terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
             i++; // two files each time
 //            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
@@ -278,7 +285,7 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
-        SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         termCounter = 0;
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
@@ -307,7 +314,7 @@ public class Indexer {
             for(int i = 'a'; i <= 'z'; i++) {
                 Stream<String> linesFile1AZ = Files.lines( path1, StandardCharsets.US_ASCII );
                 Stream<String> linesFile2AZ = Files.lines( path2, StandardCharsets.US_ASCII );
-                rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
                 int ch = i;
                 List<String> listLinesFile1AZ = linesFile1AZ
                         .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
