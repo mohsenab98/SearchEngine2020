@@ -497,7 +497,7 @@ public class Parse {
      * #6 NAMES
      * @param fullText
      */
-    private void searchNames(String fullText) {Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2}", Pattern.MULTILINE);
+    private void searchNames(String fullText) {Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,4}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
@@ -673,13 +673,21 @@ public class Parse {
         if(term.isEmpty()){
             return "";
         }
-        term = term.replaceAll("\\s*\n", "");
-        term = term.replaceAll("^_", "");
-        term = term.replaceAll("^\\w\\s", "");
-        term = term.replaceAll("-\\s+", "-");
 
-        if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
-            return "";
+        term = term.replaceAll("^\\w\\s", "");
+        if(term.contains("_")) {
+            term = term.replaceAll("^_", "");
+        }
+        if(term.contains("-")) {
+            term = term.replaceAll("-\\$", "");
+        }
+
+        if(term.contains("\n")) {
+            term = term.replaceAll("\\s*\n", "");
+        }
+
+        if(term.contains("- ")) {
+            term = term.replaceAll("-\\s+", "-");
         }
 
         return term;

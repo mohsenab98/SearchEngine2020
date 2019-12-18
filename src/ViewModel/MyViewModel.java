@@ -17,8 +17,6 @@ public class MyViewModel extends Observable implements Observer {
         this.model = model;
     }
 
-
-
     @Override
     public void update(Observable o, Object arg) {
 
@@ -26,10 +24,6 @@ public class MyViewModel extends Observable implements Observer {
 
     public void loadDictionary(File file) {
         model.loadDictionary(file);
-    }
-
-    public void showDictionary(TextField posting_text, boolean isSelected) {
-        model.showDictionary(posting_text, isSelected);
     }
 
     public void resetProcess(TextField posting_text){
