@@ -130,6 +130,13 @@ public class Parse {
 
         for (int i = 0; i < size; i++) {
             token = fullText.get(i);
+
+            // Repair numbers with "O" instead 0
+            if(token.matches(".*\\d.*") && token.toLowerCase().contains("o")){
+                token = token.toLowerCase().replaceAll("o", "0");
+            }
+
+
             if (Character.isDigit(token.charAt(0))) {
                 if (i > 0) {
                     preToken = fullText.get(i - 1);
@@ -674,31 +681,14 @@ public class Parse {
         if(term.isEmpty()){
             return "";
         }
-/*
-        term = term.replaceAll("^\\w\\s", "");
-        if(term.contains("_")) {
-            term = term.replaceAll("^_", "");
-        }
-        if(term.contains("-")) {
-            term = term.replaceAll("-\\$", "");
-        }
 
-        if(term.contains("\n")) {
-            term = term.replaceAll("\\s*\n", "");
-        }
-
-        if(term.contains("- ")) {
-            term = term.replaceAll("-\\s+", "-");
-        }
-        */
-
+        term = term.replaceAll("^(?:\\w\\s)+", "");
 
         if(term.contains("_")) {
             Pattern startLine = Pattern.compile("^_\\s*");
             term = startLine.matcher(term).replaceAll("");
         }
 
-        term = term.replaceAll("^\\w\\s", "");
         if(term.contains("_") || term.contains("/") || term.contains("-")) {
             Pattern endLine = Pattern.compile("[/_-]$");
             term = endLine.matcher(term).replaceAll("");
@@ -723,6 +713,6 @@ public class Parse {
             return "";
         }
 
-        return term;
+        return term.trim();
     }
 }
