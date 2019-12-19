@@ -107,41 +107,41 @@ public class MyModel extends Observable implements IModel {
         }
         String pathPosting = posting_text.getText(); /// need to use !!!!!!!!!!!!!!!!
 
-        ReadFile rd = new ReadFile(pathCorpus);
-        rd.filesSeparator();
-        Parse p = new Parse(pathStopWords, stem);
-        Indexer n = new Indexer(pathPosting, stem);
-        n.setDocIDCounter(0);
-        while (!rd.getListAllDocs().isEmpty()) {
+        ReadFile readFile = new ReadFile(pathCorpus);
+        readFile.filesSeparator();
+        Parse parse = new Parse(pathStopWords, stem);
+        Indexer indexer = new Indexer(pathPosting, stem);
+        indexer.setDocIDCounter(0);
+        while (!readFile.getListAllDocs().isEmpty()) {
             String fullText = "";
             String docName = "";
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            Matcher matcherText = patternText.matcher(new String(rd.getListAllDocs().get(0)));
+            Matcher matcherText = patternText.matcher(new String(readFile.getListAllDocs().get(0)));
             while (matcherText.find()) {
                 docName = matcherText.group(1);
                 fullText = matcherText.group(2);
             }
 
-            p.Parser(fullText, docName);
-            n.addTermToIndexer(p.getMapTerms(), p.getDocInfo());
+            parse.Parser(fullText, docName);
+            indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
 
-            rd.getListAllDocs().remove(0);
-            p.cleanParse();
+            readFile.getListAllDocs().remove(0);
+            parse.cleanParse();
 
         }
 
-        n.reset(); // check if there is stell terms in the sorted map
-        int i = n.merge(); //merge the temp sorted files into A-Z sorted files
-        n.finalMerge(i);
-        termNumbers = n.getDictionarySize();
+        indexer.reset(); // check if there is stell terms in the sorted map
+        int fileCounterName = indexer.merge(); //merge the temp sorted files 2 big files
+        indexer.finalMerge(fileCounterName); // merge 2 final posting files to A-Z posting files
+        termNumbers = indexer.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
         System.out.println(termNumbers);
-        System.out.println(n.getDocIDCounter());
+        System.out.println(indexer.getDocIDCounter());
         timeForIndexing = totalTime / 60;
-        docCounter = n.getDocIDCounter();
-        return true;////////
+        docCounter = indexer.getDocIDCounter();
+        return true;
     }
 
     /**
