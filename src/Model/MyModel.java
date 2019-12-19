@@ -91,7 +91,20 @@ public class MyModel extends Observable implements IModel {
         docCounter = 0;
         boolean stem = selected;
         String pathCorpus = corpus_text.getText();
-        String pathStopWords = corpus_text.getText()+"/StopWords";
+        String pathStopWords;
+        // search for stop words file
+        File f = new File(pathCorpus);
+        File[] matchingFiles = f.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().contains("stop") && name.toLowerCase().contains("words");
+            }
+        });
+        if(matchingFiles != null && matchingFiles.length > 0){
+            pathStopWords = matchingFiles[0].getPath();
+        }
+        else {
+            pathStopWords = corpus_text.getText() + "/05 stop_words.txt";
+        }
         String pathPosting = posting_text.getText(); /// need to use !!!!!!!!!!!!!!!!
 
         ReadFile rd = new ReadFile(pathCorpus);

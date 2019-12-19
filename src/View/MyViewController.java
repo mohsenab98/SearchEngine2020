@@ -52,9 +52,9 @@ public class MyViewController extends Canvas implements Observer {
                 Stage stage = new Stage();
 
                 Label l =  new Label();
-                l.setText("Number of Docs that has been indexed:  " +viewModel.getDocCounter()+"\n"+ "\n" +
-                        "Time for indexing the corpus:  " +viewModel.getTimeForIndexing() + " minutes"
-                        +"\n"+ "\n" + "Numbers of terms: " + viewModel.getNumberOfTerms());
+                l.setText("Number of indexed Docs:  " + viewModel.getDocCounter() + "\n" + "\n" +
+                        "Run Time of indexing the corpus:  " + viewModel.getTimeForIndexing() + " minutes"
+                        + "\n" + "\n" + "Amount of terms: " + viewModel.getNumberOfTerms());
                 stage.setTitle("Indexing Results!");
 
                 Scene scene = new Scene(l, 600, 400);

@@ -130,6 +130,13 @@ public class Parse {
 
         for (int i = 0; i < size; i++) {
             token = fullText.get(i);
+
+            // Repair numbers with "O" instead 0
+            if(token.matches(".*\\d.*") && token.toLowerCase().contains("o")){
+                token = token.toLowerCase().replaceAll("o", "0");
+            }
+
+
             if (Character.isDigit(token.charAt(0))) {
                 if (i > 0) {
                     preToken = fullText.get(i - 1);
@@ -243,7 +250,9 @@ public class Parse {
         Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new LinkedHashSet<>();
         while (sc2.hasNext()) {
-            setString.add(sc2.next());
+            String stopWord = sc2.next();
+            stopWord = stopWord.replace("\r", "");
+            setString.add(stopWord);
         }
         return setString;
 
@@ -497,13 +506,12 @@ public class Parse {
      * #6 NAMES
      * @param fullText
      */
-    private void searchNames(String fullText) {Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2}", Pattern.MULTILINE);
+    private void searchNames(String fullText) {Pattern patternName = Pattern.compile("(?:[A-Z]+\\w*(?:-[A-Za-z]+)*(?:\\W|\\s+)){2,4}", Pattern.MULTILINE);
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
             name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
-            name = name.replaceFirst("^\\w\\s", "");
 
             if(stem && name.contains(" ")){
                 String[] tokens = name.split(" ");
@@ -673,15 +681,38 @@ public class Parse {
         if(term.isEmpty()){
             return "";
         }
-        term = term.replaceAll("\\s*\n", "");
-        term = term.replaceAll("^_", "");
-        term = term.replaceAll("^\\w\\s", "");
-        term = term.replaceAll("-\\s+", "-");
 
+        term = term.replaceAll("^(?:\\w\\s)+", "");
+
+        if(term.contains("_")) {
+            Pattern startLine = Pattern.compile("^_\\s*");
+            term = startLine.matcher(term).replaceAll("");
+        }
+
+        if(term.contains("_") || term.contains("/") || term.contains("-")) {
+            Pattern endLine = Pattern.compile("[/_-]$");
+            term = endLine.matcher(term).replaceAll("");
+        }
+        if(term.contains("\n")) {
+            Pattern cleanLine = Pattern.compile("\\s*\n");
+            term = cleanLine.matcher(term).replaceAll("");
+        }
+        if(term.contains("- ")) {
+            Pattern cleanSpace = Pattern.compile("-\\s+");
+            term = cleanSpace.matcher(term).replaceAll("-");
+        }
+        if(term.contains("$$")){
+            Pattern cleanDollar = Pattern.compile("\\${2,}");
+            term = cleanDollar.matcher(term).replaceAll("\\$");
+        }
+        if(term.contains("%%")){
+            Pattern cleanPercent = Pattern.compile("%{2,}");
+            term = cleanPercent.matcher(term).replaceAll("%");
+        }
         if(term.length() == 1 && (term.charAt(0) == '$' ||term.charAt(0) == '%')){
             return "";
         }
 
-        return term;
+        return term.trim();
     }
 }
