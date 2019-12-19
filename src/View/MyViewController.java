@@ -4,28 +4,19 @@ import ViewModel.MyViewModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-
-import java.io.File;
-
-import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
-
+import java.io.*;
+import java.util.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView ;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
@@ -59,11 +50,12 @@ public class MyViewController extends Canvas implements Observer {
             start_button.setDisable(true);
             try {
                 Stage stage = new Stage();
+
                 Label l =  new Label();
-                l.setText("Number of Docs that has indexed:  " +viewModel.getDocCounter()+"\n"+ "\n" +
-                        "The time that it tooks:  " +viewModel.getTimeForIndexing() + " minutes"
-                        +"\n"+ "\n" + "Numbers of terms: " + viewModel.getNumberOfTerms());
-                stage.setTitle("Indexing Info!");
+                l.setText("Number of indexed Docs:  " + viewModel.getDocCounter() + "\n" + "\n" +
+                        "Run Time of indexing the corpus:  " + viewModel.getTimeForIndexing() + " minutes"
+                        + "\n" + "\n" + "Amount of terms: " + viewModel.getNumberOfTerms());
+                stage.setTitle("Indexing Results!");
 
                 Scene scene = new Scene(l, 600, 400);
                 stage.setScene(scene);
@@ -77,7 +69,8 @@ public class MyViewController extends Canvas implements Observer {
     }
 
     /**
-     * when we close the new window it reopen the start button
+     * when we close the new window:
+     * 1. reShow the start button
      * @param stage
      */
     private void SetStageCloseEvent(Stage stage) {
@@ -88,29 +81,29 @@ public class MyViewController extends Canvas implements Observer {
             }
         });
     }
+
     @Override
     public void update(Observable o, Object arg) {
 
     }
 
     /**
-     * set the view model
+     * 1. set the view model
+     * 2. start the indexing if the start button is pressed
      * @param viewModel
      */
     public void setViewModel(MyViewModel viewModel) {
         this.viewModel = viewModel;
-
         // when start button is pressed start indexing
         start_button.setOnAction(e ->{
-            File file1 = new File(corpus_text.getText());
-            File file2 = new File(posting_text.getText());
-            if(file1.exists() && file2.exists()) {
+            //if the path given by the user is right
+            if(isTruePath()) {
                 start_button.setDisable(true);
+                //if the indexing process has done
                 if(viewModel.startIndexing(stem.isSelected(), corpus_text, posting_text)){
                     ActionEvent event = new ActionEvent();
                     newWindow(event);
                 }
-
             }else{
                 showAlert("Enter valid locations !!");
             }
@@ -130,19 +123,92 @@ public class MyViewController extends Canvas implements Observer {
     }
 
     /**
+     *
+     * @return true if the path of posting and corpus is good
+     */
+    private boolean isTruePath(){
+        File file1 = new File(corpus_text.getText());
+        File file2 = new File(posting_text.getText());
+        if(file1.exists() && file2.exists()) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
      * when reset button is pressed
      * @param actionEvent
      */
     public void resetProcess(ActionEvent actionEvent) {
+        if(!isTruePath()){
+            return;
+        }
         viewModel.resetProcess(posting_text);
     }
+
     /**
-     * when reset show Dictionary is pressed
+     * when show Dictionary button is pressed
+     * using JTable to show the dictionary in new window as a table
      * @param actionEvent
      */
     public void showDictionary(ActionEvent actionEvent) {
-        viewModel.showDictionary(posting_text, stem.isSelected());
+        try {
+            String stemFolder = "";
+            if(stem.isSelected()){
+                stemFolder = "stem";
+            }else{
+                stemFolder = "noStem";
+            }
+            File file = new File (posting_text.getText() + "\\" + stemFolder + "\\Dictionary");
+            //checks if the path gives is right and checks if there is a dictionary inside the posting path given
+            if(!isTruePath() || !file.exists()){
+                return;
+            }
+            Map<String,String> mapDictionary = new LinkedHashMap<>();
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader( new FileReader( file ));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String line = null;
+            while(true){
+                try {
+                    if (!((line = reader.readLine()) != null)) break;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String[] arr = line.split( "\\|" );
+                mapDictionary.put( arr[0], arr[1].split(":")[0]);
+            }
+            JTable table=new JTable(toTableModel(mapDictionary)); //receiving the table from toTbleModel function
+            JFrame frame=new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//set closing behavior
+            frame.add(new JScrollPane(table)); // adding scrollbar
+            frame.setSize(400,600);
+            frame.setLocationRelativeTo(null);//center the jframe
+            frame.setVisible(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * table that represent the dictionary
+     * Source : "https://stackoverflow.com/questions/2257309/how-to-use-hashmap-with-jtable"
+     * @param map
+     * @return table model
+     */
+    public static TableModel toTableModel(Map<String,String> map) {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[] { "Term", "Total Appearance" }, 0
+        );
+        for (Map.Entry<String,String> entry : map.entrySet()) {
+            model.addRow(new Object[] { entry.getKey(), entry.getValue() });
+        }
+        return model;
     }
     /**
      * load the text field of the posting path
@@ -154,7 +220,6 @@ public class MyViewController extends Canvas implements Observer {
         if(postingDirectory != null) {
              posting_text.clear();
              posting_text.appendText(postingDirectory.getPath());
-
         }
     }
     /**
@@ -174,13 +239,20 @@ public class MyViewController extends Canvas implements Observer {
 
 
     /**
-     * load the the dictionary file that the user choose and load it to the main memory
+     * load the the dictionary file that located in the stem/noStem folder and load it to the main memory
      * @param actionEvent
      */
     public void loadFile(ActionEvent actionEvent) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Load Dictionary");
-        File file = fc.showOpenDialog(new Stage());
+        if(posting_text.getText().equals("")){
+            return;
+        }
+        String stemFolder = "";
+        if(stem.isSelected()){
+            stemFolder = "stem";
+        }else{
+            stemFolder = "noStem";
+        }
+        File file = new File(posting_text.getText() + "/" + stemFolder + "/Dictionary");
         if(file != null) {
             viewModel.loadDictionary(file);
         }

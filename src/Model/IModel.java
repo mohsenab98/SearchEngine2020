@@ -11,8 +11,6 @@ import java.io.File;
 public interface IModel {
     void loadDictionary(File file);
 
-    void showDictionary(TextField posting_text, boolean isSelected);
-
     void resetProcess(TextField posting_text);
 
     boolean startIndexing(boolean selected, TextField corpus_text, TextField posting_text);

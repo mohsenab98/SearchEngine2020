@@ -4,8 +4,6 @@ import Classes.Indexer;
 import Classes.Parse;
 import Classes.ReadFile;
 import javafx.scene.control.TextField;
-
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +27,7 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     * opens the file we choose and load it to the mapDictionary
+     * opens the file(Dictionary) and load it to the mapDictionary
      * @param file
      */
     @Override
@@ -52,37 +50,14 @@ public class MyModel extends Observable implements IModel {
         }
     }
 
-    /**
-     * opens the file that contains the dictionary in new window
-     * @param posting_text
-     * @param isSelected
-     */
-    @Override
-    public void showDictionary(TextField posting_text, boolean isSelected) {
-        String stemFolder = "";
-        if(isSelected){
-            stemFolder = "stem";
-        }else{
-            stemFolder = "noStem";
-        }
-        File file = new File (posting_text.getText() + "\\" + stemFolder + "\\Dictionary");
-        if(file.exists()){
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.open(file);
-            } catch (IOException e) {
-                // if path isnt right or there no stem/nostem directories dont do anything
-            }
-        }
-
-    }
 
     /**
-     * delete all dataSet we have worked with
+     * delete all dataSet(Posting files) we have worked with
      * @param posting_text
      */
     @Override
     public void resetProcess(TextField posting_text) {
+
         try {
             Files.walk(Paths.get(posting_text.getText() + "/stem"))
                     .sorted(Comparator.reverseOrder())
@@ -94,7 +69,7 @@ public class MyModel extends Observable implements IModel {
                     .map(Path::toFile)
                     .forEach(File::delete);
         }catch (Exception o){
-            // if path isnt right or there no stem/nostem directories dont do anything
+//            o.printStackTrace();
         }
     }
 
@@ -116,13 +91,26 @@ public class MyModel extends Observable implements IModel {
         docCounter = 0;
         boolean stem = selected;
         String pathCorpus = corpus_text.getText();
-        String pathStopWords = corpus_text.getText()+"/StopWords";
+        String pathStopWords;
+        // search for stop words file
+        File f = new File(pathCorpus);
+        File[] matchingFiles = f.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().contains("stop") && name.toLowerCase().contains("words");
+            }
+        });
+        if(matchingFiles != null && matchingFiles.length > 0){
+            pathStopWords = matchingFiles[0].getPath();
+        }
+        else {
+            pathStopWords = corpus_text.getText() + "/05 stop_words.txt";
+        }
         String pathPosting = posting_text.getText(); /// need to use !!!!!!!!!!!!!!!!
 
         ReadFile rd = new ReadFile(pathCorpus);
         rd.filesSeparator();
         Parse p = new Parse(pathStopWords, stem);
-        Indexer n = new Indexer(pathCorpus, pathPosting, stem);
+        Indexer n = new Indexer(pathPosting, stem);
         n.setDocIDCounter(0);
         while (!rd.getListAllDocs().isEmpty()) {
             String fullText = "";
@@ -157,7 +145,6 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     *
      * @return time for indexing
      */
     public double getTimeForIndexing() {
@@ -165,7 +152,6 @@ public class MyModel extends Observable implements IModel {
     }
 
     /**
-     *
      * @return number of docs indexed
      */
     public int getDocCounter() {

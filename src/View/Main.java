@@ -18,6 +18,7 @@ import java.io.File;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
 /**
+ * Information Retrieval - Search Engine
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
  */
 
@@ -39,20 +40,16 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 1100, 600);
-        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
 
         primaryStage.setScene(scene);
-        File file = new File("src/resources/glassSearch.png");
+        File file = new File("resources/glassSearch.png");
         Image image = new Image(file.toURI().toString());
-//        image_view.setImage(image);
         //--------------
         MyViewController view = fxmlLoader.getController();
-
         view.setViewModel(viewModel);
         view.setImage(image); // add image
         viewModel.addObserver(view);
-
-
         //--------------
         SetStageCloseEvent(primaryStage);
 
@@ -64,7 +61,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent windowEvent) {
                 Alert alert = new Alert(CONFIRMATION);
-                alert.setContentText("Are you sure that you want to exit the game ? Press OK to EXIT!");
+                alert.setContentText("Are you sure you want to exit the game ? Press OK to EXIT!");
                 alert.showAndWait();
 
                 if (alert.getResult() == ButtonType.CANCEL) {
