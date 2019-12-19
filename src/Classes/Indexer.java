@@ -23,20 +23,11 @@ public class Indexer {
      */
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
 
-    //TODO : delete path if we dont use it
-    private String pathCorpus;
-
-
     private String pathPosting;
     /**
      * isStem variable that we git from the user ( the parse send it to here)
      */
     private boolean isStem;
-
-    /**
-     * name of the temp file
-     */
-    private static int termCounter = 0;
 
     /**
      * will determinate the size of the posting (~10000 terms in posting file)
@@ -56,14 +47,13 @@ public class Indexer {
     private static int postIdCounter = 0; // name to temp posting file
     private static int sizeDictionary = 0; // size of dictionary
 
-    public Indexer(String pathCorpus,String pathPosting, boolean isStem) {
+    public Indexer(String pathPosting, boolean isStem) {
         sizeDictionary = 0;
         docIDCounter = 0;
         postIdCounter = 0;
         this.mapDictionary = new LinkedHashMap<>();
-        this.pathCorpus = pathCorpus;
         this.pathPosting = pathPosting;
-        this.mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
         postingFilesCreate(pathPosting);
@@ -83,6 +73,7 @@ public class Indexer {
         termDoc.remove("");
         for (String key : termDoc.keySet()) {
             if (this.mapSortedTerms.containsKey(key)) {
+
                 //chain the new list of term to the original one
                 String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
@@ -94,13 +85,9 @@ public class Indexer {
                     originalList.clear();
                     originalList.add(0, info);
                 }
-                if (!key.contains(" ") && Character.isLowerCase(key.charAt(0)) && mapSortedTerms.containsKey(key.toUpperCase())) {
-                    mapSortedTerms.remove(key.toUpperCase());
-                    mapSortedTerms.put(key.toLowerCase(), originalList);
-                } else {
-                    mapSortedTerms.put(key, originalList);
-                }
-            } else {
+                mapSortedTerms.put(key, originalList);
+            }
+            else {
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = new ArrayList<>();
                 String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
@@ -120,7 +107,7 @@ public class Indexer {
      */
     public void reset(){
         //mapSortedTerms  ---- save to temp posting & clear
-        SortedMap<String, String> terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        SortedMap<String, String> terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         for(String term : mapSortedTerms.keySet()){
             ArrayList<String> listInfo = mapSortedTerms.get(term);
             String info= listInfo.get(0);
@@ -128,7 +115,7 @@ public class Indexer {
         }
 
         writePosting(terms);
-        mapSortedTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
 
         // save to DOC file
         saveDocInfo();
@@ -230,8 +217,7 @@ public class Indexer {
         for( i = 0; numberOfposting - 1 > 2 ; i++){
             fileUrl1 = filePath1  + i;
             fileUrl2 = filePath2 + (i+1);
-            SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            termCounter = 0;
+            SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
             Path path1 = Paths.get(fileUrl1);
             Path path2 = Paths.get(fileUrl2);
             try
@@ -262,7 +248,7 @@ public class Indexer {
 
             writePosting(terms);
             numberOfposting++;
-            terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
             i++; // two files each time
 //            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
@@ -278,8 +264,7 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
-        SortedMap<String, String> rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        termCounter = 0;
+        SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
         if(!(new File(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1)).exists())){
@@ -307,7 +292,7 @@ public class Indexer {
             for(int i = 'a'; i <= 'z'; i++) {
                 Stream<String> linesFile1AZ = Files.lines( path1, StandardCharsets.US_ASCII );
                 Stream<String> linesFile2AZ = Files.lines( path2, StandardCharsets.US_ASCII );
-                rawTerms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
                 int ch = i;
                 List<String> listLinesFile1AZ = linesFile1AZ
                         .filter(s -> s.toLowerCase().charAt(0) == (char) ch)
@@ -352,6 +337,9 @@ public class Indexer {
         String term = line.substring(0, line.indexOf("|"));
         String info = line.substring(line.indexOf("|") + 1);
 
+        // Upper letters law
+        rawTerms = upperToLowerCase(rawTerms, term);
+
         if(!rawTerms.containsKey(term)){
             rawTerms.put(term, info);
         }
@@ -360,6 +348,53 @@ public class Indexer {
             rawTerms.put(term, info + preInfo);
         }
         return rawTerms;
+    }
+
+    private SortedMap<String, String> upperToLowerCase(SortedMap<String, String> rawTerms, String term){
+        String data = "";
+        if(rawTerms.containsKey(term.toUpperCase()) && Character.isLowerCase(term.charAt(0))){
+            data = rawTerms.get(term.toUpperCase());
+            if(rawTerms.get(term.toLowerCase()) != null) {
+                data += rawTerms.get(term.toLowerCase());
+            }
+        }
+        else if(rawTerms.containsKey(term.toLowerCase()) && Character.isUpperCase(term.charAt(0))){
+            data = rawTerms.get(term.toLowerCase());
+            if(rawTerms.get(term.toUpperCase()) != null) {
+                data += rawTerms.get(term.toUpperCase());
+            }
+
+        }
+        data = mergeData(data);
+
+        term = term.toLowerCase();
+        rawTerms.put(term, data);
+        rawTerms.remove(term.toUpperCase());
+
+        return rawTerms;
+    }
+
+    private String mergeData(String data){
+        String[] docs = data.split(";");
+        for (int i = 0; i < docs.length - 1; i++) {
+            String doc = docs[i].substring(0, docs[i].indexOf(":"));
+            for (int j = i + 1; j < docs.length; j++) {
+                if (!docs[j].isEmpty() && docs[j].substring(0, docs[j].indexOf(":")).equals(doc)) {
+                    int tf = Integer.parseInt(docs[j].substring(docs[j].indexOf(":") + 1)) + Integer.parseInt(docs[i].substring(docs[i].indexOf(":") + 1));
+                    docs[j] = docs[j].replaceFirst(docs[j].substring(docs[j].indexOf(":") + 1), String.valueOf(tf));
+                    docs[i] = "";
+                    data = "";
+                    for(String d : docs){
+                        if(d.isEmpty()){
+                            continue;
+                        }
+                        data += d + ";";
+                    }
+                    break;
+                }
+            }
+        }
+        return data;
     }
 
     private SortedMap<String, String> finaleMergeTermsFromTwoFilesToMap(SortedMap<String, String> rawTerms, List<String> file1, List<String> file2){
@@ -378,7 +413,7 @@ public class Indexer {
     private void termToDictionary(Map<String, String> termsToDict) {
         Set<String> terms = termsToDict.keySet();
         int lineCounter = 1;
-        int total = 0;
+        int total;
         for(String term : terms){
             int df = 0;
             total = 0;
@@ -412,5 +447,12 @@ public class Indexer {
 
     public static int getDocIDCounter() {
         return docIDCounter;
+    }
+
+    public int compare(String o1, String o2) {
+        int cmp = o1.compareToIgnoreCase(o2);
+        if (cmp != 0) return cmp;
+
+        return o1.compareTo(o2);
     }
 }

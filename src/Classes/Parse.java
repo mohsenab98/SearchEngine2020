@@ -243,7 +243,9 @@ public class Parse {
         Scanner sc2 = new Scanner(fullText).useDelimiter(pattern);
         Set<String> setString = new LinkedHashSet<>();
         while (sc2.hasNext()) {
-            setString.add(sc2.next());
+            String stopWord = sc2.next();
+            stopWord = stopWord.replace("\r", "");
+            setString.add(stopWord);
         }
         return setString;
 

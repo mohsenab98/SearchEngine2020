@@ -61,7 +61,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent windowEvent) {
                 Alert alert = new Alert(CONFIRMATION);
-                alert.setContentText("Are you sure that you want to exit the game ? Press OK to EXIT!");
+                alert.setContentText("Are you sure you want to exit the game ? Press OK to EXIT!");
                 alert.showAndWait();
 
                 if (alert.getResult() == ButtonType.CANCEL) {
