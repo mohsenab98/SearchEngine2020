@@ -32,7 +32,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~10000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 10000;
+    private final int MAX_POST_SIZE = 5000;
     /**
      * will write the string to a posting file if it big (~200MB)
      */
@@ -338,38 +338,55 @@ public class Indexer {
         String info = line.substring(line.indexOf("|") + 1);
 
         // Upper letters law
-        rawTerms = upperToLowerCase(rawTerms, term);
+        //rawTerms = upperToLowerCase(rawTerms, term);
 
         if(!rawTerms.containsKey(term)){
             rawTerms.put(term, info);
         }
         else{
+            ArrayList<String> check = new ArrayList<String>();
             String preInfo = rawTerms.get(term);
+            Pattern p = Pattern.compile("(\\d+):\\d+;");
+            Matcher mTerm = p.matcher(term);
+            while (mTerm.find()){
+                check.add(mTerm.group(1));
+            }
+
+            Matcher mInfo = p.matcher(info);
+            while (mInfo.find()){
+                if(preInfo.contains(mInfo.group(1))){
+                    return rawTerms;
+                }
+            }
             rawTerms.put(term, info + preInfo);
         }
         return rawTerms;
     }
 
     private SortedMap<String, String> upperToLowerCase(SortedMap<String, String> rawTerms, String term){
-        String data = "";
+        String data;
         if(rawTerms.containsKey(term.toUpperCase()) && Character.isLowerCase(term.charAt(0))){
             data = rawTerms.get(term.toUpperCase());
             if(rawTerms.get(term.toLowerCase()) != null) {
                 data += rawTerms.get(term.toLowerCase());
             }
+            data = mergeData(data);
+
+            term = term.toLowerCase();
+            rawTerms.put(term, data);
+            rawTerms.remove(term.toUpperCase());
         }
         else if(rawTerms.containsKey(term.toLowerCase()) && Character.isUpperCase(term.charAt(0))){
             data = rawTerms.get(term.toLowerCase());
             if(rawTerms.get(term.toUpperCase()) != null) {
                 data += rawTerms.get(term.toUpperCase());
             }
+            data = mergeData(data);
 
+            term = term.toLowerCase();
+            rawTerms.put(term, data);
+            rawTerms.remove(term.toUpperCase());
         }
-        data = mergeData(data);
-
-        term = term.toLowerCase();
-        rawTerms.put(term, data);
-        rawTerms.remove(term.toUpperCase());
 
         return rawTerms;
     }
@@ -389,8 +406,9 @@ public class Indexer {
                             continue;
                         }
                         data += d + ";";
+                        docs = data.split(";");
                     }
-                    break;
+                    i = 0;
                 }
             }
         }
@@ -405,6 +423,7 @@ public class Indexer {
             rawTerms.put(term, info);
         }
         for(String line : file2){
+            rawTerms = upperToLowerCase(rawTerms, line.substring(0, line.indexOf("|")));
             terms = mergeTermsToMap(rawTerms, line);
         }
         return terms;
