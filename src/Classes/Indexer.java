@@ -32,7 +32,7 @@ public class Indexer {
     /**
      * will determinate the size of the posting (~10000 terms in posting file)
      */
-    private final int MAX_POST_SIZE = 5000;
+    private final int MAX_POST_SIZE = 10000;
     /**
      * will write the string to a posting file if it big (~200MB)
      */
@@ -46,6 +46,7 @@ public class Indexer {
     private static int docIDCounter = 0; // id of docs
     private static int postIdCounter = 0; // name to temp posting file
     private static int sizeDictionary = 0; // size of dictionary
+    boolean finalM = false;
 
     public Indexer(String pathPosting, boolean isStem) {
         sizeDictionary = 0;
@@ -233,7 +234,7 @@ public class Indexer {
 
                 for( String line : (Iterable<String>) lines2::iterator )
                 {
-                    terms = mergeTermsToMap(rawTerms, line);
+                    terms = mergeTermsToMap(rawTerms, line, finalM);
 
                 }
 
@@ -333,7 +334,7 @@ public class Indexer {
         }
     }
 
-    private SortedMap<String, String> mergeTermsToMap(SortedMap<String, String> rawTerms, String line) {
+    private SortedMap<String, String> mergeTermsToMap(SortedMap<String, String> rawTerms, String line, boolean finalM) {
         String term = line.substring(0, line.indexOf("|"));
         String info = line.substring(line.indexOf("|") + 1);
 
@@ -343,9 +344,14 @@ public class Indexer {
         if(!rawTerms.containsKey(term)){
             rawTerms.put(term, info);
         }
-        else{
-            ArrayList<String> check = new ArrayList<String>();
+        else if(!finalM){
             String preInfo = rawTerms.get(term);
+            rawTerms.put(term, info + preInfo);
+        }
+        else{
+            String preInfo = rawTerms.get(term);
+
+            Set<String> check = new HashSet<>();
             Pattern p = Pattern.compile("(\\d+):\\d+;");
             Matcher mTerm = p.matcher(term);
             while (mTerm.find()){
@@ -366,6 +372,7 @@ public class Indexer {
     private SortedMap<String, String> upperToLowerCase(SortedMap<String, String> rawTerms, String term){
         String data;
         if(rawTerms.containsKey(term.toUpperCase()) && Character.isLowerCase(term.charAt(0))){
+            finalM = true;
             data = rawTerms.get(term.toUpperCase());
             if(rawTerms.get(term.toLowerCase()) != null) {
                 data += rawTerms.get(term.toLowerCase());
@@ -376,7 +383,9 @@ public class Indexer {
             rawTerms.put(term, data);
             rawTerms.remove(term.toUpperCase());
         }
-        else if(rawTerms.containsKey(term.toLowerCase()) && Character.isUpperCase(term.charAt(0))){
+
+        if(rawTerms.containsKey(term.toLowerCase()) && Character.isUpperCase(term.charAt(0))){
+            finalM = true;
             data = rawTerms.get(term.toLowerCase());
             if(rawTerms.get(term.toUpperCase()) != null) {
                 data += rawTerms.get(term.toUpperCase());
@@ -386,6 +395,9 @@ public class Indexer {
             term = term.toLowerCase();
             rawTerms.put(term, data);
             rawTerms.remove(term.toUpperCase());
+        }
+        else {
+            finalM = false;
         }
 
         return rawTerms;
@@ -424,7 +436,7 @@ public class Indexer {
         }
         for(String line : file2){
             rawTerms = upperToLowerCase(rawTerms, line.substring(0, line.indexOf("|")));
-            terms = mergeTermsToMap(rawTerms, line);
+            terms = mergeTermsToMap(rawTerms, line, finalM);
         }
         return terms;
     }

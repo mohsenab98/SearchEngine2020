@@ -713,6 +713,6 @@ public class Parse {
             return "";
         }
 
-        return term;
+        return term.trim();
     }
 }
