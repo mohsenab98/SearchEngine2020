@@ -7,12 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/glassSearch.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -44,6 +40,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="167" column="61" selection-start-line="167" selection-start-column="61" selection-end-line="167" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/IModel.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -56,17 +61,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1519">
-              <caret line="110" column="28" lean-forward="true" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
+            <state relative-caret-position="228">
+              <caret line="66" column="63" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-951">
-              <caret line="278" column="18" selection-start-line="278" selection-start-column="12" selection-end-line="278" selection-end-column="18" />
+            <state relative-caret-position="4240">
+              <caret line="335" column="24" lean-forward="true" selection-start-line="335" selection-start-column="24" selection-end-line="335" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#19312#19313#0" expanded="true" />
@@ -164,9 +169,9 @@
         <option value="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" />
         <option value="$PROJECT_DIR$/src/Model/IModel.java" />
         <option value="$PROJECT_DIR$/src/View/Main.java" />
-        <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
-        <option value="$PROJECT_DIR$/src/Model/MyModel.java" />
         <option value="$PROJECT_DIR$/src/Classes/Indexer.java" />
+        <option value="$PROJECT_DIR$/src/Model/MyModel.java" />
+        <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
       </list>
     </option>
   </component>
@@ -261,7 +266,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576742127187" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576798432940" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -372,14 +377,7 @@
       <workItem from="1576479307530" duration="17757000" />
       <workItem from="1576541593777" duration="28987000" />
       <workItem from="1576669151203" duration="23519000" />
-      <workItem from="1576702072967" duration="12957000" />
-    </task>
-    <task id="LOCAL-00017" summary="strings to byte array byte array">
-      <created>1575039271204</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1575039271204</updated>
+      <workItem from="1576702072967" duration="20177000" />
     </task>
     <task id="LOCAL-00018" summary="Names complete">
       <created>1575068486060</created>
@@ -717,11 +715,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576712041328</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="- Final version!">
+      <created>1576742311590</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1576742311590</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="475150000" />
+    <option name="totallyTimeSpent" value="482370000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -745,7 +750,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.19967267" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.602118" visible="true" weight="0.2405892" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6891074" visible="true" weight="0.15057284" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.46153846" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -753,7 +758,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32733223" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.2708018" side_tool="true" weight="0.28805238" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.31089258" side_tool="true" weight="0.15057284" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49597314" weight="0.32569557" />
       <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.4614221" weight="0.32242227" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -842,7 +847,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Indexer bug(readFile) fixed" />
     <MESSAGE value="- read without threading (~5min for 100 Files)&#10;- Indexer Update for doc writing" />
     <MESSAGE value="- read without threading (~7min for 100 Files)&#10;- Indexer Update case Sensitive(SortedMap)[for-x1]&#10;-termCounter NOT FINISHED" />
     <MESSAGE value="- Gui (4,5) buttons" />
@@ -867,7 +871,8 @@
     <MESSAGE value="- Final version - Gui is FINISHED" />
     <MESSAGE value="- Final version -1-" />
     <MESSAGE value="- Final version - improved" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Final version - improved" />
+    <MESSAGE value="- Final version!" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Final version!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1173,13 +1178,6 @@
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4580">
-          <caret line="245" column="44" selection-start-line="245" selection-start-column="44" selection-end-line="245" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ViewModel/MyViewModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="380">
@@ -1214,17 +1212,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1519">
-          <caret line="110" column="28" lean-forward="true" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-951">
-          <caret line="278" column="18" selection-start-line="278" selection-start-column="12" selection-end-line="278" selection-end-column="18" />
+        <state relative-caret-position="4240">
+          <caret line="335" column="24" lean-forward="true" selection-start-line="335" selection-start-column="24" selection-end-line="335" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#19312#19313#0" expanded="true" />
@@ -1234,6 +1225,20 @@
             <element signature="e#19503#19504#0" expanded="true" />
             <element signature="e#19538#19539#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="66" column="63" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="167" column="61" selection-start-line="167" selection-start-column="61" selection-end-line="167" selection-end-column="61" />
         </state>
       </provider>
     </entry>
