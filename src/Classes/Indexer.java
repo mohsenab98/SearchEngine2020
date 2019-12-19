@@ -234,6 +234,7 @@ public class Indexer {
 
                 for( String line : (Iterable<String>) lines2::iterator )
                 {
+                    // rawTerms = upperToLowerCase(rawTerms, line.substring(0, line.indexOf("|")));
                     terms = mergeTermsToMap(rawTerms, line, finalM);
 
                 }
@@ -377,7 +378,7 @@ public class Indexer {
             if(rawTerms.get(term.toLowerCase()) != null) {
                 data += rawTerms.get(term.toLowerCase());
             }
-            data = mergeData(data);
+           // data = mergeData(data);
 
             term = term.toLowerCase();
             rawTerms.put(term, data);
@@ -390,7 +391,7 @@ public class Indexer {
             if(rawTerms.get(term.toUpperCase()) != null) {
                 data += rawTerms.get(term.toUpperCase());
             }
-            data = mergeData(data);
+           // data = mergeData(data);
 
             term = term.toLowerCase();
             rawTerms.put(term, data);
@@ -405,26 +406,26 @@ public class Indexer {
 
     private String mergeData(String data){
         String[] docs = data.split(";");
-        for (int i = 0; i < docs.length - 1; i++) {
-            String doc = docs[i].substring(0, docs[i].indexOf(":"));
-            for (int j = i + 1; j < docs.length; j++) {
-                if (!docs[j].isEmpty() && docs[j].substring(0, docs[j].indexOf(":")).equals(doc)) {
-                    int tf = Integer.parseInt(docs[j].substring(docs[j].indexOf(":") + 1)) + Integer.parseInt(docs[i].substring(docs[i].indexOf(":") + 1));
-                    docs[j] = docs[j].replaceFirst(docs[j].substring(docs[j].indexOf(":") + 1), String.valueOf(tf));
-                    docs[i] = "";
-                    data = "";
-                    for(String d : docs){
-                        if(d.isEmpty()){
-                            continue;
-                        }
-                        data += d + ";";
-                        docs = data.split(";");
-                    }
-                    i = 0;
-                }
+        Map<String, Integer> info = new HashMap<>();
+
+        for(String d : docs){
+            String doc = d.substring(0, d.indexOf(":"));
+            Integer amount = Integer.parseInt(d.substring(d.indexOf(":") + 1));
+            if(info.containsKey(doc)){
+                info.put(doc, amount + info.get(doc));
+            }
+            else{
+                info.put(doc, amount);
             }
         }
+
+        data = "";
+        for(String d : info.keySet()){
+            data += d + ":" + info.get(d) + ";";
+        }
+
         return data;
+
     }
 
     private SortedMap<String, String> finaleMergeTermsFromTwoFilesToMap(SortedMap<String, String> rawTerms, List<String> file1, List<String> file2){
