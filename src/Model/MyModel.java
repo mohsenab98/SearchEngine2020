@@ -64,7 +64,7 @@ public class MyModel extends Observable implements IModel {
                     .map(Path::toFile)
                     .forEach(File::delete);
 
-            Files.walk(Paths.get(posting_text.getText() + "/nostem"))
+            Files.walk(Paths.get(posting_text.getText() + "/noStem"))
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);
