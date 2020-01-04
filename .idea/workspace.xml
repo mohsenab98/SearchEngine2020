@@ -8,6 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/glassSearch.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/glassSearch.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
     </list>
@@ -41,19 +43,26 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+        <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="167" column="61" selection-start-line="167" selection-start-column="61" selection-end-line="167" selection-end-column="61" />
+            <state relative-caret-position="742">
+              <caret line="55" column="96" selection-start-line="55" selection-start-column="96" selection-end-line="55" selection-end-column="96" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1081#1082#0" expanded="true" />
+                <element signature="e#1108#1109#0" expanded="true" />
+                <element signature="e#1496#1497#0" expanded="true" />
+                <element signature="e#1523#1524#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/IModel.java">
+        <entry file="file://$PROJECT_DIR$/src/Classes/ReadQuery.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+            <state relative-caret-position="80">
+              <caret line="4" column="62" selection-start-line="4" selection-start-column="62" selection-end-line="4" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -61,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="66" column="63" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
+            <state relative-caret-position="120">
+              <caret line="22" column="11" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -70,16 +79,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4240">
-              <caret line="335" column="24" lean-forward="true" selection-start-line="335" selection-start-column="24" selection-end-line="335" selection-end-column="24" />
+            <state relative-caret-position="265">
+              <caret line="527" column="69" selection-start-line="527" selection-start-column="58" selection-end-line="527" selection-end-column="69" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#19312#19313#0" expanded="true" />
-                <element signature="e#19349#19350#0" expanded="true" />
-                <element signature="e#19409#19410#0" expanded="true" />
-                <element signature="e#19460#19461#0" expanded="true" />
-                <element signature="e#19503#19504#0" expanded="true" />
-                <element signature="e#19538#19539#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,14 +93,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mapDocID</find>
       <find>names</find>
       <find>doc</find>
       <find>tempPostCounter</find>
@@ -127,6 +129,7 @@
       <find>upperToLowerCase</find>
       <find>finaleMergeTermsFromTwoFilesToMap</find>
       <find>stream</find>
+      <find>termT</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -169,9 +172,11 @@
         <option value="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" />
         <option value="$PROJECT_DIR$/src/Model/IModel.java" />
         <option value="$PROJECT_DIR$/src/View/Main.java" />
+        <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
+        <option value="$PROJECT_DIR$/src/Classes/ReadQuery.java" />
         <option value="$PROJECT_DIR$/src/Classes/Indexer.java" />
         <option value="$PROJECT_DIR$/src/Model/MyModel.java" />
-        <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
+        <option value="$PROJECT_DIR$/src/Classes/Searcher.java" />
       </list>
     </option>
   </component>
@@ -182,9 +187,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="width" value="1033" />
-    <option name="height" value="744" />
+    <option name="x" value="-7" />
+    <option name="width" value="697" />
+    <option name="height" value="735" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -194,6 +199,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -211,11 +217,6 @@
               <item name="ir2020" type="462c0819:PsiDirectoryNode" />
               <item name="out" type="462c0819:PsiDirectoryNode" />
               <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
@@ -260,13 +261,12 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576798432940" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578140471118" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -377,14 +377,9 @@
       <workItem from="1576479307530" duration="17757000" />
       <workItem from="1576541593777" duration="28987000" />
       <workItem from="1576669151203" duration="23519000" />
-      <workItem from="1576702072967" duration="20177000" />
-    </task>
-    <task id="LOCAL-00018" summary="Names complete">
-      <created>1575068486060</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1575068486060</updated>
+      <workItem from="1576702072967" duration="20512000" />
+      <workItem from="1576830384720" duration="3071000" />
+      <workItem from="1578135556727" duration="4369000" />
     </task>
     <task id="LOCAL-00019" summary="Names complete">
       <created>1575073490288</created>
@@ -722,11 +717,18 @@
       <option name="project" value="LOCAL" />
       <updated>1576742311590</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="- Final version! -- last update">
+      <created>1576798553544</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1576798553544</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="482370000" />
+    <option name="totallyTimeSpent" value="490145000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -741,7 +743,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20272315" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15153733" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -750,7 +752,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.19967267" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6891074" visible="true" weight="0.15057284" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6891074" weight="0.66775775" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.46153846" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -847,7 +849,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- read without threading (~5min for 100 Files)&#10;- Indexer Update for doc writing" />
     <MESSAGE value="- read without threading (~7min for 100 Files)&#10;- Indexer Update case Sensitive(SortedMap)[for-x1]&#10;-termCounter NOT FINISHED" />
     <MESSAGE value="- Gui (4,5) buttons" />
     <MESSAGE value="- write temp post" />
@@ -872,7 +873,8 @@
     <MESSAGE value="- Final version -1-" />
     <MESSAGE value="- Final version - improved" />
     <MESSAGE value="- Final version!" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Final version!" />
+    <MESSAGE value="- Final version! -- last update" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Final version! -- last update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1205,40 +1207,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="170" column="50" selection-start-line="170" selection-start-column="50" selection-end-line="170" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/IModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
+        <state relative-caret-position="160">
           <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
+    <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4240">
-          <caret line="335" column="24" lean-forward="true" selection-start-line="335" selection-start-column="24" selection-end-line="335" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#19312#19313#0" expanded="true" />
-            <element signature="e#19349#19350#0" expanded="true" />
-            <element signature="e#19409#19410#0" expanded="true" />
-            <element signature="e#19460#19461#0" expanded="true" />
-            <element signature="e#19503#19504#0" expanded="true" />
-            <element signature="e#19538#19539#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="40">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/ReadQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="62" selection-start-line="4" selection-start-column="62" selection-end-line="4" selection-end-column="62" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="66" column="63" selection-start-line="66" selection-start-column="63" selection-end-line="66" selection-end-column="63" />
+        <state relative-caret-position="120">
+          <caret line="22" column="11" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+    <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="167" column="61" selection-start-line="167" selection-start-column="61" selection-end-line="167" selection-end-column="61" />
+        <state relative-caret-position="265">
+          <caret line="527" column="69" selection-start-line="527" selection-start-column="58" selection-end-line="527" selection-end-column="69" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="742">
+          <caret line="55" column="96" selection-start-line="55" selection-start-column="96" selection-end-line="55" selection-end-column="96" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1081#1082#0" expanded="true" />
+            <element signature="e#1108#1109#0" expanded="true" />
+            <element signature="e#1496#1497#0" expanded="true" />
+            <element signature="e#1523#1524#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
