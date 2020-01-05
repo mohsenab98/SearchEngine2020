@@ -6,6 +6,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
+
 public class Parse {
     //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
@@ -21,9 +24,16 @@ public class Parse {
     /**
      * dictionary with a-z sorted keys:
      *          Key: all original terms in a doc
-     *          Value: list of properties of a doc
+     *          Value: TF in the doc
      */
-    private SortedMap<String, String> mapTerms;
+    private Map<String, String> mapTerms;
+
+    /**
+     * dictionary with entities of the document:
+     *          Key: TF
+     *          Value: Entity
+     */
+    private Map<String, Integer> mapDocEntities;
     /**
      * the list of the properties of a doc
      */
@@ -40,6 +50,7 @@ public class Parse {
         this.stem = stem;
         this.stemmer = new Stemmer();
         this.mapTerms = new TreeMap<>();
+        this.mapDocEntities = new TreeMap<>();
         this.docInfo = new ArrayList<>();
         listNumbersAsWords = Arrays.asList
                 (
@@ -111,11 +122,10 @@ public class Parse {
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
         searchNames(fullText); // Entity/Names law
 
-        // add properties to property-doc-list
-        this.docInfo.add(this.termMaxTf);
-        this.docInfo.add(String.valueOf(this.counterMaxTf));
-        this.docInfo.add(String.valueOf(this.mapTerms.size()));
+        addInfoToDoc();// add term tf, maxTf, amount of terms, 5 common entities to doc
+
     }
+
 
     /**
      * laws: format tokens to defined templates
@@ -298,6 +308,39 @@ public class Parse {
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
+
+        // put entity to entity dictionary
+        if(Character.isUpperCase(term.charAt(0))){
+            this.mapDocEntities.put(term, counter);
+        }
+    }
+
+    /**
+     * add term tf, maxTf, amount of terms, 5 common entities to doc
+     */
+    private void addInfoToDoc() {
+        this.docInfo.add(this.termMaxTf); // term tf
+        this.docInfo.add(String.valueOf(this.counterMaxTf)); // maxTf
+        this.docInfo.add(String.valueOf(this.mapTerms.size())); // amount of terms
+
+        // 5 common entities to doc
+        int counter = 0;
+        Map<String, Integer> sortedEntities = this.mapDocEntities
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
+        Set<String> setEntity = sortedEntities.keySet();
+        for(String entity : setEntity){
+            this.docInfo.add(entity);
+            counter++;
+            if(counter == 5){
+                break;
+            }
+        }
     }
 
     /**
@@ -326,6 +369,7 @@ public class Parse {
      */
     public void cleanParse(){
         this.mapTerms = new TreeMap<>();
+        this.mapDocEntities = new TreeMap<>();
         this.docInfo = new ArrayList<>();
     }
 

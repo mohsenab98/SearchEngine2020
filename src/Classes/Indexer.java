@@ -499,7 +499,14 @@ public class Indexer {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
-            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
+            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3))
+                    .append(";");
+            int counter = 4;
+            while (counter < listDocInfo.size() - 1){
+                text.append(listDocInfo.get(counter)).append(",");
+                counter++;
+            }
+            text.append(listDocInfo.get(counter)).append("\n");
         }
         usingBufferedWritter(text.toString(),"Doc");
         mapDocID = new LinkedHashMap<>();
@@ -512,20 +519,20 @@ public class Indexer {
     private void termToDictionary(Map<String, String> termsToDict) {
         Set<String> terms = termsToDict.keySet();
         int lineCounter = 1;
-        int total;
+        int totalDocs;
         for(String term : terms){
             int df = 0;
-            total = 0;
+            totalDocs = 0;
             String infoText = termsToDict.get(term);
 
             Pattern dfPattern = Pattern.compile("(\\d+);");
             Matcher dfMatcher = dfPattern.matcher(infoText);
             while (dfMatcher.find()){
-                total += Integer.parseInt(dfMatcher.group(1));
+                totalDocs += Integer.parseInt(dfMatcher.group(1));
                 df++;
             }
 
-            String infoDic = "" + total + ":" + df + ";" + lineCounter;
+            String infoDic = totalDocs + ":" + df + ";" + lineCounter;
             lineCounter ++;
 
             this.mapDictionary.put(term, infoDic);

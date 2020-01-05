@@ -20,7 +20,7 @@ public class MyModel extends Observable implements IModel {
     /**
      * map to load the posting of the dictionary
      */
-    private Map<String,String> mapDictionary ;
+    public static Map<String,String> mapDictionary ;
 
     public MyModel() {
         this.mapDictionary = new LinkedHashMap<>();
@@ -64,7 +64,7 @@ public class MyModel extends Observable implements IModel {
                     .map(Path::toFile)
                     .forEach(File::delete);
 
-            Files.walk(Paths.get(posting_text.getText() + "/noStem"))
+            Files.walk(Paths.get(posting_text.getText() + "/nostem"))
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);

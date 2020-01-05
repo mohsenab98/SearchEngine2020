@@ -165,7 +165,7 @@ public class MyViewController extends Canvas implements Observer {
             if(!isTruePath() || !file.exists()){
                 return;
             }
-            Map<String,String> mapDictionary = new TreeMap<>();
+            Map<String,String> mapDictionary = new LinkedHashMap<>();
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader( new FileReader( file ));
