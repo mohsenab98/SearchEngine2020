@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Indexer {
+    AlphabetEncoder abE = new AlphabetEncoder();
     /**
      * will Save the terms of the index and will save a pointer to the match posting file
      */
@@ -41,7 +42,7 @@ public class Indexer {
     /**
      * help us to save id/maxtf/counter for each doc in the posting
      */
-    private Map<Integer, ArrayList<String>> mapDocID;
+    private Map<String, ArrayList<String>> mapDocID;
 
     private static int docIDCounter = 0; // id of docs
     private static int postIdCounter = 0; // name to temp posting file
@@ -69,14 +70,14 @@ public class Indexer {
         if(mapSortedTerms.size() > MAX_POST_SIZE){
             reset();
         }
-        mapDocID.put(docIDCounter, new ArrayList<>(docInfo)); // add doc info to mapDoc
+        mapDocID.put(abE.encode(docIDCounter), new ArrayList<>(docInfo)); // add doc info to mapDoc
 
         termDoc.remove("");
         for (String key : termDoc.keySet()) {
             if (this.mapSortedTerms.containsKey(key)) {
 
                 //chain the new list of term to the original one
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                String info = new StringBuilder().append(abE.encode(docIDCounter)).append(":").append(termDoc.get(key)).append(";").toString();
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 if (!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
                     String originalInfo = originalList.get(0) + info;
@@ -91,7 +92,7 @@ public class Indexer {
             else {
                 //Add new term and it list of info to the Sorted map
                 ArrayList<String> listOfInfo = new ArrayList<>();
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                String info = new StringBuilder().append(abE.encode(docIDCounter)).append(":").append(termDoc.get(key)).append(";").toString();
                 listOfInfo.add(0, info);
                 mapSortedTerms.put(key, listOfInfo);
             }
@@ -122,25 +123,6 @@ public class Indexer {
         saveDocInfo();
     }
 
-    /**
-     * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
-     * @param path where we want to save the index files
-     */
-    private void postingFilesCreate(String path){
-        boolean folder1 = new File(path+"/stem").mkdir();
-        boolean folder2 = new File(path+"/noStem").mkdir();
-        if(folder1 && folder2){
-            File fileDocStem = new File(path+"/stem/" + "Doc");
-            File fileDocNoStem = new File(path+"/noStem/" + "Doc");
-            try {
-                fileDocStem.createNewFile();
-                fileDocNoStem.createNewFile();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     /**
      * get string of terms and write it on the disk
      */
@@ -192,8 +174,39 @@ public class Indexer {
             System.out.println(filename);
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
+     * @param path where we want to save the index files
+     */
+    private void postingFilesCreate(String path){
+        boolean folder1 = new File(path+"/stem").mkdir();
+        boolean folder2 = new File(path+"/noStem").mkdir();
+        if(folder1 && folder2){
+            File fileDocStem = new File(path+"/stem/" + "Doc");
+            File fileDocNoStem = new File(path+"/noStem/" + "Doc");
+            try {
+                fileDocStem.createNewFile();
+                fileDocNoStem.createNewFile();
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * save and write info about docs of corpus
+     */
+    private void saveDocInfo() {
+        StringBuilder text = new StringBuilder();
+        for (String key : mapDocID.keySet()) {
+            ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
+            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
+        }
+        usingBufferedWritter(text.toString(),"Doc");
+        mapDocID = new LinkedHashMap<>();
     }
 
     /**
@@ -420,6 +433,62 @@ public class Indexer {
         return terms;
     }
 
+
+    /**
+     * create the Dictionary and write in it all info
+     * @param termsToDict
+     */
+    private void termToDictionary(Map<String, String> termsToDict) {
+        Set<String> terms = termsToDict.keySet();
+        int lineCounter = 1;
+        int total;
+        for(String term : terms){
+            int df = 0;
+            total = 0;
+            String infoText = termsToDict.get(term);
+
+            Pattern dfPattern = Pattern.compile("(\\d+);");
+            Matcher dfMatcher = dfPattern.matcher(infoText);
+            while (dfMatcher.find()){
+                total += Integer.parseInt(dfMatcher.group(1));
+                df++;
+            }
+
+            String infoDic = "" + total + ":" + df + ";" + lineCounter;
+            lineCounter ++;
+
+            this.mapDictionary.put(term, infoDic);
+            sizeDictionary++;
+        }
+        String toFile = mapToFormatString(this.mapDictionary, "Dictionary");
+        usingBufferedWritter(toFile, "Dictionary");
+        this.mapDictionary = new LinkedHashMap<>();
+    }
+
+    /**
+     * Amount of uniq terms
+     * @return
+     */
+    public int getDictionarySize(){
+        return sizeDictionary;
+    }
+
+    /**
+     * give to each doc id
+     * @param docIDCounter
+     */
+    public static void setDocIDCounter(int docIDCounter) {
+        Indexer.docIDCounter = docIDCounter;
+    }
+
+    /**
+     * get present doc id
+     * @return
+     */
+    public static int getDocIDCounter() {
+        return docIDCounter;
+    }
+
     /**
      * upper/lower case law
      * @param rawTerms
@@ -490,74 +559,6 @@ public class Indexer {
 
         return data;
 
-    }
-
-    /**
-     * save and write info about docs of corpus
-     */
-    private void saveDocInfo() {
-        StringBuilder text = new StringBuilder();
-        for (Integer key : mapDocID.keySet()) {
-            ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
-            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
-        }
-        usingBufferedWritter(text.toString(),"Doc");
-        mapDocID = new LinkedHashMap<>();
-    }
-
-    /**
-     * create the Dictionary and write in it all info
-     * @param termsToDict
-     */
-    private void termToDictionary(Map<String, String> termsToDict) {
-        Set<String> terms = termsToDict.keySet();
-        int lineCounter = 1;
-        int total;
-        for(String term : terms){
-            int df = 0;
-            total = 0;
-            String infoText = termsToDict.get(term);
-
-            Pattern dfPattern = Pattern.compile("(\\d+);");
-            Matcher dfMatcher = dfPattern.matcher(infoText);
-            while (dfMatcher.find()){
-                total += Integer.parseInt(dfMatcher.group(1));
-                df++;
-            }
-
-            String infoDic = "" + total + ":" + df + ";" + lineCounter;
-            lineCounter ++;
-
-            this.mapDictionary.put(term, infoDic);
-            sizeDictionary++;
-        }
-        String toFile = mapToFormatString(this.mapDictionary, "Dictionary");
-        usingBufferedWritter(toFile, "Dictionary");
-        this.mapDictionary = new LinkedHashMap<>();
-    }
-
-    /**
-     * Amount of uniq terms
-     * @return
-     */
-    public int getDictionarySize(){
-        return sizeDictionary;
-    }
-
-    /**
-     * give to each doc id
-     * @param docIDCounter
-     */
-    public static void setDocIDCounter(int docIDCounter) {
-        Indexer.docIDCounter = docIDCounter;
-    }
-
-    /**
-     * get present doc id
-     * @return
-     */
-    public static int getDocIDCounter() {
-        return docIDCounter;
     }
 
     /**

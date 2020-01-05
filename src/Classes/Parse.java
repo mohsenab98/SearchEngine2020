@@ -682,25 +682,31 @@ public class Parse {
             return "";
         }
 
+        // clean one letters at start
         term = term.replaceAll("^(?:\\w\\s)+", "");
 
+        // clean _ at start
         if(term.contains("_")) {
             Pattern startLine = Pattern.compile("^_\\s*");
             term = startLine.matcher(term).replaceAll("");
         }
 
+        // clean ?_- at end
         if(term.contains("_") || term.contains("/") || term.contains("-")) {
             Pattern endLine = Pattern.compile("[/_-]$");
             term = endLine.matcher(term).replaceAll("");
         }
+        // clean \n
         if(term.contains("\n")) {
             Pattern cleanLine = Pattern.compile("\\s*\n");
             term = cleanLine.matcher(term).replaceAll("");
         }
+        // clean spaces after -
         if(term.contains("- ")) {
             Pattern cleanSpace = Pattern.compile("-\\s+");
             term = cleanSpace.matcher(term).replaceAll("-");
         }
+        // clean $ and %
         if(term.contains("$$")){
             Pattern cleanDollar = Pattern.compile("\\${2,}");
             term = cleanDollar.matcher(term).replaceAll("\\$");
