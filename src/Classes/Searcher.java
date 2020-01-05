@@ -30,7 +30,7 @@ public class Searcher {
                 continue;
             }
             List<Integer> termInfo = getTermInfo(termLine);
-            String termPostingLine = getPostingLine(termInfo.get(2), termLine.charAt(0));
+            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(termLine.charAt(0)));
             Map<Integer,Integer> docTf = getDocTf(termPostingLine); ////????????????????????
 
         }
@@ -63,7 +63,7 @@ public class Searcher {
      * @param postingLineNumber
      * @return
      */
-    private String getPostingLine(int postingLineNumber, char postingName) {
+    private String getPostingLine(int postingLineNumber, String postingName) {
         int lineCounter = 0;
         try {
             Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + postingName), StandardCharsets.US_ASCII );
@@ -87,6 +87,24 @@ public class Searcher {
      */
     private Map<Integer, Integer> getDocTf(String termPostingLine) {
         return null;
+    }
+
+
+    /**
+     * get doc number(= (line number+1) in the posting) and return the 5 dominant entities in the doc
+     * @param docNumber
+     * @return
+     */
+    public List<String> getDocEntities(int docNumber){
+        // call getPostingLine Function to get the specific line from the posting
+        String line = getPostingLine(docNumber + 1, "Doc");
+        //take the entites only from the specific line
+        int semicolonIndex = line.indexOf(';');
+        String entities = line.substring(semicolonIndex);
+
+        List<String> listEntities = Arrays.asList(entities.split(","));
+        return  listEntities;
+
     }
 
 
