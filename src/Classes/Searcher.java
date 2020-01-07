@@ -1,7 +1,8 @@
 package Classes;
 import Model.MyModel;
+
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,12 +15,15 @@ import java.util.stream.Stream;
  * Dictionary(Search term ) ->>>>>> search in posting(a-z) the relative info of the term
  */
 public class Searcher {
-    private List<String> queryTerms;
     private String postingPath; // includes stem/nostem folder
+    private String corpusPath; // path to corpus
+    private String query;
+    private List<String> queryTerms;
     private Ranker ranker;
 
 
     public Searcher(String query, String postingPath){
+        this.query = query;
         this.queryTerms = Arrays.asList(query.split(" "));
         this.postingPath = postingPath;
         this.ranker = setRanker();
@@ -43,14 +47,31 @@ public class Searcher {
     }
 
     public void search(){
+        //TODO : delete
+        MyModel m = new MyModel();
+        m.loadDictionary(new File("D:\\corpusResults\\noStem\\Dictionary"));
+
+        List<String> queryTermsLSA = new ArrayList<>();
+        for(String term : queryTerms){
+            List<String> synonyms = ranker.LSA(term.toLowerCase());
+            queryTermsLSA.addAll(synonyms);
+        }
+
+        queryTerms = queryTermsLSA;
+
         Map<Integer, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
         for (String term : queryTerms){
-            String termLine = MyModel.mapDictionary.get(term);
-            if(termLine.isEmpty()){
-                continue;
+            // check upper and lower cases
+            String termLine = MyModel.mapDictionary.get(term.toLowerCase());
+            if(termLine == null){
+                termLine = MyModel.mapDictionary.get(term.toUpperCase());
+                if(termLine == null) {
+                    continue;
+                }
             }
+
             List<Integer> termInfo = getTermInfo(termLine); // get term info( total - df - pointer)
-            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(termLine.charAt(0))); // get line as string using the pointer above
+            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(term.charAt(0))); // get line as string using the pointer above
             Map<Integer,Integer> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
 
             // save as : Doc(key) -- (qi - tfi - dfi)(value)
@@ -63,12 +84,14 @@ public class Searcher {
                     queryTfDf.add(term); // query_i
                     queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
                     queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
+                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
                     docQ.put(docId, queryTfDf);
                 }else{
                     ArrayList<String> queryTfDf = docQ.get(docId);
                     queryTfDf.add(term); // query_i
                     queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
                     queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
+                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
                     docQ.put(docId, queryTfDf);
                 }
 
@@ -94,9 +117,9 @@ public class Searcher {
         //add totalDocs
         listTermInfo.add(Integer.parseInt(termLine.substring(0, colonIndex)));
         //add df
-        listTermInfo.add(Integer.parseInt(termLine.substring(colonIndex, semicolonIndex)));
+        listTermInfo.add(Integer.parseInt(termLine.substring(colonIndex + 1, semicolonIndex)));
         //add LineCounter
-        listTermInfo.add(Integer.parseInt(termLine.substring(semicolonIndex)));
+        listTermInfo.add(Integer.parseInt(termLine.substring(semicolonIndex + 1)));
 
         return listTermInfo;
     }
@@ -107,8 +130,11 @@ public class Searcher {
      * @return
      */
     private String getPostingLine(int postingLineNumber, String postingName) {
-        int lineCounter = 0;
+        int lineCounter = 1;
         try {
+            if(Character.isDigit(postingName.charAt(0))){
+                postingName = "Numbers";
+            }
             Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + postingName), StandardCharsets.US_ASCII );
             // get line [#postingLineNumber] in posting file
             for( String line : (Iterable<String>) lines::iterator ){

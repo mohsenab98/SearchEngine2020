@@ -1,8 +1,6 @@
 package Model;
 
-import Classes.Indexer;
-import Classes.Parse;
-import Classes.ReadFile;
+import Classes.*;
 import javafx.scene.control.TextField;
 import java.io.*;
 import java.nio.file.Files;
@@ -136,11 +134,15 @@ public class MyModel extends Observable implements IModel {
         termNumbers = indexer.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
-        System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
+        System.out.println((totalTime)/60 + " minutes. For Read/Parse/Indexing");
         System.out.println(termNumbers);
         System.out.println(indexer.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = indexer.getDocIDCounter();
+        Searcher searcher = new Searcher("British Chunnel impact", "D:\\noStem");
+        searcher.search();
+        totalTime = (endTime - startTime) / 1000000000;
+        System.out.println((totalTime)/60 + " minutes. For Read/Parse/Search with LPA");
         return true;
     }
 
