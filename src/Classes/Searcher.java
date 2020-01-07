@@ -1,13 +1,13 @@
 package Classes;
 import Model.MyModel;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -16,25 +16,70 @@ import java.util.stream.Stream;
 public class Searcher {
     private List<String> queryTerms;
     private String postingPath; // includes stem/nostem folder
+    private Ranker ranker;
 
 
     public Searcher(String query, String postingPath){
         this.queryTerms = Arrays.asList(query.split(" "));
         this.postingPath = postingPath;
+        this.ranker = setRanker();
+    }
+
+    private Ranker setRanker() {
+        try {
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + "BM25Info"), StandardCharsets.US_ASCII );
+            // get line [#postingLineNumber] in posting file
+            int[] info = new int[2];
+            int i = 0;
+            for( String line : (Iterable<String>) lines::iterator ){
+                info[i] = Integer.parseInt(line);
+                i++;
+            }
+            return new Ranker(info[0], info[1]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void search(){
+        Map<Integer, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
         for (String term : queryTerms){
             String termLine = MyModel.mapDictionary.get(term);
             if(termLine.isEmpty()){
                 continue;
             }
-            List<Integer> termInfo = getTermInfo(termLine);
-            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(termLine.charAt(0)));
-            Map<Integer,Integer> docTf = getDocTf(termPostingLine); ////????????????????????
+            List<Integer> termInfo = getTermInfo(termLine); // get term info( total - df - pointer)
+            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(termLine.charAt(0))); // get line as string using the pointer above
+            Map<Integer,Integer> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
 
-        }
+            // save as : Doc(key) -- (qi - tfi - dfi)(value)
+            Iterator<Map.Entry<Integer, Integer>> it = docTf.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Integer, Integer> pair = it.next();
+                Integer docId = pair.getKey();
+                if(!docQ.containsKey(docId)){
+                    ArrayList<String> queryTfDf = new ArrayList<>();
+                    queryTfDf.add(term); // query_i
+                    queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
+                    queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
+                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
+                    docQ.put(docId, queryTfDf);
+                }else{
+                    ArrayList<String> queryTfDf = docQ.get(docId);
+                    queryTfDf.add(term); // query_i
+                    queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
+                    queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
+                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
+                    docQ.put(docId, queryTfDf);
+                }
 
+            }// while END
+
+        }// for While
+
+        // send to ranker bm25 function
+        ranker.rankBM25(docQ);
     }
 
 
@@ -86,7 +131,13 @@ public class Searcher {
      * @return
      */
     private Map<Integer, Integer> getDocTf(String termPostingLine) {
-        return null;
+        SortedMap<Integer, Integer> docTf = new TreeMap<>();
+        Pattern p = Pattern.compile("(\\d+):(\\d+)");
+        Matcher m = p.matcher(termPostingLine);
+        while (m.find()){
+            docTf.put(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+        }
+        return docTf;
     }
 
 
@@ -97,7 +148,7 @@ public class Searcher {
      */
     public List<String> getDocEntities(int docNumber){
         // call getPostingLine Function to get the specific line from the posting
-        String line = getPostingLine(docNumber + 1, "Doc");
+        String line = getPostingLine(docNumber, "Doc");
         //take the entites only from the specific line
         int semicolonIndex = line.indexOf(';');
         String entities = line.substring(semicolonIndex);

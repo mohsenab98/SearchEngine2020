@@ -43,14 +43,15 @@ public class Indexer {
      */
     private Map<Integer, ArrayList<String>> mapDocID;
 
-    private static int docIDCounter = 0; // id of docs
+    private static int docIDCounter = 1; // id of docs
     private static int postIdCounter = 0; // name to temp posting file
     private static int sizeDictionary = 0; // size of dictionary
+    private static int sumdl = 0;
     private boolean isUpperLowerAction = false; // if was upper/lower action
 
     public Indexer(String pathPosting, boolean isStem) {
         sizeDictionary = 0;
-        docIDCounter = 0;
+        docIDCounter = 1;
         postIdCounter = 0;
         this.mapDictionary = new LinkedHashMap<>();
         this.pathPosting = pathPosting;
@@ -278,6 +279,8 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
+
+        usingBufferedWritter(docIDCounter + "\n" + sumdl/docIDCounter, "BM25Info");
         SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
@@ -499,7 +502,20 @@ public class Indexer {
         StringBuilder text = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
-            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
+            sumdl += Integer.parseInt(listDocInfo.get(3));
+            text.append(key+1).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3))
+                    .append(";");
+            int counter = 4;
+            while (counter < listDocInfo.size() - 1){
+                text.append(listDocInfo.get(counter)).append(",");
+                counter++;
+            }
+            if(counter > 4) {
+                text.append(listDocInfo.get(counter)).append("\n");
+            }
+            else {
+                text.append("\n");
+            }
         }
         usingBufferedWritter(text.toString(),"Doc");
         mapDocID = new LinkedHashMap<>();
