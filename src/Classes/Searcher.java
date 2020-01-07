@@ -1,5 +1,7 @@
 package Classes;
 import Model.MyModel;
+
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
@@ -43,14 +45,19 @@ public class Searcher {
     }
 
     public void search(){
+        //TODO : delete
+        MyModel m = new MyModel();
+        m.loadDictionary(new File("C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem\\Dictionary"));
+
+
         Map<Integer, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
         for (String term : queryTerms){
             String termLine = MyModel.mapDictionary.get(term);
-            if(termLine.isEmpty()){
+            if(termLine == null){
                 continue;
             }
             List<Integer> termInfo = getTermInfo(termLine); // get term info( total - df - pointer)
-            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(termLine.charAt(0))); // get line as string using the pointer above
+            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(term.charAt(0))); // get line as string using the pointer above
             Map<Integer,Integer> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
 
             // save as : Doc(key) -- (qi - tfi - dfi)(value)
@@ -96,9 +103,9 @@ public class Searcher {
         //add totalDocs
         listTermInfo.add(Integer.parseInt(termLine.substring(0, colonIndex)));
         //add df
-        listTermInfo.add(Integer.parseInt(termLine.substring(colonIndex, semicolonIndex)));
+        listTermInfo.add(Integer.parseInt(termLine.substring(colonIndex + 1, semicolonIndex)));
         //add LineCounter
-        listTermInfo.add(Integer.parseInt(termLine.substring(semicolonIndex)));
+        listTermInfo.add(Integer.parseInt(termLine.substring(semicolonIndex + 1)));
 
         return listTermInfo;
     }
@@ -109,8 +116,11 @@ public class Searcher {
      * @return
      */
     private String getPostingLine(int postingLineNumber, String postingName) {
-        int lineCounter = 0;
+        int lineCounter = 1;
         try {
+            if(Character.isDigit(postingName.charAt(0))){
+                postingName = "Numbers";
+            }
             Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + postingName), StandardCharsets.US_ASCII );
             // get line [#postingLineNumber] in posting file
             for( String line : (Iterable<String>) lines::iterator ){
