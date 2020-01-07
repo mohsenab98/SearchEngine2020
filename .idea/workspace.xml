@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Ranker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Ranker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +157,7 @@
       <workItem from="1576310501527" duration="11651000" />
       <workItem from="1576338213505" duration="5786000" />
       <workItem from="1576410999610" duration="2897000" />
-      <workItem from="1578390551002" duration="9311000" />
+      <workItem from="1578390551002" duration="10509000" />
     </task>
     <task id="LOCAL-00001" summary="Price">
       <created>1574024427847</created>
@@ -441,7 +439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578228882885</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="-- V.1 Part B - Searcher BM25">
+      <created>1578403082035</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1578403082035</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TodoView">
@@ -484,7 +489,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Many many changes" />
     <MESSAGE value="functions for Names" />
     <MESSAGE value="New Read file, ArrayList in map" />
     <MESSAGE value="Level up over 9999 remove punctuation" />
@@ -509,7 +513,8 @@
     <MESSAGE value="- read without threading (~5min for 100 Files)&#10;- Indexer Update for doc writing" />
     <MESSAGE value="- read without threading (~7min for 100 Files)&#10;- Indexer Update case Sensitive(SortedMap)[for-x1]&#10;-termCounter NOT FINISHED" />
     <MESSAGE value="-- V.1 Part B - 5 Entities to doc" />
-    <option name="LAST_COMMIT_MESSAGE" value="-- V.1 Part B - 5 Entities to doc" />
+    <MESSAGE value="-- V.1 Part B - Searcher BM25" />
+    <option name="LAST_COMMIT_MESSAGE" value="-- V.1 Part B - Searcher BM25" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="72" key="#VisualVM_Launcher" timestamp="1578253825252">
@@ -524,10 +529,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="577" y="244" key="#com.intellij.refactoring.move.moveInstanceMethod.MoveInstanceMethodDialog/0.0.1536.824@0.0.1536.824" timestamp="1578226951721" />
-    <state x="358" y="0" key="CommitChangelistDialog2" timestamp="1578228880579">
+    <state x="358" y="0" key="CommitChangelistDialog2" timestamp="1578403080425">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="358" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1578228880579" />
+    <state x="358" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1578403080425" />
     <state width="598" height="657" key="DebuggerActiveHint" timestamp="1578231197320">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -567,10 +572,10 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="440" y="155" key="SettingsEditor/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578220146844" />
-    <state x="361" y="135" key="Vcs.Push.Dialog.v2" timestamp="1578228886013">
+    <state x="361" y="135" key="Vcs.Push.Dialog.v2" timestamp="1578403084677">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="135" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1578228886013" />
+    <state x="361" y="135" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1578403084677" />
     <state x="74" y="65" width="1389" height="694" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1578228787993">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
