@@ -189,13 +189,9 @@ public class MyViewController extends Canvas implements Observer {
                 String[] arr = line.split( "\\|" );
                 mapDictionary.put( arr[0], arr[1].split(":")[0]);
             }
-            JTable table=new JTable(toTableModel(mapDictionary)); //receiving the table from toTbleModel function
-            JFrame frame=new JFrame();
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//set closing behavior
-            frame.add(new JScrollPane(table)); // adding scrollbar
-            frame.setSize(400,600);
-            frame.setLocationRelativeTo(null);//center the jframe
-            frame.setVisible(true);
+
+            //show dictionary as table
+            showTable(mapDictionary);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -281,7 +277,22 @@ public class MyViewController extends Canvas implements Observer {
     @FXML public TextField chooseQuires_text;
 
     public void runQuery(ActionEvent actionEvent) {
-        viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected());
+        if(!query_text.getText().equals("")){
+            Map<String, String> result = viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
+            showTable(result);
+            return;
+        }else if(!chooseQuires_text.getText().equals("")){
+            File queryFile = new File(chooseQuires_text.getText());
+            if(queryFile.exists()){
+                //get the query results
+                Map<String, String> result = viewModel.runQueryFile(chooseQuires_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
+                // show results
+                showTable(result);
+                return;
+            }
+        }
+            showAlert("Enter valid location of the query file !!");
+
     }
 
     public void showEntities(ActionEvent actionEvent) {
@@ -289,6 +300,16 @@ public class MyViewController extends Canvas implements Observer {
         int docId = 0;
         List<String> docEntities = viewModel.getDocEntitiesFromSearcher(docId);
 
+    }
+
+    private void showTable(Map result){
+        JTable table=new JTable(toTableModel(result)); //receiving the table from toTbleModel function
+        JFrame frame=new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//set closing behavior
+        frame.add(new JScrollPane(table)); // adding scrollbar
+        frame.setSize(400,600);
+        frame.setLocationRelativeTo(null);//center the jframe
+        frame.setVisible(true);
     }
 
 

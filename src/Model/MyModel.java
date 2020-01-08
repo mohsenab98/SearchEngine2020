@@ -169,22 +169,45 @@ public class MyModel extends Observable implements IModel {
 
 
     @Override
-    public void runQuery(String textQuery, boolean stem, boolean semantic) {
-        String query = "Falkland petroleum exploration";
-        // how to parse the query ?
-        //how to deal with corpus path
-        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-        Searcher s = new Searcher(query, postingPath);
-        s.search();
+    public Map<String, String> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
+        return searcher.search();
     }
 
     @Override
     public List<String> getDocEntitiesFromSearcher(int docId) {
-        String query = "Falkland petroleum exploration";
-        // how to parse the query ?
-        //how to deal with corpus path
-        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-        Searcher s = new Searcher(query, postingPath);
-        return s.getDocEntities(docId);
+//        String query = "Falkland petroleum exploration";
+//        // how to parse the query ?
+//        //how to deal with corpus path
+//        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
+//        Searcher s = new Searcher(query, postingPath,);
+//        return s.getDocEntities(docId);
+        return null;
+    }
+
+    @Override
+    public Map<String, String> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+        String textQuery = readAllBytesJava(text);
+        String tempQuery = "";
+        // regular Expression
+
+        // foreach query
+        Searcher searcher = new Searcher(tempQuery, posting, stem, semantic);
+        searcher.search(); // return map <docId , rank >
+        return null;
+    }
+
+    private static String readAllBytesJava(String filePath)
+    {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return content;
     }
 }

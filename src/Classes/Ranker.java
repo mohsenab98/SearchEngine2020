@@ -1,15 +1,25 @@
 package Classes;
 
+import Model.MyModel;
+//import edu.cmu.lti.lexical_db.ILexicalDatabase;
+//import edu.cmu.lti.lexical_db.NictWordNet;
+//import edu.cmu.lti.ws4j.impl.WuPalmer;
+//import edu.cmu.lti.ws4j.util.WS4JConfiguration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class Ranker {
+
     private double N;
-    private int avgdl;
+    private double avgdl;
     private double k1;
     private double b;
+
+    // LSA
+//    private static ILexicalDatabase db = new NictWordNet();
 
     public Ranker(int n, int avgdl) {
         N = n;
@@ -25,14 +35,14 @@ public class Ranker {
      * @param docQ
      * @return docID - score
      */
-    public Map<Integer, Double> rankBM25(Map<Integer, ArrayList<String>> docQ) {
+    public Map<String, String> rankBM25(Map<String, ArrayList<String>> docQ) {
 
-        Map<Integer, Double> bm25Result = new HashMap<>();
-        Iterator<Map.Entry<Integer, ArrayList<String>>> it = docQ.entrySet().iterator();
+        Map<String, String> bm25Result = new HashMap<>();
+        Iterator<Map.Entry<String, ArrayList<String>>> it = docQ.entrySet().iterator();
         while (it.hasNext()) {
 
-            Map.Entry<Integer, ArrayList<String>> pair = it.next();
-            Integer docId = pair.getKey();
+            Map.Entry<String, ArrayList<String>> pair = it.next();
+            String docId = pair.getKey();
             ArrayList<String> queryInfo = pair.getValue();
 
             double score = 0;
@@ -51,14 +61,28 @@ public class Ranker {
                 // log(N/dfi)
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 
-                numerator =  tfi * (this.k1 +1);
-                denominator = tfi + (this.k1) * (1 - this.b + (this.b * total));
+                numerator =  tfi * (this.k1 + 1);
+                denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
 
                 score = score + IDF * (numerator / denominator);
             }
-            bm25Result.put(docId, score);
+            bm25Result.put(docId, String.valueOf(score));
 
         }// while END
+        return bm25Result;
+    }
+
+    public ArrayList<String> LSA(String term){
+//        ArrayList<String> synonyms = new ArrayList<>();
+//        WS4JConfiguration.getInstance().setMFS(true);
+//        for(String dictTerm : MyModel.mapDictionary.keySet()) {
+//            double distance = new WuPalmer(db).calcRelatednessOfWords(term, dictTerm);
+//            if(distance >= 0.85){
+//                synonyms.add(dictTerm);
+//            }
+//        }
+//
+//        return synonyms;
         return null;
     }
 }
