@@ -189,7 +189,7 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
-        Map<String, Map<String, String>> result = new HashMap<>();
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String textQuery = readAllBytesJava(text);
         String num = "";
         String title = "";
@@ -215,13 +215,13 @@ public class MyModel extends Observable implements IModel {
 
             Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
             Matcher matcherDesc = patternDesc.matcher(query);
-            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+?)\\s*<");
+            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
             Matcher matcherNarr = patternNarr.matcher(query);
             while (matcherDesc.find() && matcherNarr.find()){
                 narrDesc = matcherDesc.group(1) + matcherNarr.group(1);
             }
 
-            narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ");
+            narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
             Searcher searcher = new Searcher(title, posting, stem, semantic, narrDesc);
             result.put(num, searcher.search());
         }

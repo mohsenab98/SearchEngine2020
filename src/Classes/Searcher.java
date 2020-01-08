@@ -73,7 +73,7 @@ public class Searcher {
         if(isSemantic && narrDesc != null){
             List<String> queryTermsLSA = new ArrayList<>();
             for(String term : queryTerms){
-                List<String> synonyms = ranker.LSA(term.toLowerCase(), narrDesc);
+                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase(), narrDesc));
                 queryTermsLSA.addAll(synonyms);
             }
 

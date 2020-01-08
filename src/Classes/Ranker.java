@@ -6,10 +6,7 @@ import edu.cmu.lti.lexical_db.NictWordNet;
 import edu.cmu.lti.ws4j.impl.WuPalmer;
 import edu.cmu.lti.ws4j.util.WS4JConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Ranker {
 
@@ -72,8 +69,8 @@ public class Ranker {
         return bm25Result;
     }
 
-    public ArrayList<String> LSA(String term, String narrDescription){
-        ArrayList<String> synonyms = new ArrayList<>();
+    public Set<String> LSA(String term, String narrDescription){
+        Set<String> synonyms = new HashSet<>();
         WS4JConfiguration.getInstance().setMFS(true);
         String[] queryDescrNarr = narrDescription.split(" ");
         for(String synonym : queryDescrNarr) {
