@@ -137,26 +137,11 @@ public class MyModel extends Observable implements IModel {
         termNumbers = indexer.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
-        System.out.println((totalTime)/60 + " minutes. For Read/Parse/Indexing");
+        System.out.println((totalTime)/60+ " minutes. For Read/Parse/Indexing");
         System.out.println(termNumbers);
         System.out.println(indexer.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = indexer.getDocIDCounter();
-
-        /*
-        Pattern tagQueryPattern = Pattern.compile("<top>.+?</top>");
-        Pattern numQueryPattern = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
-        Pattern queryPattern = Pattern.compile("<title>\\s*([^<]+?)\\s*<");
-        Pattern descQueryPattern = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
-        Pattern narrQueryPattern = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+?)\\s*<");
-
-        Searcher searcher = new Searcher("British Chunnel impact", "D:\\noStem");
-        searcher.search();
-
-        totalTime = (endTime - startTime) / 1000000000;
-        System.out.println((totalTime)/60 + " minutes. For Read/Parse/Search with LPA");
-         */
-
         return true;
     }
 
@@ -184,22 +169,77 @@ public class MyModel extends Observable implements IModel {
 
 
     @Override
-    public void runQuery(String textQuery, boolean stem, boolean semantic) {
-        String query = "Falkland petroleum exploration";
-        // how to parse the query ?
-        //how to deal with corpus path
-        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-        Searcher s = new Searcher(query, postingPath);
-        s.search();
+    public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+        Map<String, Map<String, String>> result = new HashMap<>();
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
+        result.put("1", searcher.search());
+        return result; // return map <docId , rank >
     }
 
     @Override
     public List<String> getDocEntitiesFromSearcher(int docId) {
-        String query = "Falkland petroleum exploration";
-        // how to parse the query ?
-        //how to deal with corpus path
-        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-        Searcher s = new Searcher(query, postingPath);
-        return s.getDocEntities(docId);
+//        String query = "Falkland petroleum exploration";
+//        // how to parse the query ?
+//        //how to deal with corpus path
+//        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
+//        Searcher s = new Searcher(query, postingPath,);
+//        return s.getDocEntities(docId);
+        return null;
+    }
+
+    @Override
+    public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+        Map<String, Map<String, String>> result = new HashMap<>();
+        String textQuery = readAllBytesJava(text);
+        String num = "";
+        String title = "";
+        String narrDesc = "";
+        // regular expressions
+        Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
+        Matcher matcherTOP = patternTOP.matcher(textQuery);
+        // foreach query
+        while (matcherTOP.find()){
+            String query = matcherTOP.group(1);
+
+            Pattern patternNUM = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
+            Matcher matcherNUM = patternNUM.matcher(query);
+            while (matcherNUM.find()){
+                num = matcherNUM.group(1);
+            }
+
+            Pattern patternTitle = Pattern.compile("<title>\\s*([^<]+?)\\s*<");
+            Matcher matcherTitle = patternTitle.matcher(query);
+            while (matcherTitle.find()){
+                title = matcherTitle.group(1);
+            }
+
+            Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
+            Matcher matcherDesc = patternDesc.matcher(query);
+            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+?)\\s*<");
+            Matcher matcherNarr = patternNarr.matcher(query);
+            while (matcherDesc.find() && matcherNarr.find()){
+                narrDesc = matcherDesc.group(1) + matcherNarr.group(1);
+            }
+
+            narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ");
+            Searcher searcher = new Searcher(title, posting, stem, semantic, narrDesc);
+            result.put(num, searcher.search());
+        }
+
+        return result; // return map <docId , rank >
+    }
+
+    private static String readAllBytesJava(String filePath)
+    {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return content;
     }
 }

@@ -4,6 +4,7 @@ import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
@@ -23,7 +24,9 @@ public interface IModel {
 
     int getNumberOfTerms();
 
-    void runQuery(String textQuery, boolean stem, boolean semantic);
+    Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic,String posting);
 
     List<String> getDocEntitiesFromSearcher(int docId);
+
+    Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String Posting);
 }

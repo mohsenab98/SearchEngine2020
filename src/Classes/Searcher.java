@@ -15,23 +15,44 @@ import java.util.stream.Stream;
  * Dictionary(Search term ) ->>>>>> search in posting(a-z) the relative info of the term
  */
 public class Searcher {
-    private String postingPath; // includes stem/nostem folder
-    private String corpusPath; // path to corpus
-    private String query;
     private List<String> queryTerms;
+    private String postingPath; // includes stem/nostem folder
     private Ranker ranker;
+    private boolean isStem;
+    private boolean isSemantic;
+    private Stemmer stemmer;
+    private String narrDesc;
 
 
-    public Searcher(String query, String postingPath){
-        this.query = query;
+
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic){
         this.queryTerms = Arrays.asList(query.split(" "));
         this.postingPath = postingPath;
         this.ranker = setRanker();
+        this.isStem = stem;
+        this.isSemantic = semantic;
+        this.stemmer = new Stemmer();
+    }
+
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrDesc){
+        this.queryTerms = Arrays.asList(query.split(" "));
+        this.postingPath = postingPath;
+        this.ranker = setRanker();
+        this.isStem = stem;
+        this.isSemantic = semantic;
+        this.stemmer = new Stemmer();
+        this.narrDesc = narrDesc;
     }
 
     private Ranker setRanker() {
         try {
-            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + "BM25Info"), StandardCharsets.US_ASCII );
+            String stem = "";
+            if(isStem){
+                stem = "stem";
+            }else{
+                stem = "noStem";
+            }
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "BM25Info"), StandardCharsets.US_ASCII );
             // get line [#postingLineNumber] in posting file
             int[] info = new int[2];
             int i = 0;
@@ -40,28 +61,35 @@ public class Searcher {
                 i++;
             }
             return new Ranker(info[0], info[1]);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void search(){
-        //TODO : delete
-        MyModel m = new MyModel();
-        m.loadDictionary(new File("D:\\corpusResults\\noStem\\Dictionary"));
+    public Map<String, String> search(){
+        // user chose search with semantic treatment
+        if(isSemantic && narrDesc != null){
+            List<String> queryTermsLSA = new ArrayList<>();
+            for(String term : queryTerms){
+                List<String> synonyms = ranker.LSA(term.toLowerCase(), narrDesc);
+                queryTermsLSA.addAll(synonyms);
+            }
 
-        List<String> queryTermsLSA = new ArrayList<>();
-        for(String term : queryTerms){
-            List<String> synonyms = ranker.LSA(term.toLowerCase());
-            queryTermsLSA.addAll(synonyms);
+            queryTerms = queryTermsLSA;
         }
 
-        queryTerms = queryTermsLSA;
 
-        Map<Integer, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
+        Map<String, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
         for (String term : queryTerms){
             // check upper and lower cases
+            if (this.isStem) {
+                term = this.stemmer.porterStemmer(term);
+            }
+
+
+            //
             String termLine = MyModel.mapDictionary.get(term.toLowerCase());
             if(termLine == null){
                 termLine = MyModel.mapDictionary.get(term.toUpperCase());
@@ -72,13 +100,13 @@ public class Searcher {
 
             List<Integer> termInfo = getTermInfo(termLine); // get term info( total - df - pointer)
             String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(term.charAt(0))); // get line as string using the pointer above
-            Map<Integer,Integer> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
+            Map<String,String> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
 
             // save as : Doc(key) -- (qi - tfi - dfi)(value)
-            Iterator<Map.Entry<Integer, Integer>> it = docTf.entrySet().iterator();
+            Iterator<Map.Entry<String, String>> it = docTf.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<Integer, Integer> pair = it.next();
-                Integer docId = pair.getKey();
+                Map.Entry<String, String> pair = it.next();
+                String docId = pair.getKey();
                 if(!docQ.containsKey(docId)){
                     ArrayList<String> queryTfDf = new ArrayList<>();
                     queryTfDf.add(term); // query_i
@@ -100,7 +128,8 @@ public class Searcher {
         }// for While
 
         // send to ranker bm25 function
-        ranker.rankBM25(docQ);
+       return ranker.rankBM25(docQ);
+
     }
 
 
@@ -131,11 +160,17 @@ public class Searcher {
      */
     private String getPostingLine(int postingLineNumber, String postingName) {
         int lineCounter = 1;
+        String stem = "";
+        if(isStem){
+            stem = "stem";
+        }else{
+            stem = "noStem";
+        }
         try {
             if(Character.isDigit(postingName.charAt(0))){
                 postingName = "Numbers";
             }
-            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + postingName), StandardCharsets.US_ASCII );
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingName), StandardCharsets.US_ASCII );
             // get line [#postingLineNumber] in posting file
             for( String line : (Iterable<String>) lines::iterator ){
                 if(lineCounter == postingLineNumber){
@@ -154,12 +189,17 @@ public class Searcher {
      * @param termPostingLine
      * @return
      */
-    private Map<Integer, Integer> getDocTf(String termPostingLine) {
-        SortedMap<Integer, Integer> docTf = new TreeMap<>();
+    private Map<String, String> getDocTf(String termPostingLine) {
+        SortedMap<String, String> docTf = new TreeMap<>();
         Pattern p = Pattern.compile("(\\d+):(\\d+)");
         Matcher m = p.matcher(termPostingLine);
         while (m.find()){
-            docTf.put(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+            String lineDoc = getPostingLine(Integer.parseInt(m.group(1)), "Doc");
+            int start = lineDoc.indexOf('|');
+            int end = lineDoc.indexOf('?');
+            //TODO : debug
+            String docName = lineDoc.substring(start + 1, end );
+            docTf.put(docName.trim(), m.group(2));
         }
         return docTf;
     }

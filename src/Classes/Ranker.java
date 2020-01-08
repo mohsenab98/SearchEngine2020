@@ -1,13 +1,15 @@
 package Classes;
 
 import Model.MyModel;
-import edu.cmu.lti.jawjaw.pobj.POS;
 import edu.cmu.lti.lexical_db.ILexicalDatabase;
 import edu.cmu.lti.lexical_db.NictWordNet;
 import edu.cmu.lti.ws4j.impl.WuPalmer;
 import edu.cmu.lti.ws4j.util.WS4JConfiguration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Ranker {
 
@@ -33,14 +35,14 @@ public class Ranker {
      * @param docQ
      * @return docID - score
      */
-    public Map<Integer, Double> rankBM25(Map<Integer, ArrayList<String>> docQ) {
+    public Map<String, String> rankBM25(Map<String, ArrayList<String>> docQ) {
 
-        Map<Integer, Double> bm25Result = new HashMap<>();
-        Iterator<Map.Entry<Integer, ArrayList<String>>> it = docQ.entrySet().iterator();
+        Map<String, String> bm25Result = new HashMap<>();
+        Iterator<Map.Entry<String, ArrayList<String>>> it = docQ.entrySet().iterator();
         while (it.hasNext()) {
 
-            Map.Entry<Integer, ArrayList<String>> pair = it.next();
-            Integer docId = pair.getKey();
+            Map.Entry<String, ArrayList<String>> pair = it.next();
+            String docId = pair.getKey();
             ArrayList<String> queryInfo = pair.getValue();
 
             double score = 0;
@@ -64,19 +66,20 @@ public class Ranker {
 
                 score = score + IDF * (numerator / denominator);
             }
-            bm25Result.put(docId, score);
+            bm25Result.put(docId, String.valueOf(score));
 
         }// while END
-        return null;
+        return bm25Result;
     }
 
-    public ArrayList<String> LSA(String term){
+    public ArrayList<String> LSA(String term, String narrDescription){
         ArrayList<String> synonyms = new ArrayList<>();
         WS4JConfiguration.getInstance().setMFS(true);
-        for(String dictTerm : MyModel.mapDictionary.keySet()) {
-            double distance = new WuPalmer(db).calcRelatednessOfWords(term, dictTerm);
+        String[] queryDescrNarr = narrDescription.split(" ");
+        for(String synonym : queryDescrNarr) {
+            double distance = new WuPalmer(db).calcRelatednessOfWords(term, synonym.trim());
             if(distance >= 0.85){
-                synonyms.add(dictTerm);
+                synonyms.add(synonym.trim());
             }
         }
 
