@@ -1,6 +1,9 @@
 package Model;
 
-import Classes.*;
+import Classes.Indexer;
+import Classes.Parse;
+import Classes.ReadFile;
+import Classes.Searcher;
 import javafx.scene.control.TextField;
 import java.io.*;
 import java.nio.file.Files;
@@ -139,10 +142,21 @@ public class MyModel extends Observable implements IModel {
         System.out.println(indexer.getDocIDCounter());
         timeForIndexing = totalTime / 60;
         docCounter = indexer.getDocIDCounter();
+
+        /*
+        Pattern tagQueryPattern = Pattern.compile("<top>.+?</top>");
+        Pattern numQueryPattern = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
+        Pattern queryPattern = Pattern.compile("<title>\\s*([^<]+?)\\s*<");
+        Pattern descQueryPattern = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
+        Pattern narrQueryPattern = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+?)\\s*<");
+
         Searcher searcher = new Searcher("British Chunnel impact", "D:\\noStem");
         searcher.search();
+
         totalTime = (endTime - startTime) / 1000000000;
         System.out.println((totalTime)/60 + " minutes. For Read/Parse/Search with LPA");
+         */
+
         return true;
     }
 
@@ -163,5 +177,29 @@ public class MyModel extends Observable implements IModel {
     @Override
     public int getNumberOfTerms() {
         return termNumbers;
+    }
+
+
+    //////////////////////////2nd Part ///////////////////////////////
+
+
+    @Override
+    public void runQuery(String textQuery, boolean stem, boolean semantic) {
+        String query = "Falkland petroleum exploration";
+        // how to parse the query ?
+        //how to deal with corpus path
+        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
+        Searcher s = new Searcher(query, postingPath);
+        s.search();
+    }
+
+    @Override
+    public List<String> getDocEntitiesFromSearcher(int docId) {
+        String query = "Falkland petroleum exploration";
+        // how to parse the query ?
+        //how to deal with corpus path
+        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
+        Searcher s = new Searcher(query, postingPath);
+        return s.getDocEntities(docId);
     }
 }

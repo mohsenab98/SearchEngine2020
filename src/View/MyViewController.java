@@ -7,8 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+
 import java.io.*;
 import java.util.*;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView ;
 import javafx.stage.DirectoryChooser;
@@ -17,6 +22,8 @@ import javafx.stage.WindowEvent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javafx.scene.control.CheckBox;
+
 
 /**
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
@@ -264,4 +271,25 @@ public class MyViewController extends Canvas implements Observer {
     public void setImage(Image image) {
         image_view.setImage(image);
     }
+
+    //Second Part Functions
+    @FXML public Button entities_button;
+    @FXML public CheckBox semantic;
+    @FXML public Button query_button;
+    @FXML public Button chooseQuires_button;
+    @FXML public TextField query_text;
+    @FXML public TextField chooseQuires_text;
+
+    public void runQuery(ActionEvent actionEvent) {
+        viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected());
+    }
+
+    public void showEntities(ActionEvent actionEvent) {
+        // Doc Number ???
+        int docId = 0;
+        List<String> docEntities = viewModel.getDocEntitiesFromSearcher(docId);
+
+    }
+
+
 }

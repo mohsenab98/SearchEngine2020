@@ -3,6 +3,7 @@ package ViewModel;
 import Model.IModel;
 import javafx.scene.control.TextField;
 import java.io.File;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -45,5 +46,16 @@ public class MyViewModel extends Observable implements Observer {
 
     public int getNumberOfTerms() {
         return model.getNumberOfTerms();
+    }
+
+    ///////////// 2nd Part ///////////////////////////
+
+
+    public void runQuery(String textQuery, boolean stem, boolean semantic) {
+        model.runQuery(textQuery, stem, semantic);
+    }
+
+    public List<String> getDocEntitiesFromSearcher(int docId) {
+        return model.getDocEntitiesFromSearcher(docId);
     }
 }

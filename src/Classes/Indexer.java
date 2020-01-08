@@ -503,19 +503,24 @@ public class Indexer {
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
             sumdl += Integer.parseInt(listDocInfo.get(3));
-            text.append(key+1).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3))
+            text.append(key+1).append("|").append(listDocInfo.get(0).trim()).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3))
                     .append(";");
             int counter = 4;
             while (counter < listDocInfo.size() - 1){
                 text.append(listDocInfo.get(counter)).append(",");
                 counter++;
             }
+
+            /*
             if(counter > 4) {
                 text.append(listDocInfo.get(counter)).append("\n");
             }
             else {
                 text.append("\n");
             }
+            */
+
+            text.append("\n");
         }
         usingBufferedWritter(text.toString(),"Doc");
         mapDocID = new LinkedHashMap<>();

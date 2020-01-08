@@ -17,10 +17,25 @@
    </top>
 
     <left>
-        <CheckBox fx:id="stem" text="Stemming">
+        <GridPane fx:id="left_grid" alignment="TOP_LEFT" prefHeight="0.0" prefWidth="125.0">
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints maxHeight="17.0" minHeight="5.0" prefHeight="17.0" />
+                <RowConstraints maxHeight="12.0" minHeight="0.0" prefHeight="0.0" />
+            </rowConstraints>
+        <CheckBox fx:id="stem" text="Stemming" GridPane.rowIndex="0">
          <BorderPane.margin>
             <Insets left="20.0" top="10.0" />
          </BorderPane.margin></CheckBox>
+
+        <CheckBox fx:id="semantic" text="Semantic treatment" GridPane.rowIndex="3">
+            <BorderPane.margin>
+                <Insets left="20.0" top="10.0" />
+            </BorderPane.margin></CheckBox>
+
+
+        </GridPane>
     </left>
 
     <right>
@@ -32,7 +47,7 @@
             <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-            <Button fx:id="start_button"  text="Start" />
+            <Button fx:id="start_button" text="Start-Index" />
 
          <columnConstraints>
             <ColumnConstraints />
@@ -63,6 +78,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
 
             <Label fx:id="lbl_rowsNum" text="Enter corpus path here:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -71,34 +88,52 @@
             <TextField fx:id="corpus_text" GridPane.columnIndex="2" GridPane.rowIndex="0" />
             <TextField fx:id="posting_text" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            <Button fx:id="corpus_button"  text="Browse" onAction="#loadDirectory1" GridPane.columnIndex="3" GridPane.rowIndex="0">
+            <Button fx:id="corpus_button" onAction="#loadDirectory1" text="Browse" GridPane.columnIndex="3" GridPane.rowIndex="0">
             <GridPane.margin>
                <Insets left="30.0" />
             </GridPane.margin></Button>
 
-            <Button fx:id="posting_button"  text="Browse" onAction="#loadDirectory2" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Button fx:id="posting_button" onAction="#loadDirectory2" text="Browse" GridPane.columnIndex="3" GridPane.rowIndex="1">
             <GridPane.margin>
                <Insets left="30.0" />
             </GridPane.margin></Button>
 
+            <!--////////////////// Query ///////////-->
+
+            <Label text="Enter one Query here:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Choose Queries file here:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <TextField fx:id="query_text" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="chooseQuires_text" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+            <Button fx:id="query_button" onAction="#runQuery" text="Run" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                <GridPane.margin>
+                    <Insets left="30.0" />
+                </GridPane.margin></Button>
+
+            <Button fx:id="chooseQuires_button" onAction="#runQuery" text="Browse" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                <GridPane.margin>
+                    <Insets left="30.0" />
+                </GridPane.margin></Button>
         </GridPane>
     </center>
 
     <bottom>
-        <GridPane fx:id="bottom_grid" alignment="TOP_CENTER" prefHeight="50.0" prefWidth="100.0">
+        <GridPane fx:id="bottom_grid" alignment="TOP_CENTER" prefHeight="80.0" prefWidth="300.0">
 
             <columnConstraints>
-                <ColumnConstraints />
-                <ColumnConstraints />
-                <ColumnConstraints />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
+            <ColumnConstraints />
             </columnConstraints>
 
             <Button fx:id="reset_button" onAction="#resetProcess" text="Reset the process" GridPane.columnIndex="0" />
             <Button fx:id="show_Dic_button" onAction="#showDictionary" text="Show Dictionary" GridPane.columnIndex="1" />
             <Button fx:id="load_Dic_button" onAction="#loadFile" text="Load Dictionary" GridPane.columnIndex="2" />
-
+            <Button fx:id="entities_button" onAction="#showEntities" text="Show Entities" GridPane.columnIndex="3" />
          <rowConstraints>
-            <RowConstraints />
+             <RowConstraints maxHeight="50.0" minHeight="0.0" prefHeight="22.0" vgrow="SOMETIMES" />
          </rowConstraints>
 
         </GridPane>

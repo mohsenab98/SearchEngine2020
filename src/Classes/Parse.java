@@ -334,12 +334,15 @@ public class Parse {
                                 LinkedHashMap::new));
 
         Set<String> setEntity = sortedEntities.keySet();
+
         for(String entity : setEntity){
             this.docInfo.add(entity);
+            /*
             counter++;
             if(counter == 5){
                 break;
             }
+            */
         }
     }
 
