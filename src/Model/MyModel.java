@@ -122,16 +122,14 @@ public class MyModel extends Observable implements IModel {
                 docName = matcherText.group(1);
                 fullText = matcherText.group(2);
             }
-
             parse.Parser(fullText, docName);
             indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
 
             readFile.getListAllDocs().remove(0);
             parse.cleanParse();
-
         }
 
-        indexer.reset(); // check if there is stell terms in the sorted map
+        indexer.reset(); // check if there is still terms in the sorted map
         int fileCounterName = indexer.merge(); //merge the temp sorted files 2 big files
         indexer.finalMerge(fileCounterName); // merge 2 final posting files to A-Z posting files
         termNumbers = indexer.getDictionarySize();
@@ -213,15 +211,17 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
-            Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
-            Matcher matcherDesc = patternDesc.matcher(query);
-            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
-            Matcher matcherNarr = patternNarr.matcher(query);
-            while (matcherDesc.find() && matcherNarr.find()){
-                narrDesc = matcherDesc.group(1) + matcherNarr.group(1);
-            }
+            if(semantic) {
+                Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
+                Matcher matcherDesc = patternDesc.matcher(query);
+                Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
+                Matcher matcherNarr = patternNarr.matcher(query);
+                while (matcherDesc.find() && matcherNarr.find()) {
+                    narrDesc = matcherDesc.group(1) + matcherNarr.group(1);
+                }
 
-            narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
+                narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
+            }
             Searcher searcher = new Searcher(title, posting, stem, semantic, narrDesc);
             result.put(num, searcher.search());
         }

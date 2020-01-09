@@ -43,18 +43,18 @@ public class Ranker {
             ArrayList<String> queryInfo = pair.getValue();
 
             double score = 0;
-            double IDF = 0;
-            double numerator = 0;
-            double denominator = 0;
-            int tfi = 0;
-            int dfi = 0;
-            int total = 0; // |D|
+            double IDF;
+            double numerator;
+            double denominator;
+            int tfi;
+            int dfi;
+            int total; // |D|
 
-            for(int i = 0; i <queryInfo.size() - 3; i = i+4){
+            for(int i = 0; i <queryInfo.size() - 3; i = i + 4){
                 // Score(D,Q) -- BM25
-                dfi = Integer.parseInt(queryInfo.get(i + 2));
-                tfi = Integer.parseInt(queryInfo.get(i + 1));
-                total = Integer.parseInt(queryInfo.get(i + 3));
+                total = Integer.parseInt(queryInfo.get(i));
+                dfi = Integer.parseInt(queryInfo.get(i + 1));
+                tfi = Integer.parseInt(queryInfo.get(i + 2));
                 // log(N/dfi)
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 
@@ -70,6 +70,7 @@ public class Ranker {
     }
 
     public Set<String> LSA(String term, String narrDescription){
+
         Set<String> synonyms = new HashSet<>();
         WS4JConfiguration.getInstance().setMFS(true);
         String[] queryDescrNarr = narrDescription.split(" ");

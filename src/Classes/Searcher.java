@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Dictionary(Search term ) ->>>>>> search in posting(a-z) the relative info of the term
  */
@@ -80,9 +82,9 @@ public class Searcher {
             queryTerms = queryTermsLSA;
         }
 
-
+        Map<String, String> docTf = new LinkedHashMap<>();
         Map<String, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
-        for (String term : queryTerms){
+        for (String term : queryTerms) {
             // check upper and lower cases
             if (this.isStem) {
                 term = this.stemmer.porterStemmer(term);
@@ -91,45 +93,97 @@ public class Searcher {
 
             //
             String termLine = MyModel.mapDictionary.get(term.toLowerCase());
-            if(termLine == null){
+            if (termLine == null) {
                 termLine = MyModel.mapDictionary.get(term.toUpperCase());
-                if(termLine == null) {
+                if (termLine == null) {
                     continue;
                 }
             }
 
-            List<Integer> termInfo = getTermInfo(termLine); // get term info( total - df - pointer)
-            String termPostingLine = getPostingLine(termInfo.get(2), String.valueOf(term.charAt(0))); // get line as string using the pointer above
-            Map<String,String> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
+            String[] termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
+            String termPostingLine = getPostingLine(Integer.parseInt(termInfo[2]), String.valueOf(term.charAt(0)));
 
-            // save as : Doc(key) -- (qi - tfi - dfi)(value)
-            Iterator<Map.Entry<String, String>> it = docTf.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, String> pair = it.next();
-                String docId = pair.getKey();
-                if(!docQ.containsKey(docId)){
-                    ArrayList<String> queryTfDf = new ArrayList<>();
-                    queryTfDf.add(term); // query_i
-                    queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
-                    queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
-                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
-                    docQ.put(docId, queryTfDf);
-                }else{
-                    ArrayList<String> queryTfDf = docQ.get(docId);
-                    queryTfDf.add(term); // query_i
-                    queryTfDf.add(String.valueOf(pair.getValue())); // tf_i
-                    queryTfDf.add(String.valueOf(termInfo.get(1))); // df_i
-                    queryTfDf.add(String.valueOf(termInfo.get(0))); // total |D|
-                    docQ.put(docId, queryTfDf);
-                }
+            Pattern p = Pattern.compile("(\\d+):(\\d+)");
+            Matcher m = p.matcher(termPostingLine);
+            while (m.find()) {
+                termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
+                docTf.put( m.group(1), termInfo[0] + " " + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
+            }
+        }
 
-            }// while END
 
-        }// for While
+        // get line as string using the pointer above
+        //Map<String,String> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
+
+        // save as : Doc(key) -- (qi - tfi - dfi)(value)
+        Iterator<Map.Entry<String, String>> it = docTf.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pair = it.next();
+            String docId = pair.getKey();
+            String[] termInfo = pair.getValue().split(" "); // total |D|, df, tf, term
+            String totalD = termInfo[0];
+            String df = termInfo[1];
+            String tf = termInfo[2];
+            String term = termInfo[3];
+            if(!docQ.containsKey(docId)){
+                ArrayList<String> queryTfDf = new ArrayList<>();
+                queryTfDf.add(totalD); // total |D|
+                queryTfDf.add(df); // df_i
+                queryTfDf.add(tf); // tf_i
+                queryTfDf.add(term); // query_i
+                docQ.put(docId, queryTfDf);
+            }else{
+                ArrayList<String> queryTfDf = docQ.get(docId);
+                queryTfDf.add(totalD); // total |D|
+                queryTfDf.add(df); // df_i
+                queryTfDf.add(tf); // tf_i
+                queryTfDf.add(term); // query_i
+                docQ.put(docId, queryTfDf);
+            }
+
+        }// while END
 
         // send to ranker bm25 function
-       return ranker.rankBM25(docQ);
 
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docQ));
+        rankedDocs = get50Docs(rankedDocs);
+        return rankedDocs;
+
+    }
+
+    private Map<String, String> get50Docs(Map<String, String> rankedDocs) {
+        Map<String, String> rankedDocs50 = new LinkedHashMap<>();
+        int counter = 0;
+        for(String doc : rankedDocs.keySet()){
+            int lineCounter = 0;
+            int docId = Integer.parseInt(doc);
+            String docStr = "";
+            String stem = "";
+            if(isStem){
+                stem = "stem";
+            }else{
+                stem = "noStem";
+            }
+            try {
+                Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Doc"), StandardCharsets.US_ASCII );
+                // get line [#postingLineNumber] in posting file
+                for( String line : (Iterable<String>) lines::iterator ){
+                    if(lineCounter == docId){
+                        docStr = line.substring(line.indexOf("|") + 1, line.indexOf("?"));
+                    }
+                    lineCounter++;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            rankedDocs50.put(docStr, rankedDocs.get(doc));
+            if(counter == 49){
+                break;
+            }
+            counter++;
+        }
+        return rankedDocs50;
     }
 
 
@@ -138,17 +192,17 @@ public class Searcher {
      * @param termLine
      * @return
      */
-    private List<Integer> getTermInfo(String termLine) {
+    private String getTermInfo(String termLine) {
         int colonIndex = termLine.indexOf(':');
         int semicolonIndex = termLine.indexOf(';');
-        List<Integer> listTermInfo = new ArrayList<>();
+        String listTermInfo;
 
         //add totalDocs
-        listTermInfo.add(Integer.parseInt(termLine.substring(0, colonIndex)));
+        listTermInfo = termLine.substring(0, colonIndex);
         //add df
-        listTermInfo.add(Integer.parseInt(termLine.substring(colonIndex + 1, semicolonIndex)));
+        listTermInfo += " " + termLine.substring(colonIndex + 1, semicolonIndex);
         //add LineCounter
-        listTermInfo.add(Integer.parseInt(termLine.substring(semicolonIndex + 1)));
+        listTermInfo += " " + termLine.substring(semicolonIndex + 1);
 
         return listTermInfo;
     }
@@ -222,5 +276,32 @@ public class Searcher {
 
     }
 
+    /**
+     * Sort map by rank(value)
+     * @param rankedDocs
+     * @return
+     */
+    private Map<String, String> sortDocsByRank(Map<String, String> rankedDocs){
+        Map<String, Double> sortedDocs = new LinkedHashMap<>();
+
+        for(String doc : rankedDocs.keySet()){
+            sortedDocs.put(doc, Double.parseDouble(rankedDocs.get(doc)));
+        }
+
+        Map<String, Double> sortedEntities = sortedDocs
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
+        rankedDocs = new LinkedHashMap<>();
+        for(String doc : sortedEntities.keySet()){
+            rankedDocs.put(doc, String.valueOf(sortedEntities.get(doc)));
+        }
+
+        return rankedDocs;
+    }
 
 }
