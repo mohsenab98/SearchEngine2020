@@ -26,7 +26,5 @@ public interface IModel {
 
     Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic,String posting);
 
-    List<String> getDocEntitiesFromSearcher(int docId);
-
     Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String Posting);
 }

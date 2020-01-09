@@ -29,19 +29,15 @@ public class Ranker {
 
     /**
      * gets Doc(key) -- (qi - tfi - dfi)(value)
-     * @param docQ
+     * @param docTermInfo
      * @return docID - score
      */
-    public Map<String, String> rankBM25(Map<String, ArrayList<String>> docQ) {
+    public Map<String, String> rankBM25(Map<String, String> docTermInfo) {
 
         Map<String, String> bm25Result = new HashMap<>();
-        Iterator<Map.Entry<String, ArrayList<String>>> it = docQ.entrySet().iterator();
-        while (it.hasNext()) {
-
-            Map.Entry<String, ArrayList<String>> pair = it.next();
-            String docId = pair.getKey();
-            ArrayList<String> queryInfo = pair.getValue();
-
+        for(String docId : docTermInfo.keySet()){
+            // total |D|, df, tf, term
+            String [] termsInfo = docTermInfo.get(docId).split(" ");
             double score = 0;
             double IDF;
             double numerator;
@@ -50,12 +46,14 @@ public class Ranker {
             int dfi;
             int total; // |D|
 
-            for(int i = 0; i <queryInfo.size() - 3; i = i + 4){
+            for(int i = 0; i <termsInfo.length - 3; i = i + 4){
                 // Score(D,Q) -- BM25
-                total = Integer.parseInt(queryInfo.get(i));
-                dfi = Integer.parseInt(queryInfo.get(i + 1));
-                tfi = Integer.parseInt(queryInfo.get(i + 2));
-                // log(N/dfi)
+                total = Integer.parseInt(termsInfo[i]);
+                dfi = Integer.parseInt(termsInfo[i + 1]);
+                tfi = Integer.parseInt(termsInfo[i + 2]);
+                //TODO:termInfo[i+3] = term ???????????
+
+                //log(N/dfi)
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 
                 numerator =  tfi * (this.k1 + 1);
@@ -65,7 +63,7 @@ public class Ranker {
             }
             bm25Result.put(docId, String.valueOf(score));
 
-        }// while END
+        }
         return bm25Result;
     }
 

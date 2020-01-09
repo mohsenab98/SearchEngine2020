@@ -196,7 +196,8 @@ public class MyViewController extends Canvas implements Observer {
             }
 
             //show dictionary as table
-            showTable(mapDictionary);
+            JTable table=new JTable(toTableModel(mapDictionary)); //receiving the table from toTbleModel function
+            showTable(table);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -219,26 +220,7 @@ public class MyViewController extends Canvas implements Observer {
         return model;
     }
 
-    /**
-     * table that represent the query info
-     * Source : "https://stackoverflow.com/questions/2257309/how-to-use-hashmap-with-jtable"
-     * @param map
-     * @return table model
-     */
-    public static TableModel toTableModelQuery(Map<String, Map<String, String>> map) {
-        DefaultTableModel model = new DefaultTableModel(
-                new Object[] { "#", "QueryNUM", "DocID", "Rank" }, 0
-        );
-        int counterNO = 1;
-        for (Map.Entry<String, Map<String, String>> entryUserDocs : map.entrySet()) {
-            Map<String, String> docRank = entryUserDocs.getValue();
-            for(Map.Entry<String, String> entryDocRank : docRank.entrySet()) {
-                model.addRow(new Object[]{counterNO, entryUserDocs.getKey(), entryDocRank.getKey(), entryDocRank.getValue()});
-                counterNO++;
-            }
-        }
-        return model;
-    }
+
     /**
      * load the text field of the posting path
      * @param actionEvent
@@ -294,7 +276,8 @@ public class MyViewController extends Canvas implements Observer {
         image_view.setImage(image);
     }
 
-    //Second Part Functions
+    // ------------------------------- Second Part Functions ---------------------------------------------
+
     @FXML public Button entities_button;
     @FXML public CheckBox semantic;
     @FXML public Button query_button;
@@ -303,24 +286,13 @@ public class MyViewController extends Canvas implements Observer {
     @FXML public TextField chooseQuires_text;
 
     public void runQuery(ActionEvent actionEvent) {
-        if(!query_text.getText().equals("")){
+        if(!query_text.getText().equals("") && new File(posting_text.getText()).exists()){
             Map<String, Map<String, String>> result = viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
-            showTableQuery(result);
+            JTable table=new JTable(toTableModelQuery(result)); //receiving the table from toTbleModel function
+            showTable(table);
             return;
         }
-        /*
-        else if(!chooseQuires_text.getText().equals("")){
-            File queryFile = new File(chooseQuires_text.getText());
-            if(queryFile.exists()){
-                //get the query results
-                Map<String, Map<String, String>> result = viewModel.runQueryFile(chooseQuires_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
-                // show results
-                showTable(result);
-                return;
-            }
-        }
-         */
-            showAlert("Enter valid location of the query file !!");
+        showAlert("Enter valid location of the query file !!");
 
     }
 
@@ -330,32 +302,28 @@ public class MyViewController extends Canvas implements Observer {
             FileChooser FileChooser = new FileChooser();
             File queryFile = FileChooser.showOpenDialog(new Stage());
             if (!MyModel.mapDictionary.isEmpty()){
+                // <QueryNum , < DocName, Rank>>
                 Map<String, Map<String, String>> result = viewModel.runQueryFile(queryFile.getPath(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
-                showTableQuery(result);
+                JTable table=new JTable(toTableModelQuery(result)); //receiving the table from toTbleModel function
+                showTable(table);
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            showAlert("Enter valid location of the query file !!");
+            return;
         }
-        // show results
 
-       // return;
-
-
-       // showAlert("Enter valid location of the query file !!");
     }
 
 
 
     public void showEntities(ActionEvent actionEvent) {
-        // Doc Number ???
-        int docId = 0;
-        List<String> docEntities = viewModel.getDocEntitiesFromSearcher(docId);
-
+        // MyModel.docEntities;
     }
 
-    private void showTable(Map result){
-        JTable table=new JTable(toTableModel(result)); //receiving the table from toTbleModel function
+    private void showTable(JTable table){
+//        JTable table=new JTable(toTableModel(result)); //receiving the table from toTbleModel function
         JFrame frame=new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//set closing behavior
         frame.add(new JScrollPane(table)); // adding scrollbar
@@ -364,14 +332,25 @@ public class MyViewController extends Canvas implements Observer {
         frame.setVisible(true);
     }
 
-    private void showTableQuery(Map result){
-        JTable table=new JTable(toTableModelQuery(result)); //receiving the table from toTbleModel function
-        JFrame frame=new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//set closing behavior
-        frame.add(new JScrollPane(table)); // adding scrollbar
-        frame.setSize(600,800);
-        frame.setLocationRelativeTo(null);//center the jframe
-        frame.setVisible(true);
+    /**
+     * table that represent the query info
+     * Source : "https://stackoverflow.com/questions/2257309/how-to-use-hashmap-with-jtable"
+     * @param map
+     * @return table model
+     */
+    public static TableModel toTableModelQuery(Map<String, Map<String, String>> map) {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[] { "#", "QueryNUM", "DocID", "Rank" }, 0
+        );
+        int counterNO = 1;
+        for (Map.Entry<String, Map<String, String>> entryUserDocs : map.entrySet()) {
+            Map<String, String> docRank = entryUserDocs.getValue();
+            for(Map.Entry<String, String> entryDocRank : docRank.entrySet()) {
+                model.addRow(new Object[]{counterNO, entryUserDocs.getKey(), entryDocRank.getKey(), entryDocRank.getValue()});
+                counterNO++;
+            }
+        }
+        return model;
     }
 
 

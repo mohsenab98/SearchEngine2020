@@ -21,10 +21,12 @@ public class MyModel extends Observable implements IModel {
     /**
      * map to load the posting of the dictionary
      */
-    public static Map<String,String> mapDictionary ;
+    public static Map<String,String> mapDictionary; // central dictionary of the Search Engine
+    public static Map<String, String> docEntities; // collect entities from all relevant docs
 
     public MyModel() {
-        this.mapDictionary = new LinkedHashMap<>();
+        mapDictionary = new LinkedHashMap<>();
+        docEntities = new LinkedHashMap<>();
     }
 
     /**
@@ -169,35 +171,41 @@ public class MyModel extends Observable implements IModel {
     @Override
     public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
         Map<String, Map<String, String>> result = new HashMap<>();
+        if(textQuery.contains("<title>")){
+            return findQueryData(textQuery, stem, semantic, posting, true);
+        }
         Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
-        result.put("1", searcher.search());
+        result.put("1", searcher.search()); // <query Number, <DocName, Rank>>
+        docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
-    }
-
-    @Override
-    public List<String> getDocEntitiesFromSearcher(int docId) {
-//        String query = "Falkland petroleum exploration";
-//        // how to parse the query ?
-//        //how to deal with corpus path
-//        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-//        Searcher s = new Searcher(query, postingPath,);
-//        return s.getDocEntities(docId);
-        return null;
     }
 
     @Override
     public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String textQuery = readAllBytesJava(text);
-        String num = "";
-        String title = "";
-        String narrDesc = "";
-        // regular expressions
+        return findQueryData(textQuery, stem, semantic, posting, false);
+    }
+
+
+    private Map<String, Map<String, String>> findQueryData(String textQuery, boolean stem, boolean semantic, String posting, boolean isAlone){
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
+        String num = ""; // query Num
+        String title = ""; // query
+        String narrativeDescription = ""; // description
         Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
         Matcher matcherTOP = patternTOP.matcher(textQuery);
         // foreach query
-        while (matcherTOP.find()){
-            String query = matcherTOP.group(1);
+        while (matcherTOP.find() || isAlone){
+            String query;
+            //checks if there is no top tag
+            if(!isAlone) {
+                query = matcherTOP.group(1);
+            }
+            else{
+                query = textQuery;
+                isAlone = false;
+            }
 
             Pattern patternNUM = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
             Matcher matcherNUM = patternNUM.matcher(query);
@@ -211,22 +219,26 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
+            // take narrative description for semantic treatment
             if(semantic) {
                 Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
                 Matcher matcherDesc = patternDesc.matcher(query);
                 Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
                 Matcher matcherNarr = patternNarr.matcher(query);
                 while (matcherDesc.find() && matcherNarr.find()) {
-                    narrDesc = matcherDesc.group(1) + matcherNarr.group(1);
+                    narrativeDescription = matcherDesc.group(1) + matcherNarr.group(1);
                 }
 
-                narrDesc = narrDesc.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
+                narrativeDescription = narrativeDescription.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
             }
-            Searcher searcher = new Searcher(title, posting, stem, semantic, narrDesc);
+            Searcher searcher = new Searcher(title, posting, stem, semantic, narrativeDescription);
+            // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
+            // entities of all docs: <doc name, 5 dominating entities>
+            docEntities.putAll(searcher.getEntities());
         }
 
-        return result; // return map <docId , rank >
+        return result;
     }
 
     private static String readAllBytesJava(String filePath)

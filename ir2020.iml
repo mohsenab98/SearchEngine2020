@@ -17,9 +17,9 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="lucene-snowball-3.0.2" level="project" />
-    <orderEntry type="library" name="opennlp-tools-1.8.0" level="project" />
-    <orderEntry type="library" name="jawjaw-1.0.2" level="project" />
     <orderEntry type="library" name="ws4j-1.0.1" level="project" />
+    <orderEntry type="library" name="jawjaw-1.0.2" level="project" />
+    <orderEntry type="library" name="lucene-snowball-3.0.2" level="project" />
+    <orderEntry type="library" name="medallia-word2vec-0.10.2-jar-with-dependencies" level="project" />
   </component>
 </module>

@@ -1,7 +1,6 @@
 package Classes;
 import Model.MyModel;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,17 +17,19 @@ import static java.util.stream.Collectors.toMap;
  */
 public class Searcher {
     private List<String> queryTerms;
+    private Map<String, String> docEntities;
     private String postingPath; // includes stem/nostem folder
     private Ranker ranker;
     private boolean isStem;
     private boolean isSemantic;
     private Stemmer stemmer;
-    private String narrDesc;
+    private String narrativeDescription;
 
 
 
     public Searcher(String query, String postingPath, boolean stem, boolean semantic){
         this.queryTerms = Arrays.asList(query.split(" "));
+        this.docEntities = new HashMap<>();
         this.postingPath = postingPath;
         this.ranker = setRanker();
         this.isStem = stem;
@@ -36,16 +37,21 @@ public class Searcher {
         this.stemmer = new Stemmer();
     }
 
-    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrDesc){
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrativeDescription){
         this.queryTerms = Arrays.asList(query.split(" "));
+        this.docEntities = new HashMap<>();
         this.postingPath = postingPath;
         this.ranker = setRanker();
         this.isStem = stem;
         this.isSemantic = semantic;
         this.stemmer = new Stemmer();
-        this.narrDesc = narrDesc;
+        this.narrativeDescription = narrativeDescription;
     }
 
+    /**
+     * Creates new Ranker Instance with info taken from "BM25Info" posting file (|D| & avgId)
+     * @return
+     */
     private Ranker setRanker() {
         try {
             String stem = "";
@@ -70,85 +76,101 @@ public class Searcher {
         return null;
     }
 
+
+    /**
+     * main function of this class -- search for 50 most relevant files to the query given by the user
+     * @return
+     */
     public Map<String, String> search(){
         // user chose search with semantic treatment
-        if(isSemantic && narrDesc != null){
+        if(isSemantic && narrativeDescription != null){
             List<String> queryTermsLSA = new ArrayList<>();
             for(String term : queryTerms){
-                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase(), narrDesc));
+                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase(), narrativeDescription));
                 queryTermsLSA.addAll(synonyms);
             }
-
             queryTerms = queryTermsLSA;
         }
 
-        Map<String, String> docTf = new LinkedHashMap<>();
-        Map<String, ArrayList<String>> docQ = new HashMap<>(); // ArrayList: i: queryTerm, i + 1: tf, i + 2: df
+        Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >
         for (String term : queryTerms) {
             // check upper and lower cases
             if (this.isStem) {
                 term = this.stemmer.porterStemmer(term);
             }
 
-
-            //
+            // term line from dictionary (term | totalDocs |D| :  df ; lineCounter)
             String termLine = MyModel.mapDictionary.get(term.toLowerCase());
             if (termLine == null) {
                 termLine = MyModel.mapDictionary.get(term.toUpperCase());
                 if (termLine == null) {
+                    // Stop words and other words that the dictionary doesnt contain
                     continue;
                 }
             }
 
-            String[] termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
+            String[] termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, line counter
+            //get posting line from the posting file a-z using the function "getPostingLine(line number , char(file Name))"
             String termPostingLine = getPostingLine(Integer.parseInt(termInfo[2]), String.valueOf(term.charAt(0)));
 
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
-                docTf.put( m.group(1), termInfo[0] + " " + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
+                String termInfoInMap = "";
+                //chaining the doc term info to the map
+                if(docTermsInfo.containsKey(m.group(1))){
+                    termInfoInMap =  docTermsInfo.get(m.group(1)) + " ";
+                }
+                docTermsInfo.put( m.group(1), termInfoInMap + termInfo[0] + " " + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
             }
         }
-
-
-        // get line as string using the pointer above
-        //Map<String,String> docTf = getDocTf(termPostingLine);// get the doc_i & tf_i per term
-
-        // save as : Doc(key) -- (qi - tfi - dfi)(value)
-        Iterator<Map.Entry<String, String>> it = docTf.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = it.next();
-            String docId = pair.getKey();
-            String[] termInfo = pair.getValue().split(" "); // total |D|, df, tf, term
-            String totalD = termInfo[0];
-            String df = termInfo[1];
-            String tf = termInfo[2];
-            String term = termInfo[3];
-            if(!docQ.containsKey(docId)){
-                ArrayList<String> queryTfDf = new ArrayList<>();
-                queryTfDf.add(totalD); // total |D|
-                queryTfDf.add(df); // df_i
-                queryTfDf.add(tf); // tf_i
-                queryTfDf.add(term); // query_i
-                docQ.put(docId, queryTfDf);
-            }else{
-                ArrayList<String> queryTfDf = docQ.get(docId);
-                queryTfDf.add(totalD); // total |D|
-                queryTfDf.add(df); // df_i
-                queryTfDf.add(tf); // tf_i
-                queryTfDf.add(term); // query_i
-                docQ.put(docId, queryTfDf);
-            }
-
-        }// while END
-
         // send to ranker bm25 function
-
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docQ));
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo));
         rankedDocs = get50Docs(rankedDocs);
+        addDocEntities(); // add entities(value) to the map of entities
         return rankedDocs;
 
+    }
+
+    private void addDocEntities(){
+        try {
+            String stem;
+            if(isStem){
+                stem = "stem";
+            }else{
+                stem = "noStem";
+            }
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Entities"), StandardCharsets.US_ASCII );
+            // get line with entities for a doc
+            for( String line : (Iterable<String>) lines::iterator ){
+                String doc = line.substring(0, line.indexOf("|"));
+                // check if doc from the posting in map of entities: not => see next doc
+                if(!this.docEntities.containsKey(doc)){
+                    continue;
+                }
+
+                String[] rawEntities = line.substring(line.indexOf("|")).split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
+                // check each entity in the dictionary and get 5 most relevant
+                int counter = 0;
+                for(String entity : rawEntities){
+                    if(MyModel.mapDictionary.containsKey(entity)){
+                        if(docEntities.get(doc).isEmpty()){
+                            this.docEntities.put(doc, entity);
+                        }
+                        else {
+                            this.docEntities.put(doc, docEntities.get(doc) + "," + entity);
+                        }
+                        counter++;
+                        if(counter == 5){
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private Map<String, String> get50Docs(Map<String, String> rankedDocs) {
@@ -158,7 +180,7 @@ public class Searcher {
             int lineCounter = 0;
             int docId = Integer.parseInt(doc);
             String docStr = "";
-            String stem = "";
+            String stem;
             if(isStem){
                 stem = "stem";
             }else{
@@ -178,6 +200,7 @@ public class Searcher {
             }
 
             rankedDocs50.put(docStr, rankedDocs.get(doc));
+            this.docEntities.put(docStr, ""); // add doc entities(key) to the map of entities
             if(counter == 49){
                 break;
             }
@@ -239,27 +262,6 @@ public class Searcher {
     }
 
     /**
-     * get the doc number and tf of the term in each document in the posting
-     * @param termPostingLine
-     * @return
-     */
-    private Map<String, String> getDocTf(String termPostingLine) {
-        SortedMap<String, String> docTf = new TreeMap<>();
-        Pattern p = Pattern.compile("(\\d+):(\\d+)");
-        Matcher m = p.matcher(termPostingLine);
-        while (m.find()){
-            String lineDoc = getPostingLine(Integer.parseInt(m.group(1)), "Doc");
-            int start = lineDoc.indexOf('|');
-            int end = lineDoc.indexOf('?');
-            //TODO : debug
-            String docName = lineDoc.substring(start + 1, end );
-            docTf.put(docName.trim(), m.group(2));
-        }
-        return docTf;
-    }
-
-
-    /**
      * get doc number(= (line number+1) in the posting) and return the 5 dominant entities in the doc
      * @param docNumber
      * @return
@@ -302,6 +304,10 @@ public class Searcher {
         }
 
         return rankedDocs;
+    }
+
+    public Map<String, String> getEntities(){
+        return this.docEntities;
     }
 
 }
