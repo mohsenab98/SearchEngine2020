@@ -169,6 +169,9 @@ public class MyModel extends Observable implements IModel {
     @Override
     public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
         Map<String, Map<String, String>> result = new HashMap<>();
+        if(textQuery.contains("<title>")){
+            return findQueryData(textQuery, stem, semantic, posting, true);
+        }
         Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
         result.put("1", searcher.search());
         return result; // return map <docId , rank >
@@ -189,15 +192,28 @@ public class MyModel extends Observable implements IModel {
     public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String textQuery = readAllBytesJava(text);
+        return findQueryData(textQuery, stem, semantic, posting, false);
+    }
+
+
+    private Map<String, Map<String, String>> findQueryData(String textQuery, boolean stem, boolean semantic, String posting, boolean isAlone){
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String num = ""; // query Num
         String title = ""; // query
         String narrativeDescription = ""; // description
-        // regular expressions
         Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
         Matcher matcherTOP = patternTOP.matcher(textQuery);
         // foreach query
-        while (matcherTOP.find()){
-            String query = matcherTOP.group(1);
+        while (matcherTOP.find() || isAlone){
+            String query;
+            //checks if there is no top tag
+            if(!isAlone) {
+                query = matcherTOP.group(1);
+            }
+            else{
+                query = textQuery;
+                isAlone = false;
+            }
 
             Pattern patternNUM = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
             Matcher matcherNUM = patternNUM.matcher(query);
@@ -228,7 +244,7 @@ public class MyModel extends Observable implements IModel {
             result.put(num, searcher.search());
         }
 
-        return result; // return map <docId , rank >
+        return result;
     }
 
     private static String readAllBytesJava(String filePath)

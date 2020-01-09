@@ -101,6 +101,7 @@ public class Searcher {
             if (termLine == null) {
                 termLine = MyModel.mapDictionary.get(term.toUpperCase());
                 if (termLine == null) {
+                    // Stop words and other words that the dictionary doesnt contain
                     continue;
                 }
             }

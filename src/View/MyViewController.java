@@ -220,26 +220,7 @@ public class MyViewController extends Canvas implements Observer {
         return model;
     }
 
-    /**
-     * table that represent the query info
-     * Source : "https://stackoverflow.com/questions/2257309/how-to-use-hashmap-with-jtable"
-     * @param map
-     * @return table model
-     */
-    public static TableModel toTableModelQuery(Map<String, Map<String, String>> map) {
-        DefaultTableModel model = new DefaultTableModel(
-                new Object[] { "#", "QueryNUM", "DocID", "Rank" }, 0
-        );
-        int counterNO = 1;
-        for (Map.Entry<String, Map<String, String>> entryUserDocs : map.entrySet()) {
-            Map<String, String> docRank = entryUserDocs.getValue();
-            for(Map.Entry<String, String> entryDocRank : docRank.entrySet()) {
-                model.addRow(new Object[]{counterNO, entryUserDocs.getKey(), entryDocRank.getKey(), entryDocRank.getValue()});
-                counterNO++;
-            }
-        }
-        return model;
-    }
+
     /**
      * load the text field of the posting path
      * @param actionEvent
@@ -295,7 +276,8 @@ public class MyViewController extends Canvas implements Observer {
         image_view.setImage(image);
     }
 
-    //Second Part Functions
+    // ------------------------------- Second Part Functions ---------------------------------------------
+
     @FXML public Button entities_button;
     @FXML public CheckBox semantic;
     @FXML public Button query_button;
@@ -304,7 +286,8 @@ public class MyViewController extends Canvas implements Observer {
     @FXML public TextField chooseQuires_text;
 
     public void runQuery(ActionEvent actionEvent) {
-        if(!query_text.getText().equals("")){
+        int i = 0;
+        if(!query_text.getText().equals("") && new File(posting_text.getText()).exists()){
             Map<String, Map<String, String>> result = viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
             JTable table=new JTable(toTableModelQuery(result)); //receiving the table from toTbleModel function
             showTable(table);
@@ -353,6 +336,26 @@ public class MyViewController extends Canvas implements Observer {
         frame.setVisible(true);
     }
 
+    /**
+     * table that represent the query info
+     * Source : "https://stackoverflow.com/questions/2257309/how-to-use-hashmap-with-jtable"
+     * @param map
+     * @return table model
+     */
+    public static TableModel toTableModelQuery(Map<String, Map<String, String>> map) {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[] { "#", "QueryNUM", "DocID", "Rank" }, 0
+        );
+        int counterNO = 1;
+        for (Map.Entry<String, Map<String, String>> entryUserDocs : map.entrySet()) {
+            Map<String, String> docRank = entryUserDocs.getValue();
+            for(Map.Entry<String, String> entryDocRank : docRank.entrySet()) {
+                model.addRow(new Object[]{counterNO, entryUserDocs.getKey(), entryDocRank.getKey(), entryDocRank.getValue()});
+                counterNO++;
+            }
+        }
+        return model;
+    }
 
 
 }
