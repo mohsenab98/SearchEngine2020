@@ -122,16 +122,14 @@ public class MyModel extends Observable implements IModel {
                 docName = matcherText.group(1);
                 fullText = matcherText.group(2);
             }
-
             parse.Parser(fullText, docName);
             indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
 
             readFile.getListAllDocs().remove(0);
             parse.cleanParse();
-
         }
 
-        indexer.reset(); // check if there is stell terms in the sorted map
+        indexer.reset(); // check if there is still terms in the sorted map
         int fileCounterName = indexer.merge(); //merge the temp sorted files 2 big files
         indexer.finalMerge(fileCounterName); // merge 2 final posting files to A-Z posting files
         termNumbers = indexer.getDictionarySize();
@@ -169,9 +167,11 @@ public class MyModel extends Observable implements IModel {
 
 
     @Override
-    public Map<String, String> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+    public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+        Map<String, Map<String, String>> result = new HashMap<>();
         Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
-        return searcher.search();
+        result.put("1", searcher.search());
+        return result; // return map <docId , rank >
     }
 
     @Override
@@ -186,15 +186,49 @@ public class MyModel extends Observable implements IModel {
     }
 
     @Override
-    public Map<String, String> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+    public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String textQuery = readAllBytesJava(text);
-        String tempQuery = "";
-        // regular Expression
-
+        String num = ""; // query Num
+        String title = ""; // query
+        String narrativeDescription = ""; // description
+        // regular expressions
+        Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
+        Matcher matcherTOP = patternTOP.matcher(textQuery);
         // foreach query
-        Searcher searcher = new Searcher(tempQuery, posting, stem, semantic);
-        searcher.search(); // return map <docId , rank >
-        return null;
+        while (matcherTOP.find()){
+            String query = matcherTOP.group(1);
+
+            Pattern patternNUM = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
+            Matcher matcherNUM = patternNUM.matcher(query);
+            while (matcherNUM.find()){
+                num = matcherNUM.group(1);
+            }
+
+            Pattern patternTitle = Pattern.compile("<title>\\s*([^<]+?)\\s*<");
+            Matcher matcherTitle = patternTitle.matcher(query);
+            while (matcherTitle.find()){
+                title = matcherTitle.group(1);
+            }
+
+            // take narrative description for semantic treatment
+            if(semantic) {
+                Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
+                Matcher matcherDesc = patternDesc.matcher(query);
+                Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
+                Matcher matcherNarr = patternNarr.matcher(query);
+                while (matcherDesc.find() && matcherNarr.find()) {
+                    narrativeDescription = matcherDesc.group(1) + matcherNarr.group(1);
+                }
+
+                narrativeDescription = narrativeDescription.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
+            }
+            Searcher searcher = new Searcher(title, posting, stem, semantic, narrativeDescription);
+            // <query Number, <DocName, Rank>>
+            result.put(num, searcher.search());
+        }
+
+        return result; // return map <docId , rank >
     }
 
     private static String readAllBytesJava(String filePath)

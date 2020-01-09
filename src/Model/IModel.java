@@ -24,9 +24,9 @@ public interface IModel {
 
     int getNumberOfTerms();
 
-    Map<String, String> runQuery(String textQuery, boolean stem, boolean semantic,String posting);
+    Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic,String posting);
 
     List<String> getDocEntitiesFromSearcher(int docId);
 
-    Map<String, String> runQueryFile(String text, boolean stem, boolean semantic, String Posting);
+    Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String Posting);
 }

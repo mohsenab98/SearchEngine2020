@@ -52,7 +52,7 @@ public class MyViewModel extends Observable implements Observer {
     ///////////// 2nd Part ///////////////////////////
 
 
-    public Map<String, String> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+    public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
         return model.runQuery(textQuery, stem, semantic, posting);
     }
 
@@ -60,7 +60,7 @@ public class MyViewModel extends Observable implements Observer {
         return model.getDocEntitiesFromSearcher(docId);
     }
 
-    public Map<String, String> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+    public  Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
         return model.runQueryFile(text, stem, semantic, posting);
     }
 }

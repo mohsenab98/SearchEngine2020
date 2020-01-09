@@ -323,8 +323,8 @@ public class Parse {
         this.docInfo.add(String.valueOf(this.counterMaxTf)); // maxTf
         this.docInfo.add(String.valueOf(this.mapTerms.size())); // amount of terms
 
-        // 5 common entities to doc
-        int counter = 0;
+
+        //  entities to doc
         Map<String, Integer> sortedEntities = this.mapDocEntities
                 .entrySet()
                 .stream()
@@ -334,13 +334,9 @@ public class Parse {
                                 LinkedHashMap::new));
 
         Set<String> setEntity = sortedEntities.keySet();
-        for(String entity : setEntity){
-            this.docInfo.add(entity);
-            counter++;
-            if(counter == 5){
-                break;
-            }
-        }
+
+        this.docInfo.addAll(setEntity);
+
     }
 
     /**
