@@ -367,16 +367,6 @@ public class MyViewController extends Canvas implements Observer {
     }
 
 
-
-    public void showEntities(ActionEvent actionEvent) {
-        //MyModel.docEntities;
-
-
-    }
-
-
-
-
     /**
      * Code was taken from : "https://stackoverflow.com/questions/17225988/how-to-add-jbutton-after-a-jtable"
      * Jfram with Jtable & Jbutton

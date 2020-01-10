@@ -1,14 +1,7 @@
 package Classes;
 
-import Model.MyModel;
 import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
-import com.medallia.word2vec.thrift.Word2VecModelThrift;
-import edu.cmu.lti.lexical_db.ILexicalDatabase;
-import edu.cmu.lti.lexical_db.NictWordNet;
-import edu.cmu.lti.ws4j.impl.WuPalmer;
-import edu.cmu.lti.ws4j.util.WS4JConfiguration;
-
 import java.io.File;
 import java.util.*;
 
@@ -18,9 +11,6 @@ public class Ranker {
     private double avgdl;
     private double k1;
     private double b;
-
-    // LSA
-    private static ILexicalDatabase db = new NictWordNet();
 
     public Ranker(int n, int avgdl) {
         N = n;
