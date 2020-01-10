@@ -23,9 +23,6 @@ public class Searcher {
     private boolean isStem;
     private boolean isSemantic;
     private Stemmer stemmer;
-    private String narrativeDescription;
-
-
 
     public Searcher(String query, String postingPath, boolean stem, boolean semantic){
         this.queryTerms = Arrays.asList(query.split(" "));
@@ -35,17 +32,6 @@ public class Searcher {
         this.isStem = stem;
         this.isSemantic = semantic;
         this.stemmer = new Stemmer();
-    }
-
-    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrativeDescription){
-        this.queryTerms = Arrays.asList(query.split(" "));
-        this.docEntities = new HashMap<>();
-        this.postingPath = postingPath;
-        this.ranker = setRanker();
-        this.isStem = stem;
-        this.isSemantic = semantic;
-        this.stemmer = new Stemmer();
-        this.narrativeDescription = narrativeDescription;
     }
 
     /**
@@ -83,10 +69,10 @@ public class Searcher {
      */
     public Map<String, String> search(){
         // user chose search with semantic treatment
-        if(isSemantic && narrativeDescription != null){
+        if(isSemantic){
             List<String> queryTermsLSA = new ArrayList<>();
             for(String term : queryTerms){
-                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase(), narrativeDescription));
+                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase()));
                 queryTermsLSA.addAll(synonyms);
             }
             queryTerms = queryTermsLSA;

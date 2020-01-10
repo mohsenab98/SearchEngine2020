@@ -219,19 +219,7 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
-            // take narrative description for semantic treatment
-            if(semantic) {
-                Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
-                Matcher matcherDesc = patternDesc.matcher(query);
-                Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
-                Matcher matcherNarr = patternNarr.matcher(query);
-                while (matcherDesc.find() && matcherNarr.find()) {
-                    narrativeDescription = matcherDesc.group(1) + matcherNarr.group(1);
-                }
-
-                narrativeDescription = narrativeDescription.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
-            }
-            Searcher searcher = new Searcher(title, posting, stem, semantic, narrativeDescription);
+            Searcher searcher = new Searcher(title, posting, stem, semantic);
             // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
             // entities of all docs: <doc name, 5 dominating entities>

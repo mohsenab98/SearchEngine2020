@@ -8,13 +8,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ir2020.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Ranker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Ranker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/IModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/IModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewModel/MyViewModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,12 +100,6 @@
         </map>
       </branch-storage>
     </favorite-branches>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="668" />
-    <option name="y" value="-8" />
-    <option name="width" value="697" />
-    <option name="height" value="735" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -236,13 +226,6 @@
       <workItem from="1578433139561" duration="102000" />
       <workItem from="1578473892449" duration="8000000" />
       <workItem from="1578561859294" duration="13476000" />
-    </task>
-    <task id="LOCAL-00028" summary="-Updated Indexer">
-      <created>1575897679856</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1575897679856</updated>
     </task>
     <task id="LOCAL-00029" summary="-Updated Indexer 2">
       <created>1575918235492</created>
@@ -580,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578574140592</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="- V.1 -- Part B -- Entities without GUI">
+      <created>1578612950170</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1578612950171</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TodoView">
@@ -623,7 +613,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Second version --- only writing posting" />
     <MESSAGE value="- Second version --&#10;- improved indexer&#10;- improved parser (string instead of arrayList)" />
     <MESSAGE value="- Second version --&#10;- counters on merge not good" />
     <MESSAGE value="- Second version --&#10;- need to deal with finalMerge" />
@@ -648,37 +637,46 @@
     <MESSAGE value="- V.1 -- Part B - Gui View FINISHED" />
     <MESSAGE value="- V.1 -- Part B - Gui run one query" />
     <MESSAGE value="- V.1 -- Part B -- Searcher &amp; Ranker UPDATED" />
-    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Part B -- Searcher &amp; Ranker UPDATED" />
+    <MESSAGE value="- V.1 -- Part B -- Entities without GUI" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Part B -- Entities without GUI" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="431" height="466" key="DebuggerActiveHint" timestamp="1578608536520">
+    <state x="571" y="174" key="CommitChangelistDialog2" timestamp="1578612948452">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="431" height="466" key="DebuggerActiveHint/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578608536520" />
+    <state x="571" y="174" key="CommitChangelistDialog2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578612948452" />
+    <state width="455" height="466" key="DebuggerActiveHint" timestamp="1578615165271">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="455" height="466" key="DebuggerActiveHint/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578615165271" />
     <state x="666" y="322" key="FileChooserDialogImpl" timestamp="1578612891526">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="666" y="322" key="FileChooserDialogImpl/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578612891526" />
-    <state width="1877" height="316" key="GridCell.Tab.0.bottom" timestamp="1578609792203">
+    <state width="1877" height="316" key="GridCell.Tab.0.bottom" timestamp="1578615181211">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578609792203" />
-    <state width="1877" height="316" key="GridCell.Tab.0.center" timestamp="1578609792202">
+    <state width="1877" height="316" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578615181211" />
+    <state width="1877" height="316" key="GridCell.Tab.0.center" timestamp="1578615181211">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578609792202" />
-    <state width="1877" height="316" key="GridCell.Tab.0.left" timestamp="1578609792202">
+    <state width="1877" height="316" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578615181211" />
+    <state width="1877" height="316" key="GridCell.Tab.0.left" timestamp="1578615181211">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578609792202" />
-    <state width="1877" height="316" key="GridCell.Tab.0.right" timestamp="1578609792203">
+    <state width="1877" height="316" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578615181211" />
+    <state width="1877" height="316" key="GridCell.Tab.0.right" timestamp="1578615181211">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578609792203" />
+    <state width="1877" height="316" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578615181211" />
     <state x="440" y="155" key="SettingsEditor" timestamp="1578612895710">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="440" y="155" key="SettingsEditor/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578612895710" />
+    <state x="552" y="302" key="Vcs.Push.Dialog.v2" timestamp="1578612951899">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="552" y="302" key="Vcs.Push.Dialog.v2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578612951899" />
     <state x="92" y="92" width="1736" height="976" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1578604268171">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -711,11 +709,16 @@
           <line>117</line>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="245" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="this.docEntities" language="JAVA" />
+        <watch expression="match.distance()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
