@@ -131,7 +131,6 @@
             <Button fx:id="reset_button" onAction="#resetProcess" text="Reset the process" GridPane.columnIndex="0" />
             <Button fx:id="show_Dic_button" onAction="#showDictionary" text="Show Dictionary" GridPane.columnIndex="1" />
             <Button fx:id="load_Dic_button" onAction="#loadFile" text="Load Dictionary" GridPane.columnIndex="2" />
-            <Button fx:id="entities_button" onAction="#showEntities" text="Show Entities" GridPane.columnIndex="3" />
          <rowConstraints>
              <RowConstraints maxHeight="50.0" minHeight="0.0" prefHeight="22.0" vgrow="SOMETIMES" />
          </rowConstraints>

@@ -18,7 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="lucene-snowball-3.0.2" level="project" />
-    <orderEntry type="library" name="jawjaw-1.0.2" level="project" />
     <orderEntry type="library" name="medallia-word2vec-0.10.2-jar-with-dependencies" level="project" />
   </component>
 </module>

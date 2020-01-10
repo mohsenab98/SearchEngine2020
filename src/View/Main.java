@@ -44,7 +44,7 @@ public class Main extends Application {
 //        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
 
         primaryStage.setScene(scene);
-        File file = new File("/src/glassSearch.png");
+        File file = new File("resources/glassSearch.png");
         Image image = new Image(file.toURI().toString());
 
         //--------------
