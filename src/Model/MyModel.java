@@ -188,6 +188,10 @@ public class MyModel extends Observable implements IModel {
     }
 
 
+    public static Map<String, String> getDocEntities() {
+        return docEntities;
+    }
+
     private Map<String, Map<String, String>> findQueryData(String textQuery, boolean stem, boolean semantic, String posting, boolean isAlone){
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String num = ""; // query Num

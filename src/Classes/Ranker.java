@@ -74,22 +74,23 @@ public class Ranker {
     public Set<String> LSA(String term){
         Set<String> synonyms = new HashSet<>();
         try {
-            Word2VecModel vecModel = Word2VecModel.fromTextFile(new File("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\ir2020\\out\\word2vec.c.output.model.txt"));
+            Word2VecModel vecModel = Word2VecModel.fromBinFile(new File("resources/corpusVector150K.bin"));
             Searcher searcher = vecModel.forSearch();
-            List<Searcher.Match> matches = searcher.getMatches(term, 100);
+            List<Searcher.Match> matches = searcher.getMatches(term.toLowerCase(), 100);
 
+            int synonymCounter = 0;
             for (Searcher.Match match : matches){
-                if(match.distance() >= 0.95){
+                if(match.distance() >= 0.5 && synonymCounter < 3){
                     synonyms.add(match.match());
                 }
+                synonymCounter++;
             }
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            synonyms.add(term);
         }
 
-        synonyms.add(term);
         return synonyms;
     }
 }
