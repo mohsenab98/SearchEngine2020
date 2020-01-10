@@ -1,11 +1,11 @@
 package Classes;
 
 import Model.MyModel;
-import edu.cmu.lti.lexical_db.ILexicalDatabase;
-import edu.cmu.lti.lexical_db.NictWordNet;
-import edu.cmu.lti.ws4j.impl.WuPalmer;
-import edu.cmu.lti.ws4j.util.WS4JConfiguration;
+import com.medallia.word2vec.Searcher;
+import com.medallia.word2vec.Word2VecModel;
 
+
+import java.io.File;
 import java.util.*;
 
 public class Ranker {
@@ -16,7 +16,7 @@ public class Ranker {
     private double b;
 
     // LSA
-    private static ILexicalDatabase db = new NictWordNet();
+//    private static ILexicalDatabase db = new NictWordNet();
 
     public Ranker(int n, int avgdl) {
         N = n;
@@ -67,18 +67,25 @@ public class Ranker {
         return bm25Result;
     }
 
-    public Set<String> LSA(String term, String narrDescription){
-
+    public Set<String> LSA(String term){
         Set<String> synonyms = new HashSet<>();
-        WS4JConfiguration.getInstance().setMFS(true);
-        String[] queryDescrNarr = narrDescription.split(" ");
-        for(String synonym : queryDescrNarr) {
-            double distance = new WuPalmer(db).calcRelatednessOfWords(term, synonym.trim());
-            if(distance >= 0.85){
-                synonyms.add(synonym.trim());
+        try {
+            Word2VecModel vecModel = Word2VecModel.fromTextFile(new File("C:\\Users\\EvgeniyU\\Desktop\\ThirdYear\\DataRetrieval\\ir2020\\out\\word2vec.c.output.model.txt"));
+            Searcher searcher = vecModel.forSearch();
+            List<Searcher.Match> matches = searcher.getMatches(term, 100);
+
+            for (Searcher.Match match : matches){
+                if(match.distance() >= 0.95){
+                    synonyms.add(match.match());
+                }
             }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
+        synonyms.add(term);
         return synonyms;
     }
 }

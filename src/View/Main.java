@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -43,12 +44,14 @@ public class Main extends Application {
 //        scene.getStylesheets().add(getClass().getResource("/View/view.css").toExternalForm());
 
         primaryStage.setScene(scene);
-        File file = new File("resources/glassSearch.png");
+        File file = new File("/src/glassSearch.png");
         Image image = new Image(file.toURI().toString());
+
         //--------------
         MyViewController view = fxmlLoader.getController();
         view.setViewModel(viewModel);
         view.setImage(image); // add image
+//        view.add(new ImageView(image));
         viewModel.addObserver(view);
         //--------------
         SetStageCloseEvent(primaryStage);

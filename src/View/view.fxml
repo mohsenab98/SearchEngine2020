@@ -13,7 +13,7 @@
 
 <BorderPane fx:id="Board" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MyViewController">
     <top>
-        <ImageView fx:id="image_view" fitHeight="200.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+        <ImageView fx:id="image_view" fitHeight="200.0"  fitWidth="500.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </top>
 
     <left>
@@ -49,6 +49,9 @@
 
             <Button fx:id="start_button" text="Start-Index" />
 
+            <Button fx:id="query_button" onAction="#runQuery" text="Run-Query" GridPane.rowIndex="1"></Button>
+
+            <Button fx:id="queries_button" onAction="#runQueries" text="Run-Queries" GridPane.rowIndex="2"></Button>
          <columnConstraints>
             <ColumnConstraints />
          </columnConstraints>
@@ -106,12 +109,9 @@
             <TextField fx:id="query_text" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="chooseQuires_text" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
-            <Button fx:id="query_button" onAction="#runQuery" text="Run" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                <GridPane.margin>
-                    <Insets left="30.0" />
-                </GridPane.margin></Button>
 
-            <Button fx:id="chooseQuires_button" onAction="#runQueryFile" text="Browse" GridPane.columnIndex="3" GridPane.rowIndex="3">
+
+            <Button fx:id="chooseQuires_button" onAction="#browseQueryFile" text="Browse" GridPane.columnIndex="3" GridPane.rowIndex="3">
                 <GridPane.margin>
                     <Insets left="30.0" />
                 </GridPane.margin></Button>

@@ -21,10 +21,12 @@ public class MyModel extends Observable implements IModel {
     /**
      * map to load the posting of the dictionary
      */
-    public static Map<String,String> mapDictionary ;
+    public static Map<String,String> mapDictionary; // central dictionary of the Search Engine
+    public static Map<String, String> docEntities; // collect entities from all relevant docs
 
     public MyModel() {
-        this.mapDictionary = new LinkedHashMap<>();
+        mapDictionary = new LinkedHashMap<>();
+        docEntities = new LinkedHashMap<>();
     }
 
     /**
@@ -173,19 +175,9 @@ public class MyModel extends Observable implements IModel {
             return findQueryData(textQuery, stem, semantic, posting, true);
         }
         Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
-        result.put("1", searcher.search());
+        result.put("1", searcher.search()); // <query Number, <DocName, Rank>>
+        docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
-    }
-
-    @Override
-    public List<String> getDocEntitiesFromSearcher(int docId) {
-//        String query = "Falkland petroleum exploration";
-//        // how to parse the query ?
-//        //how to deal with corpus path
-//        String postingPath = "C:\\Users\\mohse\\Desktop\\corpusTest6\\noStem";
-//        Searcher s = new Searcher(query, postingPath,);
-//        return s.getDocEntities(docId);
-        return null;
     }
 
     @Override
@@ -195,6 +187,10 @@ public class MyModel extends Observable implements IModel {
         return findQueryData(textQuery, stem, semantic, posting, false);
     }
 
+
+    public static Map<String, String> getDocEntities() {
+        return docEntities;
+    }
 
     private Map<String, Map<String, String>> findQueryData(String textQuery, boolean stem, boolean semantic, String posting, boolean isAlone){
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
@@ -227,21 +223,11 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
-            // take narrative description for semantic treatment
-            if(semantic) {
-                Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
-                Matcher matcherDesc = patternDesc.matcher(query);
-                Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
-                Matcher matcherNarr = patternNarr.matcher(query);
-                while (matcherDesc.find() && matcherNarr.find()) {
-                    narrativeDescription = matcherDesc.group(1) + matcherNarr.group(1);
-                }
-
-                narrativeDescription = narrativeDescription.replaceAll("[,.?!():;\"']", "").replaceAll("- ", "").replaceAll("\n", " ").replaceAll("\\s+", " ");
-            }
-            Searcher searcher = new Searcher(title, posting, stem, semantic, narrativeDescription);
+            Searcher searcher = new Searcher(title, posting, stem, semantic);
             // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
+            // entities of all docs: <doc name, 5 dominating entities>
+            docEntities.putAll(searcher.getEntities());
         }
 
         return result;
