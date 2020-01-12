@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toMap;
 public class Searcher {
     private List<String> queryTerms;
     private Map<String, String> docEntities;
+    private Map<String, String> docTitle;
     private String postingPath; // includes stem/nostem folder
     private String narrative;
     private Ranker ranker;
@@ -28,6 +29,7 @@ public class Searcher {
     public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrative){
         this.queryTerms = Arrays.asList(query.split(" "));
         this.docEntities = new HashMap<>();
+        this.docTitle = new HashMap<>();
         this.postingPath = postingPath;
         this.narrative = narrative;
         this.ranker = setRanker();
@@ -105,6 +107,7 @@ public class Searcher {
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
                 this.docEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
+                this.docTitle.put(m.group(1), "");
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
                 //chaining the doc term info to the map
@@ -115,14 +118,21 @@ public class Searcher {
             }
         }
         // send to ranker bm25 function
-        addDocEntities(); // add entities(value) to the map of entities
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo));
+        addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
+        addDocFromDoc("Entities", this.docEntities); // add entities(value) to the map of entities
+        cleanTitles(); // clean Title to format [term1,term2,...]
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docEntities, this.docTitle));
         rankedDocs = get50Docs(rankedDocs);
+  //      addDoc50Entities(); // add entities(value) to the map of entities
         return rankedDocs;
 
     }
 
-    private void addDocEntities(){
+    private void cleanTitles() {
+
+    }
+
+    private void addDocFromDoc(String docName, Map<String, String> mapPosting){
         try {
             String stem;
             if(isStem){
@@ -130,33 +140,37 @@ public class Searcher {
             }else{
                 stem = "noStem";
             }
-            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Entities"), StandardCharsets.US_ASCII );
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + docName), StandardCharsets.US_ASCII );
             // get line with entities for a doc
             for( String line : (Iterable<String>) lines::iterator ){
                 String doc = line.substring(0, line.indexOf("|"));
                 // check if doc from the posting in map of entities: not => see next doc
-                if(!this.docEntities.containsKey(doc)){
+                if(!mapPosting.containsKey(doc)){
                     continue;
                 }
 
-                String[] rawEntities = line.substring(line.indexOf("|")).split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
+                String postingLine = line.substring(line.indexOf("|")).replaceAll("[!.,?/'\";:]", " ").replaceAll("\\s+", ",");
+                String[] rawPosting = postingLine.split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
                 // check each entity in the dictionary and get 5 most relevant
-                int counter = 0;
-                for(String entity : rawEntities){
-                    if(MyModel.mapDictionary.containsKey(entity)){
-                        if(docEntities.get(doc).isEmpty()){
-                            this.docEntities.put(doc, entity);
+               // int counter = 0;
+                for(String posting : rawPosting){
+                    if(MyModel.mapDictionary.containsKey(posting)){
+                        if(mapPosting.get(doc).isEmpty()){
+                            mapPosting.put(doc, posting);
                         }
                         else {
-                            this.docEntities.put(doc, docEntities.get(doc) + "," + entity);
+                            mapPosting.put(doc, mapPosting.get(doc) + "," + posting);
                         }
+                        /*
                         counter++;
                         if(counter == 5){
                             break;
                         }
+                         */
                     }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -189,6 +203,7 @@ public class Searcher {
             }
 
             rankedDocs50.put(docStr, rankedDocs.get(doc));
+            //this.mapPosting.put(docStr, "");
             if(counter == 49){
                 break;
             }
