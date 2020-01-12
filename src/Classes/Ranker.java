@@ -75,7 +75,7 @@ public class Ranker {
 
             int synonymCounter = 0;
             for (Searcher.Match match : matches){
-                if(match.distance() >= 0.5 && synonymCounter < 3){
+                if(synonymCounter < 3){
                     synonyms.add(match.match());
                 }
                 synonymCounter++;

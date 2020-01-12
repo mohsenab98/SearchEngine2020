@@ -124,7 +124,7 @@ public class MyModel extends Observable implements IModel {
             Pattern patternTitle = Pattern.compile("(?:<TI>\\s*.+?\\s*</TI>)|(<HEADLINE>.+?</HEADLINE>)" , Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             Matcher matcherTitle = patternTitle.matcher(new String(readFile.getListAllDocs().get(0)));
             while (matcherTitle.find()) {
-                title = matcherTitle.group().replaceAll("<\\w+>", " ");
+                title = matcherTitle.group().replaceAll("</?\\w+>", " ").replaceAll("\\s+", " ");
             }
             // doc num, title and full text regex
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
@@ -136,7 +136,7 @@ public class MyModel extends Observable implements IModel {
             parse.Parser(fullText, docName);
 
             indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
-            indexer.addTitle(docName, title); // add title to posting file "Titles": [docName|title]
+            indexer.addTitle(title); // add title to posting file "Titles": [docName|title]
 
             readFile.getListAllDocs().remove(0);
             parse.cleanParse();

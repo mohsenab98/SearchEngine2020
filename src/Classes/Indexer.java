@@ -518,8 +518,8 @@ public class Indexer {
     /**
      *    add title to posting file "Titles": [docName|title(lower case)]
      */
-    public void addTitle(String docName, String title) {
-        this.titles.append(docName).append("|").append(title).append("\n");
+    public void addTitle(String title) {
+        this.titles.append(docIDCounter).append("|").append(title.trim()).append("\n");
     }
 
     /**
