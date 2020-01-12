@@ -242,7 +242,7 @@ public class MyModel extends Observable implements IModel {
             Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
             Matcher matcherNarr = patternNarr.matcher(query);
             while (matcherNarr.find()){
-                narrative = matcherNarr.group(1);
+                narrative = matcherNarr.group(1).replaceAll("\n", " ").trim();
             }
 
 

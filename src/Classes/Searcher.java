@@ -120,7 +120,6 @@ public class Searcher {
         // send to ranker bm25 function
         addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
         addDocFromDoc("Entities", this.docEntities); // add entities(value) to the map of entities
-        cleanTitles(); // clean Title to format [term1,term2,...]
         Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docEntities, this.docTitle));
         rankedDocs = get50Docs(rankedDocs);
   //      addDoc50Entities(); // add entities(value) to the map of entities
@@ -149,12 +148,12 @@ public class Searcher {
                     continue;
                 }
 
-                String postingLine = line.substring(line.indexOf("|")).replaceAll("[!.,?/'\";:]", " ").replaceAll("\\s+", ",");
+                String postingLine = line.substring(line.indexOf("|") + 1).replaceAll("[!.,?/'\";:]", " ").replaceAll("\\s+", ",");
                 String[] rawPosting = postingLine.split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
                 // check each entity in the dictionary and get 5 most relevant
                // int counter = 0;
                 for(String posting : rawPosting){
-                    if(MyModel.mapDictionary.containsKey(posting)){
+                    if(MyModel.mapDictionary.containsKey(posting.toUpperCase()) || MyModel.mapDictionary.containsKey(posting.toLowerCase())){
                         if(mapPosting.get(doc).isEmpty()){
                             mapPosting.put(doc, posting);
                         }
