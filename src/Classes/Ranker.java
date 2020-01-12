@@ -26,7 +26,7 @@ public class Ranker {
      * @param docTermInfo
      * @return docID - score
      */
-    public Map<String, String> rankBM25(Map<String, String> docTermInfo) {
+    public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities) {
 
         Map<String, String> bm25Result = new HashMap<>();
         for(String docId : docTermInfo.keySet()){
@@ -46,9 +46,9 @@ public class Ranker {
                 dfi = Integer.parseInt(termsInfo[i + 1]);
                 tfi = Integer.parseInt(termsInfo[i + 2]);
                 //TODO:termInfo[i+3] = term ???????????
-
+                int number =  valueUpBy(docEntities, docId, termsInfo[i+3]);
                 //log(N/dfi)
-                IDF =  (Math.log((this.N / dfi)) / Math.log(2));
+                IDF =  (Math.log((this.N / dfi)) / Math.log(2)) * number;
 
                 numerator =  tfi * (this.k1 + 1);
                 denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
@@ -82,5 +82,27 @@ public class Ranker {
         }
 
         return synonyms;
+}
+
+    /**
+     * if the term the appear in the query is one of the most popular entities in the doc the return vale depends on it position
+     * @param docId
+     * @param term
+     * @return value between [1 - 6]
+     */
+
+    public int valueUpBy(Map<String, String> docEntities, String docId, String term){
+        int value = 1;
+        if(docEntities.get(docId) == null){
+            return value;
+        }
+        String [] entities = docEntities.get(docId).split(",");
+        for(int i = 0 ; i < entities.length; i++){
+            if(entities[i].equalsIgnoreCase(term)){
+                value = Math.abs(i - 5) + value;
+            }
+        }
+
+        return value;
     }
 }

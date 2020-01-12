@@ -79,6 +79,7 @@ public class Searcher {
         }
 
         Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >
+
         for (String term : queryTerms) {
             // check upper and lower cases
             if (this.isStem) {
@@ -102,6 +103,7 @@ public class Searcher {
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
+                this.docEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
                 //chaining the doc term info to the map
@@ -112,9 +114,9 @@ public class Searcher {
             }
         }
         // send to ranker bm25 function
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo));
-        rankedDocs = get50Docs(rankedDocs);
         addDocEntities(); // add entities(value) to the map of entities
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, docEntities));
+        rankedDocs = get50Docs(rankedDocs);
         return rankedDocs;
 
     }
@@ -186,7 +188,6 @@ public class Searcher {
             }
 
             rankedDocs50.put(docStr, rankedDocs.get(doc));
-            this.docEntities.put(docStr, ""); // add doc entities(key) to the map of entities
             if(counter == 49){
                 break;
             }

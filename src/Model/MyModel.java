@@ -175,7 +175,7 @@ public class MyModel extends Observable implements IModel {
             return findQueryData(textQuery, stem, semantic, posting, true);
         }
         Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
-        result.put("1", searcher.search()); // <query Number, <DocName, Rank>>
+        result.put("100", searcher.search()); // <query Number, <DocName, Rank>>
         docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
     }

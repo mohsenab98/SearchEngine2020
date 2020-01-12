@@ -522,7 +522,7 @@ public class Indexer {
             }
 
             int counter = 4;
-            entities.append(listDocInfo.get(0).trim()).append("|");
+            entities.append(key).append("|");
             while (counter < listDocInfo.size() - 1){
                 entities.append(listDocInfo.get(counter)).append(",");
                 counter++;
