@@ -24,6 +24,11 @@ public class Indexer {
      */
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
 
+    /**
+     * save titles of docs to string builder: [docName|title]
+     */
+    private StringBuilder titles;
+
     private String pathPosting;
     /**
      * isStem variable that we git from the user ( the parse send it to here)
@@ -57,6 +62,7 @@ public class Indexer {
         this.mapDictionary = new LinkedHashMap<>();
         this.pathPosting = pathPosting;
         this.mapSortedTerms = new TreeMap<>(this::compare);
+        this.titles = new StringBuilder();
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
         postingFilesCreate(pathPosting);
@@ -120,10 +126,19 @@ public class Indexer {
         writePosting(terms);
         mapSortedTerms = new TreeMap<>(this::compare);
 
+        // save entities to Entities file
         saveEntitiesInfo();
         // save to DOC file
         saveDocInfo();
+        // save titles to Titles file
+        saveTitle();
     }
+
+    private void saveTitle() {
+        usingBufferedWritter(this.titles.toString(), "Titles");
+        this.titles = new StringBuilder();
+    }
+
 
     /**
      * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
@@ -219,7 +234,7 @@ public class Indexer {
 
         // for each temp posting file in the directory
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
-        for( fileCounterName = 0; numberOfposting - 1 > 3 ; fileCounterName++){
+        for( fileCounterName = 0; numberOfposting - 1 > 4 ; fileCounterName++){
             fileUrl1 = filePath1  + fileCounterName;
             fileUrl2 = filePath2 + (fileCounterName + 1);
             SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
@@ -440,8 +455,6 @@ public class Indexer {
                 data += rawTerms.get(term.toLowerCase());
             }
 
-            // data = mergeData(data); // merging info of the term
-
             term = term.toLowerCase();
             rawTerms.put(term, data);
             rawTerms.remove(term.toUpperCase());
@@ -454,7 +467,6 @@ public class Indexer {
             if(rawTerms.get(term.toUpperCase()) != null) {
                 data += rawTerms.get(term.toUpperCase());
             }
-            // data = mergeData(data); // merging info of the term
 
             term = term.toLowerCase();
             rawTerms.put(term, data);
@@ -465,36 +477,6 @@ public class Indexer {
         }
 
         return rawTerms;
-    }
-
-    /**
-     * merge info of a term
-     * @param data
-     * @return
-     */
-    private String mergeData(String data){
-        String[] docs = data.split(";");
-        Map<String, Integer> info = new HashMap<>();
-
-        for(String d : docs){
-            String doc = d.substring(0, d.indexOf(":"));
-            Integer amount = Integer.parseInt(d.substring(d.indexOf(":") + 1));
-            if(info.containsKey(doc)){
-                info.put(doc, amount + info.get(doc));
-            }
-            else{
-                info.put(doc, amount);
-            }
-        }
-
-        StringBuilder dataBuilder = new StringBuilder();
-        for(String d : info.keySet()){
-            dataBuilder.append(d).append(":").append(info.get(d)).append(";");
-        }
-        data = dataBuilder.toString();
-
-        return data;
-
     }
 
     /**
@@ -522,7 +504,7 @@ public class Indexer {
             }
 
             int counter = 4;
-            entities.append(listDocInfo.get(0).trim()).append("|");
+            entities.append(key).append("|");
             while (counter < listDocInfo.size() - 1){
                 entities.append(listDocInfo.get(counter)).append(",");
                 counter++;
@@ -531,6 +513,13 @@ public class Indexer {
         }
 
         usingBufferedWritter(entities.toString(),"Entities");
+    }
+
+    /**
+     *    add title to posting file "Titles": [docName|title(lower case)]
+     */
+    public void addTitle(String docName, String title) {
+        this.titles.append(docName).append("|").append(title).append("\n");
     }
 
     /**
@@ -600,4 +589,5 @@ public class Indexer {
 
         return o1.compareTo(o2);
     }
+
 }

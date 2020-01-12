@@ -19,15 +19,17 @@ public class Searcher {
     private List<String> queryTerms;
     private Map<String, String> docEntities;
     private String postingPath; // includes stem/nostem folder
+    private String narrative;
     private Ranker ranker;
     private boolean isStem;
     private boolean isSemantic;
     private Stemmer stemmer;
 
-    public Searcher(String query, String postingPath, boolean stem, boolean semantic){
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrative){
         this.queryTerms = Arrays.asList(query.split(" "));
         this.docEntities = new HashMap<>();
         this.postingPath = postingPath;
+        this.narrative = narrative;
         this.ranker = setRanker();
         this.isStem = stem;
         this.isSemantic = semantic;
@@ -54,7 +56,7 @@ public class Searcher {
                 info[i] = Integer.parseInt(line);
                 i++;
             }
-            return new Ranker(info[0], info[1]);
+            return new Ranker(info[0], info[1], narrative);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,6 +104,7 @@ public class Searcher {
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
+                this.docEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
                 //chaining the doc term info to the map
@@ -112,9 +115,9 @@ public class Searcher {
             }
         }
         // send to ranker bm25 function
+        addDocEntities(); // add entities(value) to the map of entities
         Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo));
         rankedDocs = get50Docs(rankedDocs);
-        addDocEntities(); // add entities(value) to the map of entities
         return rankedDocs;
 
     }
@@ -186,7 +189,6 @@ public class Searcher {
             }
 
             rankedDocs50.put(docStr, rankedDocs.get(doc));
-            this.docEntities.put(docStr, ""); // add doc entities(key) to the map of entities
             if(counter == 49){
                 break;
             }

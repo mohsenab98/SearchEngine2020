@@ -116,16 +116,27 @@ public class MyModel extends Observable implements IModel {
         Indexer indexer = new Indexer(pathPosting, stem);
         indexer.setDocIDCounter(0);
         while (!readFile.getListAllDocs().isEmpty()) {
+            String title = "";
             String fullText = "";
             String docName = "";
+
+
+            Pattern patternTitle = Pattern.compile("(?:<TI>\\s*.+?\\s*</TI>)|(<HEADLINE>.+?</HEADLINE>)" , Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            Matcher matcherTitle = patternTitle.matcher(new String(readFile.getListAllDocs().get(0)));
+            while (matcherTitle.find()) {
+                title = matcherTitle.group().replaceAll("<\\w+>", " ");
+            }
+            // doc num, title and full text regex
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             Matcher matcherText = patternText.matcher(new String(readFile.getListAllDocs().get(0)));
             while (matcherText.find()) {
-                docName = matcherText.group(1);
+                docName = matcherText.group(1).trim();
                 fullText = matcherText.group(2);
             }
             parse.Parser(fullText, docName);
+
             indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
+            indexer.addTitle(docName, title); // add title to posting file "Titles": [docName|title]
 
             readFile.getListAllDocs().remove(0);
             parse.cleanParse();
@@ -174,7 +185,7 @@ public class MyModel extends Observable implements IModel {
         if(textQuery.contains("<title>")){
             return findQueryData(textQuery, stem, semantic, posting, true);
         }
-        Searcher searcher = new Searcher(textQuery, posting, stem, semantic);
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "");
         result.put("1", searcher.search()); // <query Number, <DocName, Rank>>
         docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
@@ -196,6 +207,7 @@ public class MyModel extends Observable implements IModel {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String num = ""; // query Num
         String title = ""; // query
+        String narrative = ""; // narrative
         String narrativeDescription = ""; // description
         Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
         Matcher matcherTOP = patternTOP.matcher(textQuery);
@@ -223,7 +235,18 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
-            Searcher searcher = new Searcher(title, posting, stem, semantic);
+            /*
+            Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
+            Matcher matcherDesc = patternDesc.matcher(query);
+             */
+            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
+            Matcher matcherNarr = patternNarr.matcher(query);
+            while (matcherNarr.find()){
+                narrative = matcherNarr.group(1);
+            }
+
+
+            Searcher searcher = new Searcher(title, posting, stem, semantic, narrative);
             // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
             // entities of all docs: <doc name, 5 dominating entities>

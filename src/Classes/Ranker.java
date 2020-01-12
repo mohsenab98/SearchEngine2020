@@ -11,12 +11,14 @@ public class Ranker {
     private double avgdl;
     private double k1;
     private double b;
+    private String rawNarrative;
 
-    public Ranker(int n, int avgdl) {
+    public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
         this.k1 = 1.2;
         this.b = 0.7;
+        this.rawNarrative = rawNarrative;
     }
 
 
@@ -29,6 +31,9 @@ public class Ranker {
     public Map<String, String> rankBM25(Map<String, String> docTermInfo) {
 
         Map<String, String> bm25Result = new HashMap<>();
+        String[] narative = getRelevant();
+        String relevant;
+        String notRelevant;
         for(String docId : docTermInfo.keySet()){
             // total |D|, df, tf, term
             String [] termsInfo = docTermInfo.get(docId).split(" ");
@@ -82,5 +87,10 @@ public class Ranker {
         }
 
         return synonyms;
+    }
+
+    private String[] getRelevant() {
+
+        return null;
     }
 }

@@ -77,6 +77,7 @@ public class Parse {
     /**
      * scan doc with regex -> split TEXT to tokens -> check token for laws -> add token to map as term
      * @param fullText - text for parse, name of doc of text
+     * @param title
      */
     public void Parser(String fullText, String docName) {
         this.docInfo.add(docName); // add doc's name in property-doc-list
