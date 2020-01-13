@@ -23,8 +23,8 @@ public class Ranker {
     public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
-        this.k1 = 1.5;
-        this.b = 0.75;
+        this.k1 = 1.2;
+        this.b = 0.7;
         this.rawNarrative = rawNarrative;
     }
 
@@ -71,14 +71,7 @@ public class Ranker {
                 numerator =  tfi * (this.k1 + 1);
                 denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
 
-                if(relevant.contains(term)){
-                    relevantNum *= 2;
-                }
-                if(notRelevant.contains(term)){
-                    notRelevantNum /= 2;
-                }
-
-                score = score + IDF * (numerator / denominator) * relevantNum * notRelevantNum;
+                score = score + IDF * (numerator / denominator);
             }
             bm25Result.put(docId, String.valueOf(score));
 

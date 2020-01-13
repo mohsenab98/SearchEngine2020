@@ -121,8 +121,8 @@ public class Searcher {
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
-                this.docAllEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
-                this.docTitle.put(m.group(1), "");
+              //  this.docAllEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
+              //  this.docTitle.put(m.group(1), "");
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
                 //chaining the doc term info to the map
@@ -133,14 +133,32 @@ public class Searcher {
             }
         }
         // send to ranker bm25 function
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
+        docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
         addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
         addDocFromDoc("Entities", this.docAllEntities); // add entities(value) to the map of entities
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
-        rankedDocs = get50Docs(rankedDocs);
+        rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
+        rankedDocs = show50DocsGUI(rankedDocs);
         addDoc5Entities(); // add entities(value) to the map of entities
         return rankedDocs;
 
     }
+
+    private Map<String, String> removeNNotRelevantDocs(Map<String, String> docTermsInfo, Map<String, String> rankedDocs, int N) {
+        int counter = 1;
+        Map<String, String> docTermsInfoN = new LinkedHashMap<>();
+        for (String doc : rankedDocs.keySet()) {
+            docTermsInfoN.put(doc, docTermsInfo.get(doc));
+            this.docTitle.put(doc, "");
+            this.docAllEntities.put(doc, "");
+            if(counter == N){
+                break;
+            }
+            counter++;
+        }
+        return docTermsInfoN;
+    }
+
 
     /**
      * Get 5 dominating entities to field map doc5Entities
@@ -232,10 +250,11 @@ public class Searcher {
      * Gets all relevant docs sorted by rank and chooses 50 most relevant
      * Adds the 50 relevant docs to the map this.doc5Entities
      * @param rankedDocs
+     * @param N
      * @return
      */
-    private Map<String, String> get50Docs(Map<String, String> rankedDocs) {
-        Map<String, String> rankedDocs50 = new LinkedHashMap<>();
+    private Map<String, String> show50DocsGUI(Map<String, String> rankedDocs) {
+        Map<String, String> rankedDocsN = new LinkedHashMap<>();
         int counter = 0;
         for(String doc : rankedDocs.keySet()){
             int lineCounter = 0;
@@ -260,15 +279,14 @@ public class Searcher {
                 e.printStackTrace();
             }
 
-            rankedDocs50.put(docStr, rankedDocs.get(doc));
+            rankedDocsN.put(docStr, rankedDocs.get(doc));
             this.doc5Entities.put(docId + "|" + docStr, "");
-            //this.mapPosting.put(docStr, "");
             if(counter == 49){
                 break;
             }
             counter++;
         }
-        return rankedDocs50;
+        return rankedDocsN;
     }
 
 
