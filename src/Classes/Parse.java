@@ -740,6 +740,10 @@ public class Parse {
             Pattern cleanSpace = Pattern.compile("-\\s+");
             term = cleanSpace.matcher(term).replaceAll("-");
         }
+        if(term.contains("-$")) {
+            Pattern cleanSpace = Pattern.compile("-");
+            term = cleanSpace.matcher(term).replaceAll("");
+        }
         if(term.contains("$$")){
             Pattern cleanDollar = Pattern.compile("\\${2,}");
             term = cleanDollar.matcher(term).replaceAll("\\$");

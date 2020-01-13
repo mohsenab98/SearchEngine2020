@@ -208,9 +208,12 @@ public class Searcher {
                 this.parse = new Parse(pathStopWords, isStem);
                 parse.Parser(postingLine.toString(), doc);
                 postingLine = new StringBuilder();
+
                 for(String term : parse.getMapTerms().keySet()){
                     postingLine.append(term).append(",");
                 }
+
+
                 /*
                 if(postingFileName.equals("Titles")){
                     postingLine = postingLine.replaceAll("[!.,?/'\";:-]", " ").replaceAll("\\s+", ",");
