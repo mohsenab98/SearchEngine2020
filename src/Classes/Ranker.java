@@ -1,9 +1,16 @@
 package Classes;
 
+import Model.MyModel;
 import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Ranker {
 
@@ -11,12 +18,14 @@ public class Ranker {
     private double avgdl;
     private double k1;
     private double b;
+    private String rawNarrative;
 
-    public Ranker(int n, int avgdl) {
+    public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
-        this.k1 = 1.2;
-        this.b = 0.7;
+        this.k1 = 0.1;
+        this.b = 0.9;
+        this.rawNarrative = rawNarrative;
     }
 
 
@@ -26,12 +35,17 @@ public class Ranker {
      * @param docTermInfo
      * @return docID - score
      */
-    public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities) {
-
+    public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities, Map<String, String> docTitles) {
+        String[] narrative = getRelevantFromQuery();
+        Set<String> relevant = new HashSet<>(Arrays.asList(narrative[0].split(" ")));
+        Set<String> notRelevant = new HashSet<>(Arrays.asList(narrative[1].split(" ")));
         Map<String, String> bm25Result = new HashMap<>();
+
         for(String docId : docTermInfo.keySet()){
             // total |D|, df, tf, term
             String [] termsInfo = docTermInfo.get(docId).split(" ");
+
+
             double score = 0;
             double IDF;
             double numerator;
@@ -42,18 +56,31 @@ public class Ranker {
 
             for(int i = 0; i <termsInfo.length - 3; i = i + 4){
                 // Score(D,Q) -- BM25
+                int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
+                int relevantNum = 1;
+                int notRelevantNum = 1;
                 total = Integer.parseInt(termsInfo[i]);
                 dfi = Integer.parseInt(termsInfo[i + 1]);
                 tfi = Integer.parseInt(termsInfo[i + 2]);
-                //TODO:termInfo[i+3] = term ???????????
-                int number =  valueUpBy(docEntities, docId, termsInfo[i+3]);
+                String term = termsInfo[i + 3].toLowerCase();
+                int number =  valueUpBy(docTitles, docId, termsInfo[i + 3]);
+                //System.out.println(number);
                 //log(N/dfi)
-                IDF =  (Math.log((this.N / dfi)) / Math.log(2)) * number;
+                IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 
                 numerator =  tfi * (this.k1 + 1);
                 denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
 
-                score = score + IDF * (numerator / denominator);
+                if(relevant.contains(term)){
+                    relevantNum *= 2;
+                }
+                if(notRelevant.contains(term)){
+                    notRelevantNum /= 2;
+                }
+                //TODO: change formula
+//               score = score + IDF * (numerator / denominator) * relevantNum * notRelevantNum;
+//                score = score + IDF *(numerator / denominator) + number;
+                score = score + IDF *(numerator / denominator);
             }
             bm25Result.put(docId, String.valueOf(score));
 
@@ -61,16 +88,98 @@ public class Ranker {
         return bm25Result;
     }
 
+    private int[] checkRelevantInDoc(Set<String> relevant, Set<String> notRelevant, int docId) {
+        int relevantNum = 1;
+        int notRelevantNum = 1;
+        relevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
+        notRelevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
+
+       /* Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingName), StandardCharsets.US_ASCII );
+        // get line [#postingLineNumber] in posting file
+        for( String line : (Iterable<String>) lines::iterator ){
+            if(lineCounter == postingLineNumber){
+                return line;
+            }
+            lineCounter++;
+        }
+
+        int[] result = {relevantNum, notRelevantNum};
+
+        */
+        return null;
+    }
+
+    /**
+     * if the term the appear in the query is one of the most popular entities in the doc the return vale depends on it position
+     * @param docId
+     * @param term
+     * @return value between [1 - 6]
+     */
+
+    public int valueUpBy(Map<String, String> docEntities, String docId, String term){
+        int value = 0;
+        if(docEntities.get(docId) == null){
+            return value;
+        }
+        String[] entities = docEntities.get(docId).split(",");
+        for(int i = 0 ; i < entities.length; i++){
+            if(entities[i].equalsIgnoreCase(term)){
+                value = value + 2;
+            }
+        }
+
+        return value;
+    }
+
+    private String[] getRelevantFromQuery() {
+        String relevant = "";
+        String notRelevant = "";
+        Pattern patternRelevant;
+        Matcher matcherRelevant;
+
+        patternRelevant = Pattern.compile("^Relevant (.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL |Pattern.MULTILINE);
+        matcherRelevant = patternRelevant.matcher(rawNarrative);
+        while (matcherRelevant.find()){
+            relevant += matcherRelevant.group(1);
+        }
+
+        patternRelevant = Pattern.compile("relevant:(.+)(?:not relevant:)?", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        matcherRelevant = patternRelevant.matcher(rawNarrative);
+        while (matcherRelevant.find()){
+            relevant += matcherRelevant.group(1);
+        }
+
+        patternRelevant = Pattern.compile("not relevant:(.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        matcherRelevant = patternRelevant.matcher(rawNarrative);
+        while (matcherRelevant.find()){
+            notRelevant += matcherRelevant.group(1);
+        }
+
+
+        patternRelevant = Pattern.compile("(.+?)(\\w{3}) relevant", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        matcherRelevant = patternRelevant.matcher(rawNarrative);
+        while (matcherRelevant.find()){
+            if(!matcherRelevant.group(2).equalsIgnoreCase("not")){
+                relevant += matcherRelevant.group(1) + matcherRelevant.group(2);
+            }
+            else {
+                notRelevant += matcherRelevant.group(1);
+            }
+        }
+
+        return new String[]{relevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " "), notRelevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " ")};
+    }
+
     public Set<String> LSA(String term){
         Set<String> synonyms = new HashSet<>();
         try {
             Word2VecModel vecModel = Word2VecModel.fromBinFile(new File("resources/corpusVector150K.bin"));
             Searcher searcher = vecModel.forSearch();
-            List<Searcher.Match> matches = searcher.getMatches(term.toLowerCase(), 100);
+            List<Searcher.Match> matches = searcher.getMatches(term.toLowerCase(), 5);
 
             int synonymCounter = 0;
             for (Searcher.Match match : matches){
-                if(match.distance() >= 0.5 && synonymCounter < 3){
+                if(synonymCounter < 3){
                     synonyms.add(match.match());
                 }
                 synonymCounter++;
@@ -82,27 +191,6 @@ public class Ranker {
         }
 
         return synonyms;
-}
-
-    /**
-     * if the term the appear in the query is one of the most popular entities in the doc the return vale depends on it position
-     * @param docId
-     * @param term
-     * @return value between [1 - 6]
-     */
-
-    public int valueUpBy(Map<String, String> docEntities, String docId, String term){
-        int value = 1;
-        if(docEntities.get(docId) == null){
-            return value;
-        }
-        String [] entities = docEntities.get(docId).split(",");
-        for(int i = 0 ; i < entities.length; i++){
-            if(entities[i].equalsIgnoreCase(term)){
-                value = Math.abs(i - 5) + value;
-            }
-        }
-
-        return value;
     }
+
 }

@@ -79,6 +79,7 @@ public class Parse {
      * @param fullText - text for parse, name of doc of text
      */
     public void Parser(String fullText, String docName) {
+        fullText = fullText + " ";
         this.docInfo.add(docName); // add doc's name in property-doc-list
         this.counterMaxTf = 0;
         this.termMaxTf = "";
@@ -550,7 +551,8 @@ public class Parse {
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
-            name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
+            name =  Pattern.compile("[:-]", reOptions).matcher(name).replaceAll(" ");
+            name = Pattern.compile("[,.;)?!}\\]\"'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
             if(stem && name.contains(" ")){

@@ -17,21 +17,35 @@ import static java.util.stream.Collectors.toMap;
  */
 public class Searcher {
     private List<String> queryTerms;
-    private Map<String, String> docEntities;
+    private Map<String, String> docAllEntities;
+    private Map<String, String> doc5Entities;
+    private Map<String, String> docTitle;
     private String postingPath; // includes stem/nostem folder
+    private String narrative;
     private Ranker ranker;
     private boolean isStem;
     private boolean isSemantic;
     private Stemmer stemmer;
 
-    public Searcher(String query, String postingPath, boolean stem, boolean semantic){
+    private Parse parse;
+    private String query;
+    private String queryNumber;
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrative, String queryNumber, String pathStopWords){
         this.queryTerms = Arrays.asList(query.split(" "));
-        this.docEntities = new HashMap<>();
+        this.docAllEntities = new LinkedHashMap<>();
+        this.doc5Entities = new LinkedHashMap<>();
+        this.docTitle = new LinkedHashMap<>();
         this.postingPath = postingPath;
+        this.narrative = narrative;
         this.ranker = setRanker();
         this.isStem = stem;
         this.isSemantic = semantic;
         this.stemmer = new Stemmer();
+
+        this.query = query;
+        this.queryNumber = queryNumber;
+        this.parse = new Parse(pathStopWords, isStem);
+
     }
 
     /**
@@ -54,7 +68,7 @@ public class Searcher {
                 info[i] = Integer.parseInt(line);
                 i++;
             }
-            return new Ranker(info[0], info[1]);
+            return new Ranker(info[0], info[1], narrative);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,8 +93,11 @@ public class Searcher {
         }
 
         Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >
+       //parse the query -> get the query terms like we have parsed the corpus
+        parse.Parser(this.query, queryNumber);
+        Map<String,String> queryTermsAfterPares = parse.getMapTerms();
 
-        for (String term : queryTerms) {
+        for (String term : queryTermsAfterPares.keySet()) {
             // check upper and lower cases
             if (this.isStem) {
                 term = this.stemmer.porterStemmer(term);
@@ -103,7 +120,8 @@ public class Searcher {
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine);
             while (m.find()) {
-                this.docEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
+                this.docAllEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
+                this.docTitle.put(m.group(1), "");
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
                 //chaining the doc term info to the map
@@ -114,14 +132,34 @@ public class Searcher {
             }
         }
         // send to ranker bm25 function
-        addDocEntities(); // add entities(value) to the map of entities
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, docEntities));
+        addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
+        addDocFromDoc("Entities", this.docAllEntities); // add entities(value) to the map of entities
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
         rankedDocs = get50Docs(rankedDocs);
+        addDoc5Entities(); // add entities(value) to the map of entities
         return rankedDocs;
 
     }
 
-    private void addDocEntities(){
+    private void addDoc5Entities() {
+        int counter = 0;
+        Set<String> docIdAndNameSet = new LinkedHashSet<>(this.doc5Entities.keySet()); //
+        for(String docIdAndName : docIdAndNameSet){
+
+        }
+
+    }
+
+
+    /**
+     * The function gets postingFileName: "Titles" or "Entities" and field's map postFileToProcess in format <postingFileName, "">,
+     * reads the info according to postingFileName,
+     * filters the words of the info by the dictionary,
+     * write the filtered info to field's postFileToProcess in format: <postingFileName, "word1,word2, ...,wordN">
+     * @param postingFileName
+     * @param postFileToProcess
+     */
+    private void addDocFromDoc(String postingFileName, Map<String, String> postFileToProcess){
         try {
             String stem;
             if(isStem){
@@ -129,33 +167,37 @@ public class Searcher {
             }else{
                 stem = "noStem";
             }
-            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Entities"), StandardCharsets.US_ASCII );
+            Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingFileName), StandardCharsets.US_ASCII );
             // get line with entities for a doc
             for( String line : (Iterable<String>) lines::iterator ){
                 String doc = line.substring(0, line.indexOf("|"));
                 // check if doc from the posting in map of entities: not => see next doc
-                if(!this.docEntities.containsKey(doc)){
+                if(!postFileToProcess.containsKey(doc)){
                     continue;
                 }
 
-                String[] rawEntities = line.substring(line.indexOf("|")).split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
+                String postingLine = line.substring(line.indexOf("|") + 1).replaceAll("[!.,?/'\";:]", " ").replaceAll("\\s+", ",");
+                String[] rawPosting = postingLine.split(","); // get all entities for the doc(sorted by dominated ent. up -> down)
                 // check each entity in the dictionary and get 5 most relevant
-                int counter = 0;
-                for(String entity : rawEntities){
-                    if(MyModel.mapDictionary.containsKey(entity)){
-                        if(docEntities.get(doc).isEmpty()){
-                            this.docEntities.put(doc, entity);
+               // int counter = 0;
+                for(String posting : rawPosting){
+                    if(MyModel.mapDictionary.containsKey(posting.toUpperCase()) || MyModel.mapDictionary.containsKey(posting.toLowerCase())){
+                        if(postFileToProcess.get(doc).isEmpty()){
+                            postFileToProcess.put(doc, posting);
                         }
                         else {
-                            this.docEntities.put(doc, docEntities.get(doc) + "," + entity);
+                            postFileToProcess.put(doc, postFileToProcess.get(doc) + "," + posting);
                         }
+                        /*
                         counter++;
                         if(counter == 5){
                             break;
                         }
+                         */
                     }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,6 +230,8 @@ public class Searcher {
             }
 
             rankedDocs50.put(docStr, rankedDocs.get(doc));
+            this.doc5Entities.put(docId + "|" + docStr, "");
+            //this.mapPosting.put(docStr, "");
             if(counter == 49){
                 break;
             }
@@ -294,7 +338,7 @@ public class Searcher {
     }
 
     public Map<String, String> getEntities(){
-        return this.docEntities;
+        return this.docAllEntities;
     }
 
 }
