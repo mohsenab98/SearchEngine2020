@@ -549,7 +549,7 @@ public class Parse {
         while (matcherName.find()) {
             String name = matcherName.group();
             name =  Pattern.compile("[:-]", reOptions).matcher(name).replaceAll(" ");
-            name = Pattern.compile("[,.;)?!}\\]\"'*]", reOptions).matcher(name).replaceAll("");
+            name = Pattern.compile("[,.;)?!}\\]\"'*|]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
             if(stem && name.contains(" ")){
