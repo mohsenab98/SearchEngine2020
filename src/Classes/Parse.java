@@ -77,7 +77,6 @@ public class Parse {
     /**
      * scan doc with regex -> split TEXT to tokens -> check token for laws -> add token to map as term
      * @param fullText - text for parse, name of doc of text
-     * @param title
      */
     public void Parser(String fullText, String docName) {
         this.docInfo.add(docName); // add doc's name in property-doc-list
@@ -551,7 +550,8 @@ public class Parse {
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
-            name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
+            name =  Pattern.compile("[:-]", reOptions).matcher(name).replaceAll(" ");
+            name = Pattern.compile("[,.;)?!}\\]\"'*]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
             if(stem && name.contains(" ")){

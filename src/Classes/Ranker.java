@@ -1,11 +1,16 @@
 package Classes;
 
+import Model.MyModel;
 import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Ranker {
 
@@ -18,8 +23,8 @@ public class Ranker {
     public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
-        this.k1 = 1.2;
-        this.b = 0.7;
+        this.k1 = 1.5;
+        this.b = 0.75;
         this.rawNarrative = rawNarrative;
     }
 
@@ -31,14 +36,16 @@ public class Ranker {
      * @return docID - score
      */
     public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities, Map<String, String> docTitles) {
-
+        String[] narrative = getRelevantFromQuery();
+        Set<String> relevant = new HashSet<>(Arrays.asList(narrative[0].split(" ")));
+        Set<String> notRelevant = new HashSet<>(Arrays.asList(narrative[1].split(" ")));
         Map<String, String> bm25Result = new HashMap<>();
-        String[] narative = getRelevant();
-        String relevant;
-        String notRelevant;
+
         for(String docId : docTermInfo.keySet()){
             // total |D|, df, tf, term
             String [] termsInfo = docTermInfo.get(docId).split(" ");
+
+
             double score = 0;
             double IDF;
             double numerator;
@@ -49,9 +56,13 @@ public class Ranker {
 
             for(int i = 0; i <termsInfo.length - 3; i = i + 4){
                 // Score(D,Q) -- BM25
+                int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
+                int relevantNum = 1;
+                int notRelevantNum = 1;
                 total = Integer.parseInt(termsInfo[i]);
                 dfi = Integer.parseInt(termsInfo[i + 1]);
                 tfi = Integer.parseInt(termsInfo[i + 2]);
+                String term = termsInfo[i + 3].toLowerCase();
                 int number =  valueUpBy(docTitles, docId, termsInfo[i + 3]);
                 //System.out.println(number);
                 //log(N/dfi)
@@ -60,12 +71,40 @@ public class Ranker {
                 numerator =  tfi * (this.k1 + 1);
                 denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
 
-                score = score + IDF * (numerator / denominator) * number;
+                if(relevant.contains(term)){
+                    relevantNum *= 2;
+                }
+                if(notRelevant.contains(term)){
+                    notRelevantNum /= 2;
+                }
+
+                score = score + IDF * (numerator / denominator) * relevantNum * notRelevantNum;
             }
             bm25Result.put(docId, String.valueOf(score));
 
         }
         return bm25Result;
+    }
+
+    private int[] checkRelevantInDoc(Set<String> relevant, Set<String> notRelevant, int docId) {
+        int relevantNum = 1;
+        int notRelevantNum = 1;
+        relevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
+        notRelevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
+
+       /* Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingName), StandardCharsets.US_ASCII );
+        // get line [#postingLineNumber] in posting file
+        for( String line : (Iterable<String>) lines::iterator ){
+            if(lineCounter == postingLineNumber){
+                return line;
+            }
+            lineCounter++;
+        }
+
+        int[] result = {relevantNum, notRelevantNum};
+
+        */
+        return null;
     }
 
     /**
@@ -90,7 +129,7 @@ public class Ranker {
         return value;
     }
 
-    private String[] getRelevant() {
+    private String[] getRelevantFromQuery() {
         String relevant = "";
         String notRelevant = "";
         Pattern patternRelevant;
@@ -126,7 +165,7 @@ public class Ranker {
             }
         }
 
-        return new String[]{relevant.replaceAll("[!.,?/'\";:-]", " "), notRelevant.replaceAll("[!.,?/'\";:-]", " ")};
+        return new String[]{relevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " "), notRelevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " ")};
     }
 
     public Set<String> LSA(String term){
@@ -150,6 +189,6 @@ public class Ranker {
         }
 
         return synonyms;
-}
+    }
 
 }
