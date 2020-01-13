@@ -4,13 +4,9 @@ import Model.MyModel;
 import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class Ranker {
 
@@ -63,8 +59,20 @@ public class Ranker {
                 dfi = Integer.parseInt(termsInfo[i + 1]);
                 tfi = Integer.parseInt(termsInfo[i + 2]);
                 String term = termsInfo[i + 3].toLowerCase();
-                int number =  valueUpBy(docTitles, docId, termsInfo[i + 3]);
-                //System.out.println(number);
+
+                //TODO: Entities ????????????????
+                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 3]);
+
+                //TODO: Title ????????????????
+                if(!docTitles.isEmpty()) {
+                    String[] title = docTitles.get(docId).split(",");
+                    for (String termT : title) {
+                        if (termT.equalsIgnoreCase(term)) {
+
+                        }
+                    }
+                }
+
                 //log(N/dfi)
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 

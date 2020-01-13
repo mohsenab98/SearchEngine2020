@@ -137,7 +137,8 @@ public class Searcher {
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
         addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
         addDocFromDoc("Entities", this.docAllEntities); // add entities(value) to the map of entities
-        rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
+        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle);
+        rankedDocs = sortDocsByRank(rankedDocs);
         rankedDocs = show50DocsGUI(rankedDocs);
         addDoc5Entities(); // add entities(value) to the map of entities
         return rankedDocs;
@@ -231,13 +232,6 @@ public class Searcher {
                     postingLine.append(term).append(",");
                 }
 
-
-                /*
-                if(postingFileName.equals("Titles")){
-                    postingLine = postingLine.replaceAll("[!.,?/'\";:-]", " ").replaceAll("\\s+", ",");
-                }
-                 */
-
                 postFileToProcess.put(doc, postingLine.toString());
             }
 
@@ -250,7 +244,6 @@ public class Searcher {
      * Gets all relevant docs sorted by rank and chooses 50 most relevant
      * Adds the 50 relevant docs to the map this.doc5Entities
      * @param rankedDocs
-     * @param N
      * @return
      */
     private Map<String, String> show50DocsGUI(Map<String, String> rankedDocs) {

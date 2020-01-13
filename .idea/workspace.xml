@@ -10,6 +10,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Ranker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Ranker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,14 +216,7 @@
       <workItem from="1578765886449" duration="4553000" />
       <workItem from="1578787928334" duration="701000" />
       <workItem from="1578827205829" duration="1023000" />
-      <workItem from="1578828256237" duration="52342000" />
-    </task>
-    <task id="LOCAL-00041" summary="- write temp post">
-      <created>1576444096265</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1576444096266</updated>
+      <workItem from="1578828256237" duration="54341000" />
     </task>
     <task id="LOCAL-00042" summary="- write temp post up1">
       <created>1576444299944</created>
@@ -560,7 +554,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578937974266</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="- V.1 -- Part B -- 2000 to rank with title and entities">
+      <created>1578945160784</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1578945160784</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -594,7 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Ready with gui complete and without duplicates in Indexer" />
     <MESSAGE value="- Ready with law num words" />
     <MESSAGE value="- Ready sorted merge(old)" />
     <MESSAGE value="- Final version not clear code" />
@@ -619,7 +619,8 @@
     <MESSAGE value="- V.1 -- Part B -- titles parse, entities in gui work" />
     <MESSAGE value="- V.1 -- Part B -- parse name clean &quot;|&quot;" />
     <MESSAGE value="- V.1 -- Part B -- Run Time 5 min" />
-    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Part B -- Run Time 5 min" />
+    <MESSAGE value="- V.1 -- Part B -- 2000 to rank with title and entities" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Part B -- 2000 to rank with title and entities" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="72" key="#VisualVM_Launcher" timestamp="1578937116244">
@@ -634,15 +635,15 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="687" y="384" key="#com.intellij.fileTypes.FileTypeChooser/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578683971058" />
-    <state x="457" y="13" key="CommitChangelistDialog2" timestamp="1578937972537">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="571" y="174" key="CommitChangelistDialog2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578918831880" />
-    <state x="457" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1578937972537" />
-    <state width="494" height="466" key="DebuggerActiveHint" timestamp="1578944736922">
+    <state x="571" y="174" key="CommitChangelistDialog2" timestamp="1578945159637">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="494" height="466" key="DebuggerActiveHint/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578944736922" />
+    <state x="571" y="174" key="CommitChangelistDialog2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578945159637" />
+    <state x="457" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1578937972537" />
+    <state width="494" height="466" key="DebuggerActiveHint" timestamp="1578945702892">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="494" height="466" key="DebuggerActiveHint/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578945702892" />
     <state width="468" height="332" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1578937667308" />
     <state x="74" y="65" width="1389" height="694" key="DiffContextDialog" timestamp="1578928735560">
       <screen x="0" y="0" width="1536" height="824" />
@@ -654,25 +655,25 @@
     </state>
     <state x="666" y="322" key="FileChooserDialogImpl/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578788026975" />
     <state x="533" y="229" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1578937114746" />
-    <state width="1877" height="171" key="GridCell.Tab.0.bottom" timestamp="1578944957889">
+    <state width="1877" height="171" key="GridCell.Tab.0.bottom" timestamp="1578946341706">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="171" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578944957889" />
+    <state width="1877" height="171" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578946341706" />
     <state width="1493" height="171" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1578939564944" />
-    <state width="1877" height="171" key="GridCell.Tab.0.center" timestamp="1578944957888">
+    <state width="1877" height="171" key="GridCell.Tab.0.center" timestamp="1578946341705">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="171" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578944957888" />
+    <state width="1877" height="171" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578946341705" />
     <state width="1493" height="171" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1578939564944" />
-    <state width="1877" height="171" key="GridCell.Tab.0.left" timestamp="1578944957888">
+    <state width="1877" height="171" key="GridCell.Tab.0.left" timestamp="1578946341705">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="171" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578944957888" />
+    <state width="1877" height="171" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578946341705" />
     <state width="1493" height="171" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1578939564944" />
-    <state width="1877" height="171" key="GridCell.Tab.0.right" timestamp="1578944957888">
+    <state width="1877" height="171" key="GridCell.Tab.0.right" timestamp="1578946341706">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="171" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578944957888" />
+    <state width="1877" height="171" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578946341706" />
     <state width="1493" height="171" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1578939564944" />
     <state x="625" y="280" width="694" height="600" key="NewModule_or_Project.wizard" timestamp="1578682286511">
       <screen x="0" y="0" width="1920" height="1160" />
@@ -687,10 +688,10 @@
     </state>
     <state x="92" y="94" width="1735" height="974" key="ShowDiffWithBranchDialog/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578693070577" />
     <state x="74" y="67" width="1388" height="692" key="ShowDiffWithBranchDialog/0.0.1536.824@0.0.1536.824" timestamp="1578928735560" />
-    <state x="442" y="215" key="Vcs.Push.Dialog.v2" timestamp="1578937976116">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="552" y="302" key="Vcs.Push.Dialog.v2" timestamp="1578945162285">
+      <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="552" y="302" key="Vcs.Push.Dialog.v2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578918835150" />
+    <state x="552" y="302" key="Vcs.Push.Dialog.v2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578945162285" />
     <state x="442" y="215" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1578937976116" />
     <state x="74" y="65" width="1389" height="694" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1578835967954">
       <screen x="0" y="0" width="1536" height="824" />
@@ -720,19 +721,9 @@
           <option name="timeStamp" value="171" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
-          <line>141</line>
-          <option name="timeStamp" value="308" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
-          <line>175</line>
-          <option name="timeStamp" value="309" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
-          <line>282</line>
-          <option name="timeStamp" value="311" />
+          <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="319" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

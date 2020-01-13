@@ -190,13 +190,9 @@ public class MyModel extends Observable implements IModel {
         }else{
             path = path +"/noStem";
         }
-        String pathStopWords = "";
+        String pathStopWords;
     File f = new File(path);
-    File[] matchingFiles = f.listFiles(new FilenameFilter() {
-        public boolean accept(File dir, String name) {
-            return name.toLowerCase().contains("stop") && name.toLowerCase().contains("words");
-        }
-    });
+    File[] matchingFiles = f.listFiles((dir, name) -> name.toLowerCase().contains("stop") && name.toLowerCase().contains("words"));
     if(matchingFiles != null && matchingFiles.length > 0){
         pathStopWords = matchingFiles[0].getPath();
     }
@@ -220,7 +216,6 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
-        Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String textQuery = readAllBytesJava(text);
         return findQueryData(textQuery, stem, semantic, posting, false);
     }
@@ -235,7 +230,6 @@ public class MyModel extends Observable implements IModel {
         String num = ""; // query Num
         String title = ""; // query
         String narrative = ""; // narrative
-        String narrativeDescription = ""; // description
         Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
         Matcher matcherTOP = patternTOP.matcher(textQuery);
         // foreach query
