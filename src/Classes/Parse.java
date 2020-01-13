@@ -79,6 +79,7 @@ public class Parse {
      * @param fullText - text for parse, name of doc of text
      */
     public void Parser(String fullText, String docName) {
+        fullText = fullText + " ";
         this.docInfo.add(docName); // add doc's name in property-doc-list
         this.counterMaxTf = 0;
         this.termMaxTf = "";
@@ -244,10 +245,7 @@ public class Parse {
      * @return true/false
      */
     private boolean isStopWord(String token) {
-        if (this.setStopWords.contains(token.toLowerCase())) {
-            return true;
-        }
-        return false;
+        return this.setStopWords.contains(token.toLowerCase());
     }
 
     /**

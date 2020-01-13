@@ -178,6 +178,33 @@ public class MyModel extends Observable implements IModel {
 
     //////////////////////////2nd Part ///////////////////////////////
 
+    /**
+     * get path of stopWords file inside the posting path
+     * @param path
+     * @param isStem
+     * @return
+     */
+    private String getPathOfStopWords(String path, boolean isStem){
+        if(isStem){
+            path = path + "/stem";
+        }else{
+            path = path +"/noStem";
+        }
+        String pathStopWords = "";
+    File f = new File(path);
+    File[] matchingFiles = f.listFiles(new FilenameFilter() {
+        public boolean accept(File dir, String name) {
+            return name.toLowerCase().contains("stop") && name.toLowerCase().contains("words");
+        }
+    });
+    if(matchingFiles != null && matchingFiles.length > 0){
+        pathStopWords = matchingFiles[0].getPath();
+    }
+    else {
+        pathStopWords = path + "/05 stop_words.txt";
+    }
+    return pathStopWords;
+}
 
     @Override
     public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
@@ -185,8 +212,8 @@ public class MyModel extends Observable implements IModel {
         if(textQuery.contains("<title>")){
             return findQueryData(textQuery, stem, semantic, posting, true);
         }
-        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "");
-        result.put("1", searcher.search()); // <query Number, <DocName, Rank>>
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "", "100", getPathOfStopWords(posting, stem));
+        result.put("100", searcher.search()); // <query Number, <DocName, Rank>>
         docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
     }
@@ -246,7 +273,7 @@ public class MyModel extends Observable implements IModel {
             }
 
 
-            Searcher searcher = new Searcher(title, posting, stem, semantic, narrative);
+            Searcher searcher = new Searcher(title, posting, stem, semantic, narrative, num, getPathOfStopWords(posting, stem));
             // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
             // entities of all docs: <doc name, 5 dominating entities>
