@@ -269,7 +269,7 @@ public class MyModel extends Observable implements IModel {
 
 
             Searcher searcher = new Searcher(title, posting, stem, semantic, narrative, num, getPathOfStopWords(posting, stem));
-            // <query Number, <DocName, Rank>>x
+            // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
             // entities of all docs: <doc name, 5 dominating entities>
             docEntities.putAll(searcher.getEntities());

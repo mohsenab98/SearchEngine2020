@@ -495,6 +495,9 @@ public class Indexer {
         mapDocID = new LinkedHashMap<>();
     }
 
+    /**
+     * Save entities in format [DocId|entity1,entity2...] to posting file: "Entities"
+     */
     private void saveEntitiesInfo(){
         StringBuilder entities = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
@@ -503,6 +506,7 @@ public class Indexer {
                 continue;
             }
 
+            // in the listDocInfo, the entities start from  listDocInfo[4]
             int counter = 4;
             entities.append(key).append("|");
             while (counter < listDocInfo.size() - 1){
@@ -561,6 +565,11 @@ public class Indexer {
         return sizeDictionary;
     }
 
+
+    /**
+     * write stop words to posting file for Parser in Searcher.class
+     * @param stopWords
+     */
     public void writeStopWordsToPosting(String stopWords){
         usingBufferedWritter(stopWords, "stop_words.txt");
     }

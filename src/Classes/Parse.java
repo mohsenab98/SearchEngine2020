@@ -10,7 +10,6 @@ import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 
 public class Parse {
-    //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
     private Stemmer stemmer;
     private int counterMaxTf = 0; // counter for max frequency term in a doc

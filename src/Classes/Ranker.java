@@ -47,6 +47,7 @@ public class Ranker {
             double numerator;
             double denominator;
             double tfi;
+            double titleCounter = 0;
             int dfi;
             int total; // |D|
             int entitiesNum = 0;
@@ -85,7 +86,7 @@ public class Ranker {
                 score = score + IDF * (numerator / denominator);
             }
 //            score = (score*6 + cosSim*4)/10;
-            bm25Result.put(docId, String.valueOf(score + entitiesNum));
+            bm25Result.put(docId, String.valueOf(score + titleCounter));
 
         }
         return bm25Result;
