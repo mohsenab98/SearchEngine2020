@@ -34,7 +34,6 @@ public class Searcher {
     private Ranker ranker;
     private boolean isStem;
     private boolean isSemantic;
-    private Stemmer stemmer;
 
     private Parse parse;
     private String query;
@@ -61,7 +60,6 @@ public class Searcher {
         this.ranker = setRanker();
         this.isStem = stem;
         this.isSemantic = semantic;
-        this.stemmer = new Stemmer();
 
         this.query = query;
         this.queryNumber = queryNumber;
@@ -71,7 +69,7 @@ public class Searcher {
     /**
      * Creates new Ranker Instance with info taken from "BM25Info" posting file (N & avgId)
      * N = number of DOCs in the corpus
-     * avgId = average DOC length(= number of terms)
+     * avgdl = average DOC length(= number of terms)
      * @return new Ranker Instance
      */
     private Ranker setRanker() {
@@ -97,28 +95,34 @@ public class Searcher {
         return null;
     }
 
+    /**
+     * the query field is updated = query + synonyms
+     * the function calls the ranker.semanticSearchFunction to get the synonyms
+     * @return map of synonyms words of each word in the query
+     */
+    private Map<String, Double> queryWithSemanticSearch(){
+        Map<String, Double> synonymsMap = new HashMap<>();
+        List<String> queryTermsLSA = new ArrayList<>();
+        for(String term : listQueryTerms){
+            synonymsMap.putAll(ranker.semanticSearchFunction(term.toLowerCase()));
+        }
+        Set<String> synonymsList = synonymsMap.keySet();
+        queryTermsLSA.addAll(synonymsList);
+        this.query = "";
+        listQueryTerms = queryTermsLSA;
+        for(String termQ : listQueryTerms){
+            this.query += termQ + " ";
+        }
+        return synonymsMap;
+    }
 
     /**
-     * main function of this class -- search for 50 most relevant files to the query given by the user
-     * @return
+     *
+     * @param queryTermsAfterParse
+     * @return map <DocId , "dfi tfi term">
      */
-    public Map<String, String> search(){
-        // user chose search with semantic treatment
-        if(isSemantic){
-            //add all synonyms to the query terms list
-            List<String> queryTermsLSA = new ArrayList<>();
-            for(String term : listQueryTerms){
-                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase()));
-                queryTermsLSA.addAll(synonyms);
-            }
-            listQueryTerms = queryTermsLSA;
-        }
-        Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >; info = <|Q|, |D|, dfi, tfi, term>
-       //parse the query -> get the query terms like we have parsed the corpus
-        this.parse = new Parse(pathStopWords, isStem);
-        parse.Parser(this.query, queryNumber);
-
-        Map<String,String> queryTermsAfterParse = parse.getMapTerms();
+    private Map<String, String> addTermInfoToDocMap(Map<String,String> queryTermsAfterParse){
+        Map<String, String> docTermsInfo = new LinkedHashMap<>();
         for (String term : queryTermsAfterParse.keySet()) {
             // term line from dictionary (term | totalDocs |D| :  df ; lineCounter)
             String termLine = MyModel.mapDictionary.get(term.toLowerCase());
@@ -129,13 +133,13 @@ public class Searcher {
                     continue;
                 }
             }
-            String[] termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, line counter
+            String[] termInfo = getTermInfo(termLine).split(" "); // total |D|, df, line counter
             //get posting line from the posting file a-z using the function "getPostingLine(line number , char(file Name))"
             String termPostingLine = getPostingLine(Integer.parseInt(termInfo[2]), String.valueOf(term.charAt(0)));
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
             Matcher m = p.matcher(termPostingLine); // DocID : tf
             while (m.find()) {
-                termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
+                termInfo = getTermInfo(termLine).split(" "); // total |D|, df, tf
                 String termInfoInMap = "";
                 String docId = m.group(1);
                 String tfTermPerDoc = m.group(2);
@@ -147,15 +151,36 @@ public class Searcher {
                 docTermsInfo.put(docId, termInfoInMap + dfTermFromDictionary + " " + tfTermPerDoc + " " + term);
             }
         }
-        // add info to the docTermInfo map
-        docTermsInfo = readDocFromPostingAndAddInfo(docTermsInfo, queryTermsAfterParse.size());
+        return docTermsInfo;
+    }
+
+    /**
+     * main function of this class -- search for 50 most relevant files to the query given by the user
+     * @return
+     */
+
+    public Map<String, String> search(){
+        // user chose search with semantic treatment
+        Map<String, Double> synonymsMap = new HashMap<>();
+        if(isSemantic){
+            //add all synonyms to the query terms list
+           synonymsMap = queryWithSemanticSearch();
+        }
+        Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >; info = <|Q|, |D|, dfi, tfi, term>
+       //parse the query -> get the query terms like we have parsed the corpus
+
+        this.parse = new Parse(this.pathStopWords, this.isStem);
+        parse.Parser(this.query, this.queryNumber);
+        Map<String,String> queryTermsAfterParse = parse.getMapTerms();
+        docTermsInfo = addTermInfoToDocMap(queryTermsAfterParse); // add term info to doc map
+        docTermsInfo = readDocFromPostingAndAddInfo(docTermsInfo, queryTermsAfterParse.size());// add query size & doc size to doc map
 
 
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle));
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle, synonymsMap));
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
         addValuesToMapFromPosting("Titles", this.mapDocIDTitle);// add entities(value) to the map of entities
         addValuesToMapFromPosting("Entities", this.docAllEntities); // add entities(value) to the map of entities
-        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle);
+        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle, synonymsMap);
         rankedDocs = sortDocsByRank(rankedDocs);
         rankedDocs = show50DocsGUI(rankedDocs);
         add5DominatingEntitiesToMap(); // add entities(value) to the map of entities
