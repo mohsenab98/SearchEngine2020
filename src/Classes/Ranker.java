@@ -174,7 +174,7 @@ public class Ranker {
         return new String[]{relevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " "), notRelevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " ")};
     }
 
-    public Map<String, Double> LSA(String term){
+    public Map<String, Double> semanticSearchFunction(String term){
 //        Set<String> synonyms = new HashSet<>();
         Map<String, Double> synonyms = new HashMap<>();
         try {
@@ -189,7 +189,7 @@ public class Ranker {
                     if(match.match().equalsIgnoreCase(term)){
                         synonyms.put(match.match(), 1.0);
                     }else{
-                        synonyms.put(match.match(), 0.4);
+                        synonyms.put(match.match(), 0.5);
                     }
                 }
                 synonymCounter++;
