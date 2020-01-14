@@ -19,7 +19,7 @@ public class Ranker {
     public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
-        this.k1 = 1.5;
+        this.k1 = 1.7;
         this.b = 0.7;
         this.rawNarrative = rawNarrative;
     }
@@ -46,7 +46,7 @@ public class Ranker {
             double IDF;
             double numerator;
             double denominator;
-            int tfi =1;
+            double tfi =1;
             int dfi;
             int total; // |D|
 
@@ -94,7 +94,7 @@ public class Ranker {
                 cosSim = cosSim + cosinSimilarity(tfi, 1, total, Integer.parseInt(termsInfo[0])); ///??????????????????/
                 score = score + IDF * (numerator / denominator);
             }
-//            score = (score*6 + cosSim*4)/10;
+            score = (score*0 + cosSim*10)/10;
             bm25Result.put(docId, String.valueOf(score));
 
         }
@@ -109,7 +109,7 @@ public class Ranker {
      * @param Q = number of words in query
      * @return
      */
-    private double cosinSimilarity(int dj, int q, int D, int Q){
+    private double cosinSimilarity(double dj, int q, int D, int Q){
         double numerator =  (dj*q);
         double denominator =(Math.sqrt(Math.pow(D,2)*Math.pow(Q,2)));
         return numerator / denominator;

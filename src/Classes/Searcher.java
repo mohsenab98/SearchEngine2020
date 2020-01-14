@@ -13,14 +13,23 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * Dictionary(Search term ) ->>>>>> search in posting(a-z) the relative info of the term
+ * Search query in corpus :
+ * 1. query -> terms[according to semantic] (parse..)
+ * 2. search for relevant docs
+ * 3.rank the docs
+ * 4.take 2000 first docs and search for titles and entities
+ * 5.rank the docs second time
+ * 6.take only 50 first docs
  */
 public class Searcher {
-    private List<String> queryTerms;
+    private List<String> listQueryTerms;
+    //TODO : docAllEntities
     private Map<String, String> docAllEntities;
-    private Map<String, String> doc5Entities;
-    private Map<String, String> docTitle;
+    private Map<String, String> map5DominatingEntities;
+    private Map<String, String> mapDocIDTitle;
     private String postingPath; // includes stem/nostem folder
+    //TODO: delete
+
     private String narrative;
     private Ranker ranker;
     private boolean isStem;
@@ -31,11 +40,22 @@ public class Searcher {
     private String query;
     private String queryNumber;
     private String pathStopWords;
+
+    /**
+     *
+     * @param query -> list of therms separated by " "
+     * @param postingPath
+     * @param stem
+     * @param semantic
+     * @param narrative ->
+     * @param queryNumber
+     * @param pathStopWords
+     */
     public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrative, String queryNumber, String pathStopWords){
-        this.queryTerms = Arrays.asList(query.split(" "));
+        this.listQueryTerms = Arrays.asList(query.split(" "));
         this.docAllEntities = new LinkedHashMap<>();
-        this.doc5Entities = new LinkedHashMap<>();
-        this.docTitle = new LinkedHashMap<>();
+        this.map5DominatingEntities = new LinkedHashMap<>();
+        this.mapDocIDTitle = new LinkedHashMap<>();
         this.postingPath = postingPath;
         this.narrative = narrative;
         this.ranker = setRanker();
@@ -49,8 +69,10 @@ public class Searcher {
     }
 
     /**
-     * Creates new Ranker Instance with info taken from "BM25Info" posting file (|D| & avgId)
-     * @return
+     * Creates new Ranker Instance with info taken from "BM25Info" posting file (N & avgId)
+     * N = number of DOCs in the corpus
+     * avgId = average DOC length(= number of terms)
+     * @return new Ranker Instance
      */
     private Ranker setRanker() {
         try {
@@ -61,7 +83,6 @@ public class Searcher {
                 stem = "noStem";
             }
             Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "BM25Info"), StandardCharsets.US_ASCII );
-            // get line [#postingLineNumber] in posting file
             int[] info = new int[2];
             int i = 0;
             for( String line : (Iterable<String>) lines::iterator ){
@@ -84,26 +105,21 @@ public class Searcher {
     public Map<String, String> search(){
         // user chose search with semantic treatment
         if(isSemantic){
+            //add all synonyms to the query terms list
             List<String> queryTermsLSA = new ArrayList<>();
-            for(String term : queryTerms){
+            for(String term : listQueryTerms){
                 List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase()));
                 queryTermsLSA.addAll(synonyms);
             }
-            queryTerms = queryTermsLSA;
+            listQueryTerms = queryTermsLSA;
         }
-
-        Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >
+        Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >; info = <|Q|, |D|, dfi, tfi, term>
        //parse the query -> get the query terms like we have parsed the corpus
         this.parse = new Parse(pathStopWords, isStem);
         parse.Parser(this.query, queryNumber);
-        Map<String,String> queryTermsAfterPares = parse.getMapTerms();
 
-        for (String term : queryTermsAfterPares.keySet()) {
-            // check upper and lower cases
-            if (this.isStem) {
-                term = this.stemmer.porterStemmer(term);
-            }
-
+        Map<String,String> queryTermsAfterParse = parse.getMapTerms();
+        for (String term : queryTermsAfterParse.keySet()) {
             // term line from dictionary (term | totalDocs |D| :  df ; lineCounter)
             String termLine = MyModel.mapDictionary.get(term.toLowerCase());
             if (termLine == null) {
@@ -113,49 +129,47 @@ public class Searcher {
                     continue;
                 }
             }
-
             String[] termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, line counter
             //get posting line from the posting file a-z using the function "getPostingLine(line number , char(file Name))"
             String termPostingLine = getPostingLine(Integer.parseInt(termInfo[2]), String.valueOf(term.charAt(0)));
-
             Pattern p = Pattern.compile("(\\d+):(\\d+)");
-            Matcher m = p.matcher(termPostingLine);
+            Matcher m = p.matcher(termPostingLine); // DocID : tf
             while (m.find()) {
-              //  this.docAllEntities.put(m.group(1), ""); // add doc entities(key) to the map of entities
-              //  this.docTitle.put(m.group(1), "");
                 termInfo = getTermInfo(termLine).split(" "); // // total |D|, df, tf
                 String termInfoInMap = "";
-                //chaining the doc term info to the map
-                if(docTermsInfo.containsKey(m.group(1))){
-                    termInfoInMap =  docTermsInfo.get(m.group(1)) + " ";
+                String docId = m.group(1);
+                String tfTermPerDoc = m.group(2);
+                String dfTermFromDictionary = termInfo[1];
+                if(docTermsInfo.containsKey(docId)){
+                    //chain the info of the previous term in the doc
+                    termInfoInMap =  docTermsInfo.get(docId) + " ";
                 }
-                //TODO : change termInfo[0]=total appereance of term in corpus -> |D| = number of words in docID
-                docTermsInfo.put( m.group(1), termInfoInMap + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
+                docTermsInfo.put(docId, termInfoInMap + dfTermFromDictionary + " " + tfTermPerDoc + " " + term);
             }
         }
-        // send to ranker bm25 function
-        docTermsInfo = readDocFromPosting(docTermsInfo, queryTermsAfterPares.size());
+        // add info to the docTermInfo map
+        docTermsInfo = readDocFromPostingAndAddInfo(docTermsInfo, queryTermsAfterParse.size());
 
 
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle));
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
-        addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
-        addDocFromDoc("Entities", this.docAllEntities); // add entities(value) to the map of entities
-        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle);
+        addValuesToMapFromPosting("Titles", this.mapDocIDTitle);// add entities(value) to the map of entities
+        addValuesToMapFromPosting("Entities", this.docAllEntities); // add entities(value) to the map of entities
+        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle);
         rankedDocs = sortDocsByRank(rankedDocs);
         rankedDocs = show50DocsGUI(rankedDocs);
-        addDoc5Entities(); // add entities(value) to the map of entities
+        add5DominatingEntitiesToMap(); // add entities(value) to the map of entities
         return rankedDocs;
 
     }
 
     /**
-     *
-     * @param docTermsInfo < DocID, "total |D|, df, tf, term | ...."></>
+     * info = |Q| and |D|
+     * @param docTermsInfo
      * @param queryLength
-     * @return
+     * @return map of <DocId , <|Q|, |D|, dfi, tfi, term>>
      */
-    private Map<String, String> readDocFromPosting(Map<String, String> docTermsInfo, int queryLength) {
+    private Map<String, String> readDocFromPostingAndAddInfo(Map<String, String> docTermsInfo, int queryLength) {
         String stem;
         if(isStem){
             stem = "stem";
@@ -176,22 +190,26 @@ public class Searcher {
             if (!docTermsInfo.containsKey(doc)) {
                 continue;
             }
-//            String maxTf = getMaxTfFromDoc(line);
-//
-//            docTermsInfo.put(doc,  maxTf + " " + docTermsInfo.get(doc));
+            // add to each <DocId , <dfi, tfi, term>> query length and doc length -> <DocId , <|Q|, |D|, dfi, tfi, term>>
             docTermsInfo.put(doc,  queryLength + " " + D + " " + docTermsInfo.get(doc));
         }
 
         return docTermsInfo;
     }
 
-
+    /**
+     *
+     * @param docTermsInfo
+     * @param rankedDocs = map of the sorted ranked docs
+     * @param N = final map size after deleting
+     * @return same docTermsInfo with new size of N
+     */
     private Map<String, String> removeNNotRelevantDocs(Map<String, String> docTermsInfo, Map<String, String> rankedDocs, int N) {
         int counter = 1;
         Map<String, String> docTermsInfoN = new LinkedHashMap<>();
         for (String doc : rankedDocs.keySet()) {
             docTermsInfoN.put(doc, docTermsInfo.get(doc));
-            this.docTitle.put(doc, "");
+            this.mapDocIDTitle.put(doc, "");
             this.docAllEntities.put(doc, "");
             if(counter == N){
                 break;
@@ -203,16 +221,16 @@ public class Searcher {
 
 
     /**
-     * Get 5 dominating entities to field map doc5Entities
+     * Get 5 dominating entities from this.docAllEntities(= saves the entities for each doc)
      */
-    private void addDoc5Entities() {
-        Set<String> docIdAndNameSet = new LinkedHashSet<>(this.doc5Entities.keySet()); // add possibility to change the original this.doc5Entities map
-        this.doc5Entities = new LinkedHashMap<>(); // renew this.doc5Entities for adding 5 entities
+    private void add5DominatingEntitiesToMap() {
+        Set<String> docIdAndNameSet = new LinkedHashSet<>(this.map5DominatingEntities.keySet()); // add possibility to change the original this.map5DominatingEntities map
+        this.map5DominatingEntities = new LinkedHashMap<>(); // renew this.map5DominatingEntities for adding 5 entities
         // for each on the set of relevant docs: docIdAndName in format <docID|docName>
         for(String docIdAndName : docIdAndNameSet){
             String docId = docIdAndName.substring(0, docIdAndName.indexOf("|")); // get docID
             String docName = docIdAndName.replaceAll(docId, "").replace("|" , ""); // get docName
-            this.doc5Entities.put(docName, ""); // create key-value in the map: <docName, "">
+            this.map5DominatingEntities.put(docName, ""); // create key-value in the map: <docName, "">
             String[] entities = this.docAllEntities.get(docId).split(","); // get all entities to string array
 
             int counter = 0;
@@ -234,21 +252,21 @@ public class Searcher {
             // remove ", " in the end of the 5 entities
             if(!fiveEntities.toString().isEmpty()) {
                 int lastCommaIndex = fiveEntities.length() - 2;
-                this.doc5Entities.put(docName, fiveEntities.delete(lastCommaIndex, lastCommaIndex + 1).toString());
+                this.map5DominatingEntities.put(docName, fiveEntities.delete(lastCommaIndex, lastCommaIndex + 1).toString());
             }
         }
     }
 
 
     /**
-     * The function gets postingFileName: "Titles" or "Entities" and field's map postFileToProcess in format <postingFileName, "">,
-     * reads the info according to postingFileName,
-     * filters the words of the info by the dictionary,
-     * write the filtered info to field's postFileToProcess in format: <postingFileName, "word1,word2, ...,wordN">
+     * The function gets postingFileName: "Titles" or "Entities" and field's map postFileToProcess in format <DOCID, "">,
+     * reads the info(= entities/titles of docID) according to postingFileName and DOCID,
+     * parse the info(= entities/titles of docID)
+     * write the parsed info to the map in the format: <DOCID, "word1,word2, ...,wordN">
      * @param postingFileName
      * @param postFileToProcess
      */
-    private void addDocFromDoc(String postingFileName, Map<String, String> postFileToProcess){
+    private void addValuesToMapFromPosting(String postingFileName, Map<String, String> postFileToProcess){
         try {
             String stem;
             if(isStem){
@@ -282,8 +300,8 @@ public class Searcher {
     }
 
     /**
-     * Gets all relevant docs sorted by rank and chooses 50 most relevant
-     * Adds the 50 relevant docs to the map this.doc5Entities
+     * Gets all relevant docs sorted by rank and chooses 50 most relevant + add the original DOCNAME to the docID in the map
+     * Adds the 50 relevant docs to the map this.map5DominatingEntities
      * @param rankedDocs
      * @return
      */
@@ -301,6 +319,7 @@ public class Searcher {
                 stem = "noStem";
             }
             try {
+                // read the DOCNAME of first 50 docs (because we save id instead of DOCNAME)
                 Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Doc"), StandardCharsets.US_ASCII );
                 // get line [#postingLineNumber] in posting file
                 for( String line : (Iterable<String>) lines::iterator ){
@@ -314,7 +333,8 @@ public class Searcher {
             }
 
             rankedDocsN.put(docStr, rankedDocs.get(doc));
-            this.doc5Entities.put(docId + "|" + docStr, "");
+            // we save also the id to help us find the 5 most entities
+            this.map5DominatingEntities.put(docId + "|" + docStr, "");
             if(counter == 49){
                 break;
             }
@@ -344,6 +364,7 @@ public class Searcher {
         return listTermInfo;
     }
 
+    //TODO : delete
     public String getMaxTfFromDoc(String termLine) {
         int start = termLine.indexOf(":");
         int end = termLine.lastIndexOf(",");
@@ -383,12 +404,13 @@ public class Searcher {
 
     /**
      * Sort map by rank(value)
-     * @param rankedDocs
-     * @return
+     * @param rankedDocs = map of <DOCID, rank> not sorted by rank
+     * @return sorted map by rank
      */
     private Map<String, String> sortDocsByRank(Map<String, String> rankedDocs){
         Map<String, Double> sortedDocs = new LinkedHashMap<>();
 
+        //to rank the map -> change rank from string to double
         for(String doc : rankedDocs.keySet()){
             sortedDocs.put(doc, Double.parseDouble(rankedDocs.get(doc)));
         }
@@ -409,8 +431,12 @@ public class Searcher {
         return rankedDocs;
     }
 
+    /**
+     *
+     * @return map of 5 Dominating Entities
+     */
     public Map<String, String> getEntities(){
-        return this.doc5Entities;
+        return this.map5DominatingEntities;
     }
 
 }
