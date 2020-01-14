@@ -561,6 +561,10 @@ public class Indexer {
         return sizeDictionary;
     }
 
+    public void writeStopWordsToPosting(String stopWords){
+        usingBufferedWritter(stopWords, "stop_words.txt");
+    }
+
     /**
      * give to each doc id
      * @param docIDCounter

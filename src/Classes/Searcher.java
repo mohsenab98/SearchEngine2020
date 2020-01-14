@@ -129,10 +129,14 @@ public class Searcher {
                 if(docTermsInfo.containsKey(m.group(1))){
                     termInfoInMap =  docTermsInfo.get(m.group(1)) + " ";
                 }
-                docTermsInfo.put( m.group(1), termInfoInMap + termInfo[0] + " " + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
+                //TODO : change termInfo[0]=total appereance of term in corpus -> |D| = number of words in docID
+                docTermsInfo.put( m.group(1), termInfoInMap + termInfo[1] + " " + m.group(2) + " " + term); // total |D|, df, tf, term
             }
         }
         // send to ranker bm25 function
+        docTermsInfo = readDocFromPosting(docTermsInfo, queryTermsAfterPares.size());
+
+
         Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.docTitle));
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
         addDocFromDoc("Titles", this.docTitle);// add entities(value) to the map of entities
@@ -144,6 +148,43 @@ public class Searcher {
         return rankedDocs;
 
     }
+
+    /**
+     *
+     * @param docTermsInfo < DocID, "total |D|, df, tf, term | ...."></>
+     * @param queryLength
+     * @return
+     */
+    private Map<String, String> readDocFromPosting(Map<String, String> docTermsInfo, int queryLength) {
+        String stem;
+        if(isStem){
+            stem = "stem";
+        }else{
+            stem = "noStem";
+        }
+        Stream<String> lines = null;
+        try {
+            lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + "Doc"), StandardCharsets.US_ASCII );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // get line with entities for a doc
+        for( String line : (Iterable<String>) lines::iterator ) {
+            String doc = line.substring(0, line.indexOf("|"));
+            String D = line.substring(line.lastIndexOf(",")+1, line.indexOf(";"));
+            // check if doc from the posting in map of entities: not => see next doc
+            if (!docTermsInfo.containsKey(doc)) {
+                continue;
+            }
+//            String maxTf = getMaxTfFromDoc(line);
+//
+//            docTermsInfo.put(doc,  maxTf + " " + docTermsInfo.get(doc));
+            docTermsInfo.put(doc,  queryLength + " " + D + " " + docTermsInfo.get(doc));
+        }
+
+        return docTermsInfo;
+    }
+
 
     private Map<String, String> removeNNotRelevantDocs(Map<String, String> docTermsInfo, Map<String, String> rankedDocs, int N) {
         int counter = 1;
@@ -303,6 +344,12 @@ public class Searcher {
         return listTermInfo;
     }
 
+    public String getMaxTfFromDoc(String termLine) {
+        int start = termLine.indexOf(":");
+        int end = termLine.lastIndexOf(",");
+        return termLine.substring(start+1, end);
+
+    }
     /**
      * receive line number and return the posting line as a String
      * @param postingLineNumber

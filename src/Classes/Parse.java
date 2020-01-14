@@ -40,6 +40,10 @@ public class Parse {
     private ArrayList<String> docInfo;
 
     /**
+     * String of stop words
+     */
+    String stopWords;
+    /**
      *  words to numbers
      */
     private List<String> listNumbersAsWords;
@@ -64,7 +68,7 @@ public class Parse {
         setNumbersAsWords = new HashSet<>(listNumbersAsWords);
         // charge stop words from file on hard disk to set in RAM
         try {
-            String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
+            this.stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
             // for words to numbers law
             this.setStopWords.removeAll(setNumbersAsWords);
@@ -343,6 +347,10 @@ public class Parse {
      */
     public Map<String, String> getMapTerms(){
         return this.mapTerms;
+    }
+
+    public String getStopWords(){
+        return this.stopWords;
     }
 
     /**
