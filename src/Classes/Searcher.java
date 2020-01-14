@@ -102,19 +102,27 @@ public class Searcher {
      * main function of this class -- search for 50 most relevant files to the query given by the user
      * @return
      */
+
     public Map<String, String> search(){
         // user chose search with semantic treatment
+        Map<String, Double> synonymsMap = new HashMap<>();
         if(isSemantic){
             //add all synonyms to the query terms list
             List<String> queryTermsLSA = new ArrayList<>();
             for(String term : listQueryTerms){
-                List<String> synonyms = new ArrayList<>(ranker.LSA(term.toLowerCase()));
-                queryTermsLSA.addAll(synonyms);
+                synonymsMap.putAll(ranker.LSA(term.toLowerCase()));
             }
+            Set<String> synonymsList = synonymsMap.keySet();
+            queryTermsLSA.addAll(synonymsList);
+            this.query = "";
             listQueryTerms = queryTermsLSA;
+            for(String termQ : listQueryTerms){
+                this.query += termQ + " ";
+            }
         }
         Map<String, String> docTermsInfo = new LinkedHashMap<>(); // save <DocID , <Term1 Info> <Term 2 Info>... >; info = <|Q|, |D|, dfi, tfi, term>
        //parse the query -> get the query terms like we have parsed the corpus
+
         this.parse = new Parse(pathStopWords, isStem);
         parse.Parser(this.query, queryNumber);
 
@@ -151,11 +159,11 @@ public class Searcher {
         docTermsInfo = readDocFromPostingAndAddInfo(docTermsInfo, queryTermsAfterParse.size());
 
 
-        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle));
+        Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle, synonymsMap));
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
         addValuesToMapFromPosting("Titles", this.mapDocIDTitle);// add entities(value) to the map of entities
         addValuesToMapFromPosting("Entities", this.docAllEntities); // add entities(value) to the map of entities
-        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle);
+        rankedDocs = ranker.rankBM25(docTermsInfo, this.docAllEntities, this.mapDocIDTitle, synonymsMap);
         rankedDocs = sortDocsByRank(rankedDocs);
         rankedDocs = show50DocsGUI(rankedDocs);
         add5DominatingEntitiesToMap(); // add entities(value) to the map of entities

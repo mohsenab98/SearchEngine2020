@@ -5,12 +5,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 
 public class Parse {
-    //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
     private Stemmer stemmer;
     private int counterMaxTf = 0; // counter for max frequency term in a doc
@@ -40,6 +37,10 @@ public class Parse {
     private ArrayList<String> docInfo;
 
     /**
+     * String of stop words
+     */
+    String stopWords;
+    /**
      *  words to numbers
      */
     private List<String> listNumbersAsWords;
@@ -64,7 +65,7 @@ public class Parse {
         setNumbersAsWords = new HashSet<>(listNumbersAsWords);
         // charge stop words from file on hard disk to set in RAM
         try {
-            String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
+            this.stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
             // for words to numbers law
             this.setStopWords.removeAll(setNumbersAsWords);
@@ -343,6 +344,10 @@ public class Parse {
      */
     public Map<String, String> getMapTerms(){
         return this.mapTerms;
+    }
+
+    public String getStopWords(){
+        return this.stopWords;
     }
 
     /**

@@ -145,6 +145,7 @@ public class MyModel extends Observable implements IModel {
         indexer.reset(); // check if there is still terms in the sorted map
         int fileCounterName = indexer.merge(); //merge the temp sorted files 2 big files
         indexer.finalMerge(fileCounterName); // merge 2 final posting files to A-Z posting files
+        indexer.writeStopWordsToPosting(parse.getStopWords()); // write stop words to the posting
         termNumbers = indexer.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;

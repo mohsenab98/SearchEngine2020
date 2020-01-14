@@ -6,10 +6,13 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
+    <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="- V.1 -- Search - Final">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classes/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Ranker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Ranker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,32 +43,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="204" column="51" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
-              <folding>
-                <element signature="e#16757#16758#0" expanded="true" />
-                <element signature="e#16807#16808#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-40">
-              <caret line="482" column="36" selection-start-line="482" selection-start-column="33" selection-end-line="482" selection-end-column="36" />
+            <state relative-caret-position="170">
+              <caret line="522" column="43" selection-start-line="522" selection-start-column="37" selection-end-line="522" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#21440#21441#0" expanded="true" />
-                <element signature="e#21477#21478#0" expanded="true" />
-                <element signature="e#21607#21608#0" expanded="true" />
-                <element signature="e#21658#21659#0" expanded="true" />
-                <element signature="e#21758#21759#0" expanded="true" />
-                <element signature="e#21793#21794#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -74,26 +58,16 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/Parse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="321" column="20" selection-start-line="321" selection-start-column="13" selection-end-line="321" selection-end-column="20" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#9008#9009#0" expanded="true" />
-                <element signature="e#9078#9079#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
-          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="80">
-              <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="13" />
+              <caret line="319" column="29" selection-start-line="319" selection-start-column="17" selection-end-line="319" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1579002432239" expanded="true" signature="2703:2845" ph="..." />
-                <marker date="1579002432239" expanded="true" signature="2848:2863" ph="..." />
+                <element signature="e#8996#8997#0" expanded="true" />
+                <element signature="e#9066#9067#0" expanded="true" />
+                <element signature="e#12114#12115#0" expanded="true" />
+                <element signature="e#12150#12151#0" expanded="true" />
+                <element signature="e#12185#12186#0" expanded="true" />
+                <element signature="e#12222#12223#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -102,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="407" column="19" selection-start-line="407" selection-start-column="19" selection-end-line="407" selection-end-column="19" />
+            <state relative-caret-position="170">
+              <caret line="335" column="61" selection-start-line="335" selection-start-column="44" selection-end-line="335" selection-end-column="61" />
               <folding>
                 <element signature="e#10564#10565#0" expanded="true" />
                 <element signature="e#10606#10607#0" expanded="true" />
@@ -113,10 +87,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Classes/ReadQuery.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="100">
+              <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="36" />
+            <state relative-caret-position="400">
+              <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#526#527#0" expanded="true" />
@@ -129,8 +112,33 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="206" column="12" selection-start-line="206" selection-start-column="12" selection-end-line="206" selection-end-column="12" />
+            <state relative-caret-position="225">
+              <caret line="270" column="86" selection-start-line="270" selection-start-column="77" selection-end-line="270" selection-end-column="86" />
+              <folding>
+                <element signature="e#7924#7925#0" expanded="true" />
+                <element signature="e#7958#7959#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="161" column="117" selection-start-line="161" selection-start-column="117" selection-end-line="161" selection-end-column="117" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3571">
+              <caret line="191" column="55" selection-start-line="191" selection-start-column="55" selection-end-line="191" selection-end-column="55" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,8 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>stemFolder</find>
-      <find>reader</find>
       <find>writePosting</find>
       <find>case</find>
       <find>finalM</find>
@@ -171,12 +177,14 @@
       <find>removing reference.</find>
       <find>searcher</find>
       <find>removing reference</find>
-      <find>docEntities</find>
       <find>docTitle</find>
       <find>docTermsInfo</find>
-      <find>docI</find>
-      <find>doc</find>
       <find>lastInd</find>
+      <find>doc</find>
+      <find>docI</find>
+      <find>docEntities</find>
+      <find>toTableModelQuery</find>
+      <find>titles</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -220,11 +228,11 @@
         <option value="$PROJECT_DIR$/src/View/view.fxml" />
         <option value="$PROJECT_DIR$/src/View/MyViewController.java" />
         <option value="$PROJECT_DIR$/src/Classes/Indexer.java" />
-        <option value="$PROJECT_DIR$/src/Classes/Parse.java" />
         <option value="$PROJECT_DIR$/src/Model/MyModel.java" />
         <option value="$PROJECT_DIR$/src/Classes/main.java" />
-        <option value="$PROJECT_DIR$/src/Classes/Ranker.java" />
+        <option value="$PROJECT_DIR$/src/Classes/Parse.java" />
         <option value="$PROJECT_DIR$/src/Classes/Searcher.java" />
+        <option value="$PROJECT_DIR$/src/Classes/Ranker.java" />
       </list>
     </option>
   </component>
@@ -235,8 +243,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="726" />
+    <option name="y" value="30" />
     <option name="width" value="697" />
     <option name="height" value="734" />
   </component>
@@ -266,6 +274,11 @@
               <item name="ir2020" type="462c0819:PsiDirectoryNode" />
               <item name="out" type="462c0819:PsiDirectoryNode" />
               <item name="artifacts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ir2020" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ir2020" type="b2602c69:ProjectViewProjectNode" />
@@ -304,7 +317,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1579007924699" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1579032956826" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/commons-text-1.8.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -319,8 +332,8 @@
       <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\out\artifacts" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\src" />
       <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\resources" />
+      <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\src" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -426,14 +439,7 @@
       <workItem from="1578433139561" duration="102000" />
       <workItem from="1578473892449" duration="8000000" />
       <workItem from="1578561859294" duration="14806000" />
-      <workItem from="1578603093661" duration="93566000" />
-    </task>
-    <task id="LOCAL-00035" summary="-Gui updated&#10;-Indexer posting path updated">
-      <created>1576253375607</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1576253375607</updated>
+      <workItem from="1578603093661" duration="108817000" />
     </task>
     <task id="LOCAL-00036" summary="- gui bug(pathPosting) fixed">
       <created>1576256175424</created>
@@ -771,11 +777,18 @@
       <option name="project" value="LOCAL" />
       <updated>1578999532660</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="- V.1 -- Search - Final">
+      <created>1579007961787</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1579007961787</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="630863000" />
+    <option name="totallyTimeSpent" value="646114000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -790,7 +803,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.07186082" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15355521" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -799,8 +812,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.47108844" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6891074" weight="0.16836734" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.35544217" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6891074" visible="true" weight="0.2244898" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.2840136" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7512275" />
@@ -811,14 +824,14 @@
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49597314" weight="0.32569557" />
       <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.4614221" weight="0.32142857" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.24962178" />
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info anchor="right" id="Maven" order="6" weight="0.3298217" />
-      <window_info anchor="right" id="Database" order="7" weight="0.15973154" />
-      <window_info anchor="right" id="Ant Build" order="8" weight="0.24959481" />
+      <window_info anchor="right" id="Ant Build" order="7" weight="0.24959481" />
+      <window_info anchor="right" id="Database" order="8" weight="0.15960665" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -865,7 +878,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Ready V1.2" />
     <MESSAGE value="- Ready V1.3 - dictionary" />
     <MESSAGE value="- Ready V1.4 - Names 18.34 min" />
     <MESSAGE value="- Ready with gui complete and without duplicates in Indexer" />
@@ -890,7 +902,8 @@
     <MESSAGE value="- V.1 -- Searcher with Parse" />
     <MESSAGE value="- V.1 -- total -&gt; |D|" />
     <MESSAGE value="- V.1 -- total -&gt; |D| FIXED" />
-    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- total -&gt; |D| FIXED" />
+    <MESSAGE value="- V.1 -- Search - Final" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Search - Final" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -926,21 +939,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
-          <line>221</line>
+          <line>79</line>
           <properties />
-          <option name="timeStamp" value="216" />
+          <option name="timeStamp" value="255" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
+          <line>125</line>
+          <properties />
+          <option name="timeStamp" value="258" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
+          <line>158</line>
+          <properties />
+          <option name="timeStamp" value="260" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
-          <line>58</line>
+          <line>40</line>
           <properties />
-          <option name="timeStamp" value="251" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
-          <line>86</line>
-          <properties />
-          <option name="timeStamp" value="253" />
+          <option name="timeStamp" value="261" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -949,10 +968,10 @@
         <watch expression="query" />
         <watch expression=" parse.getMapTerms()" />
         <watch expression="term" />
-        <watch expression="termLine" />
-        <watch expression="termInfo" />
-        <watch expression="termPostingLine" />
-        <watch expression="termInfoInMap" />
+        <watch expression="synonyms.get(term)" />
+        <watch expression="score + IDF * (numerator / denominator)" />
+        <watch expression="score + IDF * (numerator / denominator)*synonyms.get(term)" />
+        <watch expression="docTermInfo.keySet()" />
       </configuration>
     </watches-manager>
   </component>
@@ -1067,6 +1086,11 @@
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
+        <expression-string>parse.getMapTerms()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>docTermsInfo.get(doc)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
@@ -1103,11 +1127,6 @@
       </expression>
       <expression>
         <expression-string>docEntities.get(docId)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>docId</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -1187,13 +1206,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/View/IView.java" />
     <entry file="file://$PROJECT_DIR$/src/View/view.css" />
-    <entry file="file://$PROJECT_DIR$/src/Classes/ReadQuery.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="62" selection-start-line="4" selection-start-column="62" selection-end-line="4" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/IModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
@@ -1230,28 +1242,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="206" column="12" selection-start-line="206" selection-start-column="12" selection-end-line="206" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="407" column="19" selection-start-line="407" selection-start-column="19" selection-end-line="407" selection-end-column="19" />
-          <folding>
-            <element signature="e#10564#10565#0" expanded="true" />
-            <element signature="e#10606#10607#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="36" />
+        <state relative-caret-position="400">
+          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#526#527#0" expanded="true" />
@@ -1262,51 +1256,82 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Parse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="321" column="20" selection-start-line="321" selection-start-column="13" selection-end-line="321" selection-end-column="20" />
+        <state relative-caret-position="80">
+          <caret line="319" column="29" selection-start-line="319" selection-start-column="17" selection-end-line="319" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9008#9009#0" expanded="true" />
-            <element signature="e#9078#9079#0" expanded="true" />
+            <element signature="e#8996#8997#0" expanded="true" />
+            <element signature="e#9066#9067#0" expanded="true" />
+            <element signature="e#12114#12115#0" expanded="true" />
+            <element signature="e#12150#12151#0" expanded="true" />
+            <element signature="e#12185#12186#0" expanded="true" />
+            <element signature="e#12222#12223#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Indexer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-40">
-          <caret line="482" column="36" selection-start-line="482" selection-start-column="33" selection-end-line="482" selection-end-column="36" />
+        <state relative-caret-position="170">
+          <caret line="522" column="43" selection-start-line="522" selection-start-column="37" selection-end-line="522" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#21440#21441#0" expanded="true" />
-            <element signature="e#21477#21478#0" expanded="true" />
-            <element signature="e#21607#21608#0" expanded="true" />
-            <element signature="e#21658#21659#0" expanded="true" />
-            <element signature="e#21758#21759#0" expanded="true" />
-            <element signature="e#21793#21794#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
+    <entry file="file://$PROJECT_DIR$/src/Model/MyModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="225">
+          <caret line="270" column="86" selection-start-line="270" selection-start-column="77" selection-end-line="270" selection-end-column="86" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1579002432239" expanded="true" signature="2703:2845" ph="..." />
-            <marker date="1579002432239" expanded="true" signature="2848:2863" ph="..." />
+            <element signature="e#7924#7925#0" expanded="true" />
+            <element signature="e#7958#7959#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/View/MyViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="335" column="61" selection-start-line="335" selection-start-column="44" selection-end-line="335" selection-end-column="61" />
+          <folding>
+            <element signature="e#10564#10565#0" expanded="true" />
+            <element signature="e#10606#10607#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/ReadQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="204" column="51" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
+        <state relative-caret-position="252">
+          <caret line="161" column="117" selection-start-line="161" selection-start-column="117" selection-end-line="161" selection-end-column="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/word2vec.c.output.model.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/out/artifacts/medallia-word2vec-0.10.2-jar-with-dependencies.jar!/com/medallia/word2vec/Searcher.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3571">
+          <caret line="191" column="55" selection-start-line="191" selection-start-column="55" selection-end-line="191" selection-end-column="55" />
           <folding>
-            <element signature="e#16757#16758#0" expanded="true" />
-            <element signature="e#16807#16808#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
