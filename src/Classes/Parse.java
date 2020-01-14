@@ -245,10 +245,7 @@ public class Parse {
      * @return true/false
      */
     private boolean isStopWord(String token) {
-        if (this.setStopWords.contains(token.toLowerCase())) {
-            return true;
-        }
-        return false;
+        return this.setStopWords.contains(token.toLowerCase());
     }
 
     /**
@@ -552,7 +549,7 @@ public class Parse {
         while (matcherName.find()) {
             String name = matcherName.group();
             name =  Pattern.compile("[:-]", reOptions).matcher(name).replaceAll(" ");
-            name = Pattern.compile("[,.;)?!}\\]\"'*]", reOptions).matcher(name).replaceAll("");
+            name = Pattern.compile("[,.;)?!}\\]\"'*|]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
             if(stem && name.contains(" ")){
@@ -742,6 +739,10 @@ public class Parse {
         if(term.contains("- ")) {
             Pattern cleanSpace = Pattern.compile("-\\s+");
             term = cleanSpace.matcher(term).replaceAll("-");
+        }
+        if(term.contains("-$")) {
+            Pattern cleanSpace = Pattern.compile("-");
+            term = cleanSpace.matcher(term).replaceAll("");
         }
         if(term.contains("$$")){
             Pattern cleanDollar = Pattern.compile("\\${2,}");

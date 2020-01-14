@@ -4,13 +4,9 @@ import Model.MyModel;
 import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class Ranker {
 
@@ -45,49 +41,78 @@ public class Ranker {
             // total |D|, df, tf, term
             String [] termsInfo = docTermInfo.get(docId).split(" ");
 
-
+            double cosSim = 0;
             double score = 0;
             double IDF;
             double numerator;
             double denominator;
-            int tfi;
+            int tfi =1;
             int dfi;
             int total; // |D|
 
-            for(int i = 0; i <termsInfo.length - 3; i = i + 4){
+            for(int i = 1; i <termsInfo.length - 3; i = i + 4){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
                 int relevantNum = 1;
                 int notRelevantNum = 1;
                 total = Integer.parseInt(termsInfo[i]);
                 dfi = Integer.parseInt(termsInfo[i + 1]);
-                tfi = Integer.parseInt(termsInfo[i + 2]);
+                try{
+                    tfi = Integer.parseInt(termsInfo[i + 2]);
+
+                }catch (Exception e){
+                    System.out.println("xxxx");
+                }
                 String term = termsInfo[i + 3].toLowerCase();
-                int number =  valueUpBy(docTitles, docId, termsInfo[i + 3]);
-                //System.out.println(number);
+
+                //TODO: Entities ????????????????
+                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 3]);
+
+                //TODO: Title ????????????????
+                if(!docTitles.isEmpty()) {
+                    String[] title = docTitles.get(docId).split(",");
+                    for (String termT : title) {
+                        if (termT.equalsIgnoreCase(term)) {
+
+                        }
+                    }
+                }
+                //Normalization of tfi by maxTf = termsInfo[i+4]
+//                int maxTf = Integer.parseInt(termsInfo[0]);
+//                if(maxTf > 0){
+//                    tfi = tfi / maxTf;
+//                }
+//                if(total > 0){
+//                    tfi = tfi / total;
+//                }
                 //log(N/dfi)
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
 
                 numerator =  tfi * (this.k1 + 1);
                 denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
-
-                if(relevant.contains(term)){
-                    relevantNum *= 2;
-                }
-                if(notRelevant.contains(term)){
-                    notRelevantNum /= 2;
-                }
-                //TODO: change formula
-//               score = score + IDF * (numerator / denominator) * relevantNum * notRelevantNum;
-//                score = score + IDF *(numerator / denominator) + number;
-                score = score + IDF *(numerator / denominator);
+                cosSim = cosSim + cosinSimilarity(tfi, 1, total, Integer.parseInt(termsInfo[0])); ///??????????????????/
+                score = score + IDF * (numerator / denominator);
             }
+//            score = (score*6 + cosSim*4)/10;
             bm25Result.put(docId, String.valueOf(score));
 
         }
         return bm25Result;
     }
 
+    /**
+     *
+     * @param dj = tf
+     * @param q = how many times the term shown in the query
+     * @param D = number of words in doc
+     * @param Q = number of words in query
+     * @return
+     */
+    private double cosinSimilarity(int dj, int q, int D, int Q){
+        double numerator =  (dj*q);
+        double denominator =(Math.sqrt(Math.pow(D,2)*Math.pow(Q,2)));
+        return numerator / denominator;
+    }
     private int[] checkRelevantInDoc(Set<String> relevant, Set<String> notRelevant, int docId) {
         int relevantNum = 1;
         int notRelevantNum = 1;
@@ -117,14 +142,14 @@ public class Ranker {
      */
 
     public int valueUpBy(Map<String, String> docEntities, String docId, String term){
-        int value = 0;
+        int value = 1;
         if(docEntities.get(docId) == null){
             return value;
         }
         String[] entities = docEntities.get(docId).split(",");
         for(int i = 0 ; i < entities.length; i++){
             if(entities[i].equalsIgnoreCase(term)){
-                value = value + 2;
+                value = value * 2;
             }
         }
 
