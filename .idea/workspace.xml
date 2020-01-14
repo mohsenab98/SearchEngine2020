@@ -8,11 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ir2020.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Ranker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Ranker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/MyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MyModel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,11 +40,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="172" selection-start-line="172" selection-end-line="172" />
+            <state relative-caret-position="2620">
+              <caret line="175" selection-start-line="175" selection-end-line="175" />
               <folding>
                 <element signature="e#15415#15416#0" expanded="true" />
                 <element signature="e#15455#15456#0" expanded="true" />
@@ -88,15 +85,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="65">
-              <caret line="60" column="50" selection-start-line="60" selection-start-column="43" selection-end-line="60" selection-end-column="50" />
+            <state relative-caret-position="140">
+              <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1578997091409" expanded="true" signature="2703:2845" ph="..." />
-                <marker date="1578997091409" expanded="true" signature="2848:2939" ph="..." />
+                <marker date="1578999325385" expanded="true" signature="2700:2842" ph="..." />
+                <marker date="1578999325385" expanded="true" signature="2845:2860" ph="..." />
               </folding>
             </state>
           </provider>
@@ -150,7 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>postIdCounter++</find>
       <find>stemFolder</find>
       <find>reader</find>
       <find>writePosting</find>
@@ -180,6 +176,7 @@
       <find>docTermsInfo</find>
       <find>docI</find>
       <find>doc</find>
+      <find>lastInd</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -307,7 +304,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578997932228" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578999335249" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/commons-text-1.8.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -429,14 +426,7 @@
       <workItem from="1578433139561" duration="102000" />
       <workItem from="1578473892449" duration="8000000" />
       <workItem from="1578561859294" duration="14806000" />
-      <workItem from="1578603093661" duration="83710000" />
-    </task>
-    <task id="LOCAL-00033" summary="-Gui">
-      <created>1576185484056</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1576185484057</updated>
+      <workItem from="1578603093661" duration="85229000" />
     </task>
     <task id="LOCAL-00034" summary="-Gui updated&#10;-Indexer posting path updated">
       <created>1576249328557</created>
@@ -774,11 +764,18 @@
       <option name="project" value="LOCAL" />
       <updated>1578927992789</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="- V.1 -- total -&gt; |D|">
+      <created>1578997962127</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1578997962127</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="621007000" />
+    <option name="totallyTimeSpent" value="622526000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -802,8 +799,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.19967267" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6891074" weight="0.34013605" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" visible="true" weight="0.35034013" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6891074" visible="true" weight="0.34013605" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.72919816" weight="0.48979592" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7512275" />
@@ -868,7 +865,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Ready V1" />
     <MESSAGE value="- Ready V1.1" />
     <MESSAGE value="- Ready V1.2" />
     <MESSAGE value="- Ready V1.3 - dictionary" />
@@ -893,7 +889,8 @@
     <MESSAGE value="- V.1 -- READY (Need to improve performance)" />
     <MESSAGE value="- V.1 -- Entities func add to BM25" />
     <MESSAGE value="- V.1 -- Searcher with Parse" />
-    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- Searcher with Parse" />
+    <MESSAGE value="- V.1 -- total -&gt; |D|" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V.1 -- total -&gt; |D|" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -929,22 +926,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
-          <line>220</line>
+          <line>221</line>
           <properties />
           <option name="timeStamp" value="216" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Classes/Ranker.java</url>
-          <line>63</line>
+          <line>58</line>
           <properties />
-          <option name="timeStamp" value="242" />
+          <option name="timeStamp" value="251" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="doc.equals(&quot;276618&quot;)" language="JAVA" />
           <url>file://$PROJECT_DIR$/src/Classes/Searcher.java</url>
           <line>173</line>
           <properties />
-          <option name="timeStamp" value="245" />
+          <option name="timeStamp" value="252" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1292,25 +1288,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
+    <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="60" column="50" selection-start-line="60" selection-start-column="43" selection-end-line="60" selection-end-column="50" />
+        <state relative-caret-position="2620">
+          <caret line="175" selection-start-line="175" selection-end-line="175" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1578997091409" expanded="true" signature="2703:2845" ph="..." />
-            <marker date="1578997091409" expanded="true" signature="2848:2939" ph="..." />
+            <element signature="e#15415#15416#0" expanded="true" />
+            <element signature="e#15455#15456#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Classes/Searcher.java">
+    <entry file="file://$PROJECT_DIR$/src/Classes/Ranker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="172" selection-start-line="172" selection-end-line="172" />
+        <state relative-caret-position="140">
+          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
           <folding>
-            <element signature="e#15415#15416#0" expanded="true" />
-            <element signature="e#15455#15456#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <marker date="1578999325385" expanded="true" signature="2700:2842" ph="..." />
+            <marker date="1578999325385" expanded="true" signature="2845:2860" ph="..." />
           </folding>
         </state>
       </provider>

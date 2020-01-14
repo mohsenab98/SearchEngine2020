@@ -171,7 +171,7 @@ public class Searcher {
         // get line with entities for a doc
         for( String line : (Iterable<String>) lines::iterator ) {
             String doc = line.substring(0, line.indexOf("|"));
-            String D = line.substring(line.indexOf(",")+1, line.indexOf(";"));
+            String D = line.substring(line.lastIndexOf(",")+1, line.indexOf(";"));
             // check if doc from the posting in map of entities: not => see next doc
             if (!docTermsInfo.containsKey(doc)) {
                 continue;

@@ -19,8 +19,8 @@ public class Ranker {
     public Ranker(int n, int avgdl, String rawNarrative) {
         N = n;
         this.avgdl = avgdl;
-        this.k1 = 0.1;
-        this.b = 0.9;
+        this.k1 = 1.5;
+        this.b = 0.7;
         this.rawNarrative = rawNarrative;
     }
 
@@ -50,23 +50,23 @@ public class Ranker {
             int dfi;
             int total; // |D|
 
-            for(int i = 1; i <termsInfo.length - 3; i = i + 4){
+            for(int i = 2; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
                 int relevantNum = 1;
                 int notRelevantNum = 1;
-                total = Integer.parseInt(termsInfo[i]);
-                dfi = Integer.parseInt(termsInfo[i + 1]);
+                total = Integer.parseInt(termsInfo[1]);
+                dfi = Integer.parseInt(termsInfo[i]);
                 try{
-                    tfi = Integer.parseInt(termsInfo[i + 2]);
+                    tfi = Integer.parseInt(termsInfo[i + 1]);
 
                 }catch (Exception e){
                     System.out.println("xxxx");
                 }
-                String term = termsInfo[i + 3].toLowerCase();
+                String term = termsInfo[i + 2].toLowerCase();
 
                 //TODO: Entities ????????????????
-                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 3]);
+                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
 
                 //TODO: Title ????????????????
                 if(!docTitles.isEmpty()) {
@@ -78,6 +78,7 @@ public class Ranker {
                     }
                 }
                 //Normalization of tfi by maxTf = termsInfo[i+4]
+
 //                int maxTf = Integer.parseInt(termsInfo[0]);
 //                if(maxTf > 0){
 //                    tfi = tfi / maxTf;
