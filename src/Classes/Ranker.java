@@ -47,7 +47,6 @@ public class Ranker {
             int dfi;
             int total; // |D|
             int entitiesNum = 0;
-
             for(int i = 2; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
@@ -56,17 +55,22 @@ public class Ranker {
                 total = Integer.parseInt(termsInfo[1]);
                 dfi = Integer.parseInt(termsInfo[i]);
                 tfi = Integer.parseInt(termsInfo[i + 1]);
+
+
                 String term = termsInfo[i + 2].toLowerCase();
+                if(MyModel.mapDictionary.containsKey(term.toUpperCase())){
+                    entitiesNum = 100;
+                }
 
                 //TODO: Entities ????????????????
-               // entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
+//                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
 
                 //TODO: Title ????????????????
                 if(!docTitles.isEmpty()) {
                     String[] title = docTitles.get(docId).split(",");
                     for (String termT : title) {
                         if (termT.equalsIgnoreCase(term)) {
-                            tfi += 2;
+
                         }
                     }
                 }
@@ -81,7 +85,7 @@ public class Ranker {
                     score = score + IDF * (numerator / denominator);
                 }
             }
-            bm25Result.put(docId, String.valueOf(score));
+            bm25Result.put(docId, String.valueOf(score+entitiesNum));
 
         }
         return bm25Result;
@@ -176,7 +180,7 @@ public class Ranker {
         try {
             Word2VecModel vecModel = Word2VecModel.fromBinFile(new File("resources/corpusVector150K.bin"));
             Searcher searcher = vecModel.forSearch();
-            List<Searcher.Match> matches = searcher.getMatches(term.toLowerCase(), 10);
+            List<Searcher.Match> matches = searcher.getMatches(term.toLowerCase(), 2);
 
             int synonymCounter = 0;
             for (Searcher.Match match : matches){

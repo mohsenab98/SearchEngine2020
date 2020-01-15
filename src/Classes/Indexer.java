@@ -523,7 +523,7 @@ public class Indexer {
      *    add title to posting file "Titles": [docName|title(lower case)]
      */
     public void addTitle(String title) {
-        this.titles.append(docIDCounter).append("|").append(title.trim()).append("\n");
+        this.titles.append(docIDCounter - 1).append("|").append(title.trim()).append("\n");
     }
 
     /**
