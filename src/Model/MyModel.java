@@ -3,6 +3,7 @@ package Model;
 import Classes.Indexer;
 import Classes.Parse;
 import Classes.ReadFile;
+import Classes.Searcher;
 import javafx.scene.control.TextField;
 import java.io.*;
 import java.nio.file.Files;
@@ -20,10 +21,12 @@ public class MyModel extends Observable implements IModel {
     /**
      * map to load the posting of the dictionary
      */
-    private Map<String,String> mapDictionary ;
+    public static Map<String,String> mapDictionary; // central dictionary of the Search Engine
+    public static Map<String, String> docEntities; // collect entities from all relevant docs
 
     public MyModel() {
-        this.mapDictionary = new LinkedHashMap<>();
+        mapDictionary = new LinkedHashMap<>();
+        docEntities = new LinkedHashMap<>();
     }
 
     /**
@@ -36,14 +39,16 @@ public class MyModel extends Observable implements IModel {
         try {
             reader = new BufferedReader( new FileReader( file ));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            return;
         }
         String line = null;
         while(true){
             try {
                 if (!((line = reader.readLine()) != null)) break;
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();\
+                return;
             }
             String[] arr = line.split( "\\|" );
             mapDictionary.put( arr[0], arr[1] );
@@ -113,26 +118,36 @@ public class MyModel extends Observable implements IModel {
         Indexer indexer = new Indexer(pathPosting, stem);
         indexer.setDocIDCounter(0);
         while (!readFile.getListAllDocs().isEmpty()) {
+            String title = "";
             String fullText = "";
             String docName = "";
+
+
+            Pattern patternTitle = Pattern.compile("(?:<TI>\\s*.+?\\s*</TI>)|(<HEADLINE>.+?</HEADLINE>)" , Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            Matcher matcherTitle = patternTitle.matcher(new String(readFile.getListAllDocs().get(0)));
+            while (matcherTitle.find()) {
+                title = matcherTitle.group().replaceAll("</?\\w+>", " ").replaceAll("\\s+", " ");
+            }
+            // doc num, title and full text regex
             Pattern patternText = Pattern.compile("<DOCNO>\\s*([^<]+)\\s*</DOCNO>.+?<TEXT>(.+?)</TEXT>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             Matcher matcherText = patternText.matcher(new String(readFile.getListAllDocs().get(0)));
             while (matcherText.find()) {
-                docName = matcherText.group(1);
+                docName = matcherText.group(1).trim();
                 fullText = matcherText.group(2);
             }
-
             parse.Parser(fullText, docName);
+
             indexer.addTermToIndexer(parse.getMapTerms(), parse.getDocInfo());
+            indexer.addTitle(title); // add title to posting file "Titles": [docName|title]
 
             readFile.getListAllDocs().remove(0);
             parse.cleanParse();
-
         }
 
-        indexer.reset(); // check if there is stell terms in the sorted map
+        indexer.reset(); // check if there is still terms in the sorted map
         int fileCounterName = indexer.merge(); //merge the temp sorted files 2 big files
         indexer.finalMerge(fileCounterName); // merge 2 final posting files to A-Z posting files
+        indexer.writeStopWordsToPosting(parse.getStopWords()); // write stop words to the posting
         termNumbers = indexer.getDictionarySize();
         double endTime = System.nanoTime();
         double totalTime = (endTime - startTime) / 1000000000;
@@ -161,5 +176,110 @@ public class MyModel extends Observable implements IModel {
     @Override
     public int getNumberOfTerms() {
         return termNumbers;
+    }
+
+
+    //////////////////////////2nd Part ///////////////////////////////
+
+    /**
+     * get path of stopWords file inside the posting path
+     * @param path
+     * @param isStem
+     * @return
+     */
+    private String getPathOfStopWords(String path, boolean isStem){
+        if(isStem){
+            path = path + "/stem";
+        }else{
+            path = path +"/noStem";
+        }
+        String pathStopWords;
+    File f = new File(path);
+    File[] matchingFiles = f.listFiles((dir, name) -> name.toLowerCase().contains("stop") && name.toLowerCase().contains("words"));
+    if(matchingFiles != null && matchingFiles.length > 0){
+        pathStopWords = matchingFiles[0].getPath();
+    }
+    else {
+        pathStopWords = path + "/05 stop_words.txt";
+    }
+    return pathStopWords;
+}
+
+    @Override
+    public Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic, String posting) {
+        Map<String, Map<String, String>> result = new HashMap<>();
+        if(textQuery.contains("<title>")){
+            return findQueryData(textQuery, stem, semantic, posting, true);
+        }
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "100", getPathOfStopWords(posting, stem));
+        result.put("100", searcher.search()); // <query Number, <DocName, Rank>>
+        docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
+        return result; // return map <docId , rank >
+    }
+
+    @Override
+    public Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String posting) {
+        String textQuery = readAllBytesJava(text);
+        return findQueryData(textQuery, stem, semantic, posting, false);
+    }
+
+
+    public static Map<String, String> getDocEntities() {
+        return docEntities;
+    }
+
+    private Map<String, Map<String, String>> findQueryData(String textQuery, boolean stem, boolean semantic, String posting, boolean isAlone){
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
+        String num = ""; // query Num
+        String title = ""; // query
+        Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
+        Matcher matcherTOP = patternTOP.matcher(textQuery);
+        // foreach query
+        while (matcherTOP.find() || isAlone){
+            String query;
+            //checks if there is no top tag
+            if(!isAlone) {
+                query = matcherTOP.group(1);
+            }
+            else{
+                query = textQuery;
+                isAlone = false;
+            }
+
+            Pattern patternNUM = Pattern.compile("<num>\\s*Number:\\s*([^<]+?)\\s*<");
+            Matcher matcherNUM = patternNUM.matcher(query);
+            while (matcherNUM.find()){
+                num = matcherNUM.group(1);
+            }
+
+            Pattern patternTitle = Pattern.compile("<title>\\s*([^<]+?)\\s*<");
+            Matcher matcherTitle = patternTitle.matcher(query);
+            while (matcherTitle.find()){
+                title = matcherTitle.group(1);
+            }
+
+
+            Searcher searcher = new Searcher(title, posting, stem, semantic, num, getPathOfStopWords(posting, stem));
+            // <query Number, <DocName, Rank>>
+            result.put(num, searcher.search());
+            // entities of all docs: <doc name, 5 dominating entities>
+            docEntities.putAll(searcher.getEntities());
+        }
+
+        return result;
+    }
+
+    private static String readAllBytesJava(String filePath)
+    {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return content;
     }
 }

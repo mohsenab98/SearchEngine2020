@@ -5,9 +5,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static java.util.stream.Collectors.toMap;
 
 public class Parse {
-    //private ExecutorService threadPool = Executors.newCachedThreadPool();
     private boolean stem; // flag to use stemming
     private Stemmer stemmer;
     private int counterMaxTf = 0; // counter for max frequency term in a doc
@@ -21,14 +21,25 @@ public class Parse {
     /**
      * dictionary with a-z sorted keys:
      *          Key: all original terms in a doc
-     *          Value: list of properties of a doc
+     *          Value: TF in the doc
      */
-    private SortedMap<String, String> mapTerms;
+    private Map<String, String> mapTerms;
+
+    /**
+     * dictionary with entities of the document:
+     *          Key: TF
+     *          Value: Entity
+     */
+    private Map<String, Integer> mapDocEntities;
     /**
      * the list of the properties of a doc
      */
     private ArrayList<String> docInfo;
 
+    /**
+     * String of stop words
+     */
+    String stopWords;
     /**
      *  words to numbers
      */
@@ -40,6 +51,7 @@ public class Parse {
         this.stem = stem;
         this.stemmer = new Stemmer();
         this.mapTerms = new TreeMap<>();
+        this.mapDocEntities = new TreeMap<>();
         this.docInfo = new ArrayList<>();
         listNumbersAsWords = Arrays.asList
                 (
@@ -53,7 +65,7 @@ public class Parse {
         setNumbersAsWords = new HashSet<>(listNumbersAsWords);
         // charge stop words from file on hard disk to set in RAM
         try {
-            String stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
+            this.stopWords = new String(Files.readAllBytes(Paths.get(stopWordsPath)));
             this.setStopWords = stringToSetOfString(stopWords);
             // for words to numbers law
             this.setStopWords.removeAll(setNumbersAsWords);
@@ -68,6 +80,7 @@ public class Parse {
      * @param fullText - text for parse, name of doc of text
      */
     public void Parser(String fullText, String docName) {
+        fullText = fullText + " ";
         this.docInfo.add(docName); // add doc's name in property-doc-list
         this.counterMaxTf = 0;
         this.termMaxTf = "";
@@ -111,11 +124,10 @@ public class Parse {
         tokenFormat(tokensFullText); // dates, numbers, %, price, +2 ours laws
         searchNames(fullText); // Entity/Names law
 
-        // add properties to property-doc-list
-        this.docInfo.add(this.termMaxTf);
-        this.docInfo.add(String.valueOf(this.counterMaxTf));
-        this.docInfo.add(String.valueOf(this.mapTerms.size()));
+        addInfoToDoc();// add term tf, maxTf, amount of terms, 5 common entities to doc
+
     }
+
 
     /**
      * laws: format tokens to defined templates
@@ -234,10 +246,7 @@ public class Parse {
      * @return true/false
      */
     private boolean isStopWord(String token) {
-        if (this.setStopWords.contains(token.toLowerCase())) {
-            return true;
-        }
-        return false;
+        return this.setStopWords.contains(token.toLowerCase());
     }
 
     /**
@@ -298,6 +307,35 @@ public class Parse {
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
+
+        // put entity to entity dictionary
+        if(Character.isUpperCase(term.charAt(0))){
+            this.mapDocEntities.put(term, counter);
+        }
+    }
+
+    /**
+     * add term tf, maxTf, amount of terms, 5 common entities to doc
+     */
+    private void addInfoToDoc() {
+        this.docInfo.add(this.termMaxTf); // term tf
+        this.docInfo.add(String.valueOf(this.counterMaxTf)); // maxTf
+        this.docInfo.add(String.valueOf(this.mapTerms.size())); // amount of terms
+
+
+        //  entities to doc
+        Map<String, Integer> sortedEntities = this.mapDocEntities
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
+        Set<String> setEntity = sortedEntities.keySet();
+
+        this.docInfo.addAll(setEntity);
+
     }
 
     /**
@@ -306,6 +344,10 @@ public class Parse {
      */
     public Map<String, String> getMapTerms(){
         return this.mapTerms;
+    }
+
+    public String getStopWords(){
+        return this.stopWords;
     }
 
     /**
@@ -326,6 +368,7 @@ public class Parse {
      */
     public void cleanParse(){
         this.mapTerms = new TreeMap<>();
+        this.mapDocEntities = new TreeMap<>();
         this.docInfo = new ArrayList<>();
     }
 
@@ -510,7 +553,8 @@ public class Parse {
         Matcher matcherName = patternName.matcher(fullText);
         while (matcherName.find()) {
             String name = matcherName.group();
-            name = Pattern.compile("[,.:;)-?!}\\]\"\'*]", reOptions).matcher(name).replaceAll("");
+            name =  Pattern.compile("[:-]", reOptions).matcher(name).replaceAll(" ");
+            name = Pattern.compile("[,.;)?!}\\]\"'*|]", reOptions).matcher(name).replaceAll("");
             name = Pattern.compile("\n|\\s+", reOptions).matcher(name).replaceAll(" ").trim();
 
             if(stem && name.contains(" ")){
@@ -700,6 +744,10 @@ public class Parse {
         if(term.contains("- ")) {
             Pattern cleanSpace = Pattern.compile("-\\s+");
             term = cleanSpace.matcher(term).replaceAll("-");
+        }
+        if(term.contains("-$")) {
+            Pattern cleanSpace = Pattern.compile("-");
+            term = cleanSpace.matcher(term).replaceAll("");
         }
         if(term.contains("$$")){
             Pattern cleanDollar = Pattern.compile("\\${2,}");

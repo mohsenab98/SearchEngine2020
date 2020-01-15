@@ -17,11 +17,17 @@ public class Indexer {
      * will Save the terms of the index and will save a pointer to the match posting file
      */
     private Map<String, String> mapDictionary;
+
     /**
      * will save the term and its info for each doc in a sorted map (A-Z) list[0] = DocID (according to the mapDocID)
      * list[1] = tf . list[2] = delimiter
      */
     private SortedMap<String, ArrayList<String>> mapSortedTerms ;
+
+    /**
+     * save titles of docs to string builder: [docName|title]
+     */
+    private StringBuilder titles;
 
     private String pathPosting;
     /**
@@ -46,6 +52,7 @@ public class Indexer {
     private static int docIDCounter = 0; // id of docs
     private static int postIdCounter = 0; // name to temp posting file
     private static int sizeDictionary = 0; // size of dictionary
+    private static int sumdl = 0;
     private boolean isUpperLowerAction = false; // if was upper/lower action
 
     public Indexer(String pathPosting, boolean isStem) {
@@ -54,7 +61,8 @@ public class Indexer {
         postIdCounter = 0;
         this.mapDictionary = new LinkedHashMap<>();
         this.pathPosting = pathPosting;
-        this.mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
+        this.mapSortedTerms = new TreeMap<>(this::compare);
+        this.titles = new StringBuilder();
         this.isStem = isStem;
         this.mapDocID = new LinkedHashMap<>();
         postingFilesCreate(pathPosting);
@@ -76,7 +84,7 @@ public class Indexer {
             if (this.mapSortedTerms.containsKey(key)) {
 
                 //chain the new list of term to the original one
-                String info = new StringBuilder().append(docIDCounter).append(":").append(termDoc.get(key)).append(";").toString();
+                String info = docIDCounter + ":" + termDoc.get(key) + ";";
                 ArrayList<String> originalList = mapSortedTerms.get(key);
                 if (!originalList.get(0).substring(0, originalList.get(0).indexOf(":")).equals(String.valueOf(docIDCounter))) {
                     String originalInfo = originalList.get(0) + info;
@@ -108,7 +116,7 @@ public class Indexer {
      */
     public void reset(){
         //mapSortedTerms  ---- save to temp posting & clear
-        SortedMap<String, String> terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
+        SortedMap<String, String> terms = new TreeMap<>(this::compare);
         for(String term : mapSortedTerms.keySet()){
             ArrayList<String> listInfo = mapSortedTerms.get(term);
             String info= listInfo.get(0);
@@ -116,11 +124,21 @@ public class Indexer {
         }
 
         writePosting(terms);
-        mapSortedTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
+        mapSortedTerms = new TreeMap<>(this::compare);
 
+        // save entities to Entities file
+        saveEntitiesInfo();
         // save to DOC file
         saveDocInfo();
+        // save titles to Titles file
+        saveTitle();
     }
+
+    private void saveTitle() {
+        usingBufferedWritter(this.titles.toString(), "Titles");
+        this.titles = new StringBuilder();
+    }
+
 
     /**
      * Creating two folders(with/without stemming) and in each folder we creat the posting files of the index
@@ -135,7 +153,6 @@ public class Indexer {
             try {
                 fileDocStem.createNewFile();
                 fileDocNoStem.createNewFile();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -180,7 +197,7 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
-        String fileUrl = new StringBuilder().append(this.pathPosting).append("/").append(stemFolder).append("/").append(filename).toString();
+        String fileUrl = this.pathPosting + "/" + stemFolder + "/" + filename;
         BufferedWriter writer;
         try {
             writer = new BufferedWriter(
@@ -217,9 +234,9 @@ public class Indexer {
 
         // for each temp posting file in the directory
         int numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
-        for( fileCounterName = 0; numberOfposting - 1 > 2 ; fileCounterName++){
+        for( fileCounterName = 0; numberOfposting - 1 > 4 ; fileCounterName++){
             fileUrl1 = filePath1  + fileCounterName;
-            fileUrl2 = filePath2 + (fileCounterName+1);
+            fileUrl2 = filePath2 + (fileCounterName + 1);
             SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
             Path path1 = Paths.get(fileUrl1);
             Path path2 = Paths.get(fileUrl2);
@@ -258,7 +275,7 @@ public class Indexer {
             // write merged terms on hard disk
             writePosting(terms);
             numberOfposting++;
-            terms = new TreeMap<>((o1, o2) -> compare(o1, o2));
+            terms = new TreeMap<>(this::compare);
             fileCounterName++; // two files each time
 //            numberOfposting = new File(this.pathPosting + "/" + stemFolder).listFiles().length;
         }
@@ -278,6 +295,8 @@ public class Indexer {
             stemFolder = "noStem";
         }
 
+
+        usingBufferedWritter(docIDCounter + "\n" + sumdl/docIDCounter, "BM25Info");
         SortedMap<String, String> rawTerms = new TreeMap<>((o1, o2) -> compare(o1, o2));
         Path path1 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName));
         Path path2 = Paths.get(this.pathPosting + "/" + stemFolder + "/" + (intFileName + 1));
@@ -287,7 +306,7 @@ public class Indexer {
 
         try
         {
-     //////////////////////  merge numbers  ////////////////////////////
+            //////////////////////  merge numbers  ////////////////////////////
             Stream<String> linesFile1Numbers = Files.lines( path1, StandardCharsets.US_ASCII );
             Stream<String> linesFile2Numbers = Files.lines( path2, StandardCharsets.US_ASCII );
 
@@ -305,7 +324,7 @@ public class Indexer {
             linesFile2Numbers.close();
             usingBufferedWritter(toFileNumbers, "Numbers");
             termToDictionary(termsNumbers); // add terms to the dictionary and write them to the hard disk
-    //////////////////////  merge a-z, lower and upper cases law  ////////////////////////////
+            //////////////////////  merge a-z, lower and upper cases law  ////////////////////////////
             for(int i = 'a'; i <= 'z'; i++) {
                 Stream<String> linesFile1AZ = Files.lines( path1, StandardCharsets.US_ASCII );
                 Stream<String> linesFile2AZ = Files.lines( path2, StandardCharsets.US_ASCII );
@@ -321,7 +340,7 @@ public class Indexer {
                 // help-function to merge terms after reading them from hard disk
                 SortedMap<String, String> termsAB = finaleMergeTermsFromTwoFilesToMap(rawTerms, listLinesFile1AZ, listLinesFile2AZ);
 
-     ////////////////////// Names: check if a name in 2 or more docs ////////////////////////////
+                ////////////////////// Names: check if a name in 2 or more docs ////////////////////////////
                 // the iterator avoids: Exception in thread "JavaFX Application Thread" java.util.ConcurrentModificationException
                 for(Iterator<Map.Entry<String, String>> it = termsAB.entrySet().iterator(); it.hasNext(); ) {
                     Map.Entry<String, String> entry = it.next();
@@ -436,8 +455,6 @@ public class Indexer {
                 data += rawTerms.get(term.toLowerCase());
             }
 
-            // data = mergeData(data); // merging info of the term
-
             term = term.toLowerCase();
             rawTerms.put(term, data);
             rawTerms.remove(term.toUpperCase());
@@ -450,7 +467,6 @@ public class Indexer {
             if(rawTerms.get(term.toUpperCase()) != null) {
                 data += rawTerms.get(term.toUpperCase());
             }
-            // data = mergeData(data); // merging info of the term
 
             term = term.toLowerCase();
             rawTerms.put(term, data);
@@ -464,45 +480,50 @@ public class Indexer {
     }
 
     /**
-     * merge info of a term
-     * @param data
-     * @return
-     */
-    private String mergeData(String data){
-        String[] docs = data.split(";");
-        Map<String, Integer> info = new HashMap<>();
-
-        for(String d : docs){
-            String doc = d.substring(0, d.indexOf(":"));
-            Integer amount = Integer.parseInt(d.substring(d.indexOf(":") + 1));
-            if(info.containsKey(doc)){
-                info.put(doc, amount + info.get(doc));
-            }
-            else{
-                info.put(doc, amount);
-            }
-        }
-
-        data = "";
-        for(String d : info.keySet()){
-            data += d + ":" + info.get(d) + ";";
-        }
-
-        return data;
-
-    }
-
-    /**
      * save and write info about docs of corpus
      */
     private void saveDocInfo() {
         StringBuilder text = new StringBuilder();
+        StringBuilder entities = new StringBuilder();
         for (Integer key : mapDocID.keySet()) {
             ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
-            text.append(key).append("|").append(listDocInfo.get(0)).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3)).append(";").append("\n");
+            sumdl += Integer.parseInt(listDocInfo.get(3));
+            text.append(key).append("|").append(listDocInfo.get(0).trim()).append("?").append(listDocInfo.get(1)).append(":").append(listDocInfo.get(2)).append(",").append(listDocInfo.get(3))
+                    .append(";").append("\n");
         }
         usingBufferedWritter(text.toString(),"Doc");
         mapDocID = new LinkedHashMap<>();
+    }
+
+    /**
+     * Save entities in format [DocId|entity1,entity2...] to posting file: "Entities"
+     */
+    private void saveEntitiesInfo(){
+        StringBuilder entities = new StringBuilder();
+        for (Integer key : mapDocID.keySet()) {
+            ArrayList<String> listDocInfo = mapDocID.get(key); /// DOCID | DOCNAME ? Term : maxtf , counter(unique terms per doc)
+            if(listDocInfo.get(0).equals("")){
+                continue;
+            }
+
+            // in the listDocInfo, the entities start from  listDocInfo[4]
+            int counter = 4;
+            entities.append(listDocInfo.get(0)).append("|"); // append doc name
+            while (counter < listDocInfo.size() - 1){
+                entities.append(listDocInfo.get(counter)).append(",");
+                counter++;
+            }
+            entities.append("\n");
+        }
+
+        usingBufferedWritter(entities.toString(),"Entities");
+    }
+
+    /**
+     *    add title to posting file "Titles": [docName|title(lower case)]
+     */
+    public void addTitle(String title) {
+        this.titles.append(docIDCounter - 1).append("|").append(title.trim()).append("\n");
     }
 
     /**
@@ -512,20 +533,20 @@ public class Indexer {
     private void termToDictionary(Map<String, String> termsToDict) {
         Set<String> terms = termsToDict.keySet();
         int lineCounter = 1;
-        int total;
+        int totalDocs;
         for(String term : terms){
             int df = 0;
-            total = 0;
+            totalDocs = 0;
             String infoText = termsToDict.get(term);
 
             Pattern dfPattern = Pattern.compile("(\\d+);");
             Matcher dfMatcher = dfPattern.matcher(infoText);
             while (dfMatcher.find()){
-                total += Integer.parseInt(dfMatcher.group(1));
+                totalDocs += Integer.parseInt(dfMatcher.group(1));
                 df++;
             }
 
-            String infoDic = "" + total + ":" + df + ";" + lineCounter;
+            String infoDic = totalDocs + ":" + df + ";" + lineCounter;
             lineCounter ++;
 
             this.mapDictionary.put(term, infoDic);
@@ -542,6 +563,15 @@ public class Indexer {
      */
     public int getDictionarySize(){
         return sizeDictionary;
+    }
+
+
+    /**
+     * write stop words to posting file for Parser in Searcher.class
+     * @param stopWords
+     */
+    public void writeStopWordsToPosting(String stopWords){
+        usingBufferedWritter(stopWords, "stop_words.txt");
     }
 
     /**
@@ -572,4 +602,5 @@ public class Indexer {
 
         return o1.compareTo(o2);
     }
+
 }

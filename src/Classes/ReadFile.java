@@ -43,8 +43,7 @@ public class ReadFile{
             // separate docs by paths
             for( Path fileP :  filesPaths) {
                 String strFiles = fileIntoString(new File(fileP.toString()));
-                String strFilePath = fileP.toString();
-                separatedFilesToArrayList(strFiles, strFilePath); // separate docs to list: doc per index
+                separatedFilesToArrayList(strFiles); // separate docs to list: doc per index
             }
         }
         catch (Exception e){
@@ -77,7 +76,7 @@ public class ReadFile{
      * @param fileString
      * @return mapFilesNumberContent
      */
-    private void separatedFilesToArrayList(String fileString, String pathDirectory){
+    private void separatedFilesToArrayList(String fileString){
         // Content
 
         Pattern patternFileContent = Pattern.compile("<DOC>.+?</DOC>",
@@ -85,27 +84,8 @@ public class ReadFile{
         Matcher matcherFileContent = patternFileContent.matcher(fileString);
         while (matcherFileContent.find()) {
             String content = matcherFileContent.group();
-            content = writeDocName(content, Paths.get(pathDirectory).getFileName().toString());
             this.allFiles.add(content.getBytes(StandardCharsets.US_ASCII));
         }
-    }
-
-    /**
-     * Save docs's folder's name to tag <DOCNO></DOCNO>
-     * @param content
-     * @param pathDirectory
-     * @return
-     */
-    private String writeDocName(String content, String pathDirectory){
-        Pattern patternFileContent = Pattern.compile("<DOCNO>\\s*([^<]+?)\\s*</DOCNO>",
-                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-        Matcher matcherFileContent = patternFileContent.matcher(content);
-        while (matcherFileContent.find()){
-            if(!matcherFileContent.group(1).contains(pathDirectory)) {
-                content = content.replaceAll("<DOCNO>[^<]+?</DOCNO>", "<DOCNO>" + pathDirectory + "-" + matcherFileContent.group(1) + "</DOCNO>");
-            }
-        }
-        return content;
     }
 
     // getter for docs

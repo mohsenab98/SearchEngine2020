@@ -3,6 +3,9 @@ package Model;
 import javafx.scene.control.TextField;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Mohsen Abdalla & Evgeny Umansky. December 2019.
  */
@@ -20,4 +23,8 @@ public interface IModel {
     int getDocCounter();
 
     int getNumberOfTerms();
+
+    Map<String, Map<String, String>> runQuery(String textQuery, boolean stem, boolean semantic,String posting);
+
+    Map<String, Map<String, String>> runQueryFile(String text, boolean stem, boolean semantic, String Posting);
 }
