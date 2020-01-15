@@ -37,32 +37,37 @@ public class Ranker {
         Set<String> notRelevant = new HashSet<>(Arrays.asList(narrative[1].split(" ")));
         Map<String, String> bm25Result = new HashMap<>();
         for(String docId : docTermInfo.keySet()){
-            // total |D|, df, tf, term
-            String [] termsInfo = docTermInfo.get(docId).split(" ");
+            // |Q|, |D|, maxTfTerm, df, tf, term
+            String [] termsInfo = docTermInfo.get(docId).split("!");
             double score = 0;
             double IDF;
             double numerator;
             double denominator;
             double tfi =1;
-            int dfi;
-            int total; // |D|
+            int dfi =1;
+            int total =1; // |D|
             int entitiesNum = 0;
-            for(int i = 2; i <termsInfo.length - 2; i = i + 3){
+            int maxTfScore = 0;
+            for(int i = 3; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
                 int relevantNum = 1;
                 int notRelevantNum = 1;
-                total = Integer.parseInt(termsInfo[1]);
-                dfi = Integer.parseInt(termsInfo[i]);
-                try{
+                try {
+                    total = Integer.parseInt(termsInfo[1]);
+                    dfi = Integer.parseInt(termsInfo[i]);
                     tfi = Integer.parseInt(termsInfo[i + 1]);
-
                 }catch (Exception e){
-                    System.out.println("xxxx");
+                    System.out.println("kjds");
                 }
+
+                String maxTfTerm = termsInfo[2];
                 String term = termsInfo[i + 2].toLowerCase();
                 if(MyModel.mapDictionary.containsKey(term.toUpperCase())){
                     entitiesNum = 100;
+                }
+                if(maxTfTerm.equals(term)){
+                    maxTfScore = 10;
                 }
 
                 //TODO: Entities ????????????????
@@ -88,7 +93,7 @@ public class Ranker {
                     score = score + IDF * (numerator / denominator);
                 }
             }
-            bm25Result.put(docId, String.valueOf(score+entitiesNum));
+            bm25Result.put(docId, String.valueOf(score+entitiesNum+maxTfScore));
 
         }
         return bm25Result;
