@@ -8,6 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MyViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MyViewController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,23 +79,24 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578583781612" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../ePark" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Facets" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15234375" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\EvgeniyU\Desktop\ThirdYear\DataRetrieval\ir2020\resources" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\EvgeniyU\Desktop\ThirdYear\DataRetrieval\ir2020\src" />
       <recent name="C:\Users\EvgeniyU\Desktop\ThirdYear\DataRetrieval\ir2020\resources" />
       <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\src" />
       <recent name="C:\Users\mohse\Desktop\ir2020\ir2020\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\EvgeniyU\Desktop\ThirdYear\DataRetrieval\ir2020\resources" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -216,14 +218,7 @@
       <workItem from="1578828256237" duration="57969000" />
       <workItem from="1578951068776" duration="3129000" />
       <workItem from="1578954818132" duration="34166000" />
-      <workItem from="1579081589267" duration="14901000" />
-    </task>
-    <task id="LOCAL-00052" summary="- Ready V1.2">
-      <created>1576525820321</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1576525820321</updated>
+      <workItem from="1579081589267" duration="18860000" />
     </task>
     <task id="LOCAL-00053" summary="- Ready V1.3 - dictionary">
       <created>1576532089117</created>
@@ -561,7 +556,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579097955523</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="- V1.0 -- Part B -- Final version: fixed bug in the Parse.java">
+      <created>1579100291863</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1579100291863</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -636,11 +638,15 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="687" y="384" key="#com.intellij.fileTypes.FileTypeChooser/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578683971058" />
-    <state x="383" y="13" key="CommitChangelistDialog2" timestamp="1579097954160">
+    <state x="602" y="197" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1579101289692">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="602" y="197" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1579101289692" />
+    <state x="383" y="13" key="CommitChangelistDialog2" timestamp="1579100290786">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="571" y="174" key="CommitChangelistDialog2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579082309507" />
-    <state x="383" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1579097954160" />
+    <state x="383" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1579100290786" />
     <state width="526" height="332" key="DebuggerActiveHint" timestamp="1579096856889">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -656,44 +662,45 @@
     </state>
     <state x="666" y="322" key="FileChooserDialogImpl/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578788026975" />
     <state x="533" y="229" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1578937114746" />
-    <state width="1493" height="125" key="GridCell.Tab.0.bottom" timestamp="1579100273232">
+    <state width="1493" height="125" key="GridCell.Tab.0.bottom" timestamp="1579106585893">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="125" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
-    <state width="1493" height="125" key="GridCell.Tab.0.center" timestamp="1579100273232">
+    <state width="1493" height="125" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579106585893" />
+    <state width="1493" height="125" key="GridCell.Tab.0.center" timestamp="1579106585893">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="125" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
-    <state width="1493" height="125" key="GridCell.Tab.0.left" timestamp="1579100273232">
+    <state width="1493" height="125" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1579106585893" />
+    <state width="1493" height="125" key="GridCell.Tab.0.left" timestamp="1579106585893">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056430" />
-    <state width="1493" height="125" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
-    <state width="1493" height="125" key="GridCell.Tab.0.right" timestamp="1579100273232">
+    <state width="1493" height="125" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1579106585893" />
+    <state width="1493" height="125" key="GridCell.Tab.0.right" timestamp="1579106585893">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="125" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
+    <state width="1493" height="125" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1579106585893" />
     <state x="625" y="280" width="694" height="600" key="NewModule_or_Project.wizard" timestamp="1578682286511">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="625" y="280" width="694" height="600" key="NewModule_or_Project.wizard/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578682286511" />
-    <state x="440" y="155" key="SettingsEditor" timestamp="1578692017900">
-      <screen x="0" y="0" width="1920" height="1160" />
+    <state x="352" y="0" key="SettingsEditor" timestamp="1579101296729">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="440" y="155" key="SettingsEditor/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578692017900" />
+    <state x="352" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1579101296729" />
     <state x="74" y="67" width="1388" height="692" key="ShowDiffWithBranchDialog" timestamp="1579092987808">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="92" y="94" width="1735" height="974" key="ShowDiffWithBranchDialog/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578693070577" />
     <state x="74" y="67" width="1388" height="692" key="ShowDiffWithBranchDialog/0.0.1536.824@0.0.1536.824" timestamp="1579092987808" />
-    <state x="442" y="215" key="Vcs.Push.Dialog.v2" timestamp="1579097957527">
+    <state x="442" y="215" key="Vcs.Push.Dialog.v2" timestamp="1579100293826">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="552" y="302" key="Vcs.Push.Dialog.v2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579082312532" />
-    <state x="442" y="215" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1579097957527" />
+    <state x="442" y="215" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1579100293826" />
     <state x="74" y="65" width="1389" height="694" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1579092987808">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
