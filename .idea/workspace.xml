@@ -8,8 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ef0ac20f-59cc-486d-a8e2-6dee762b0fad" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Parse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Parse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classes/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classes/Searcher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,14 +216,7 @@
       <workItem from="1578828256237" duration="57969000" />
       <workItem from="1578951068776" duration="3129000" />
       <workItem from="1578954818132" duration="34166000" />
-      <workItem from="1579081589267" duration="13811000" />
-    </task>
-    <task id="LOCAL-00051" summary="- Ready V1.2">
-      <created>1576524148135</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1576524148135</updated>
+      <workItem from="1579081589267" duration="14901000" />
     </task>
     <task id="LOCAL-00052" summary="- Ready V1.2">
       <created>1576525820321</created>
@@ -563,7 +554,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579093001797</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="- V1.0 -- Part B -- Final version: fixed bug in the Parse.java">
+      <created>1579097955523</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1579097955523</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -597,7 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Final version - improved" />
     <MESSAGE value="- Final version!" />
     <MESSAGE value="- Final version! -- last update" />
     <MESSAGE value="- V.1 -- Part B" />
@@ -622,7 +619,8 @@
     <MESSAGE value="- V1.0 -- Part B -- Final version. Semantic does not work, 158 docs with stem" />
     <MESSAGE value="- V1.0 -- Part B -- Final version. Play with title, entity and maxTf for the best score!" />
     <MESSAGE value="- V1.0 -- Part B -- Final version." />
-    <option name="LAST_COMMIT_MESSAGE" value="- V1.0 -- Part B -- Final version." />
+    <MESSAGE value="- V1.0 -- Part B -- Final version: fixed bug in the Parse.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V1.0 -- Part B -- Final version: fixed bug in the Parse.java" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="72" key="#VisualVM_Launcher" timestamp="1578937116244">
@@ -638,11 +636,11 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="687" y="384" key="#com.intellij.fileTypes.FileTypeChooser/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578683971058" />
-    <state x="383" y="13" key="CommitChangelistDialog2" timestamp="1579092999746">
+    <state x="383" y="13" key="CommitChangelistDialog2" timestamp="1579097954160">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="571" y="174" key="CommitChangelistDialog2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579082309507" />
-    <state x="383" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1579092999746" />
+    <state x="383" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1579097954160" />
     <state width="526" height="332" key="DebuggerActiveHint" timestamp="1579096856889">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -658,26 +656,26 @@
     </state>
     <state x="666" y="322" key="FileChooserDialogImpl/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578788026975" />
     <state x="533" y="229" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1578937114746" />
-    <state width="1493" height="206" key="GridCell.Tab.0.bottom" timestamp="1579097837633">
+    <state width="1493" height="125" key="GridCell.Tab.0.bottom" timestamp="1579100273232">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.bottom/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="206" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579097837633" />
-    <state width="1493" height="206" key="GridCell.Tab.0.center" timestamp="1579097837633">
+    <state width="1493" height="125" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
+    <state width="1493" height="125" key="GridCell.Tab.0.center" timestamp="1579100273232">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.center/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="206" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1579097837633" />
-    <state width="1493" height="206" key="GridCell.Tab.0.left" timestamp="1579097837633">
+    <state width="1493" height="125" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
+    <state width="1493" height="125" key="GridCell.Tab.0.left" timestamp="1579100273232">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.left/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056430" />
-    <state width="1493" height="206" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1579097837633" />
-    <state width="1493" height="206" key="GridCell.Tab.0.right" timestamp="1579097837633">
+    <state width="1493" height="125" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
+    <state width="1493" height="125" key="GridCell.Tab.0.right" timestamp="1579100273232">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1877" height="185" key="GridCell.Tab.0.right/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579087056431" />
-    <state width="1493" height="206" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1579097837633" />
+    <state width="1493" height="125" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1579100273232" />
     <state x="625" y="280" width="694" height="600" key="NewModule_or_Project.wizard" timestamp="1578682286511">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -691,11 +689,11 @@
     </state>
     <state x="92" y="94" width="1735" height="974" key="ShowDiffWithBranchDialog/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1578693070577" />
     <state x="74" y="67" width="1388" height="692" key="ShowDiffWithBranchDialog/0.0.1536.824@0.0.1536.824" timestamp="1579092987808" />
-    <state x="442" y="215" key="Vcs.Push.Dialog.v2" timestamp="1579093058078">
+    <state x="442" y="215" key="Vcs.Push.Dialog.v2" timestamp="1579097957527">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="552" y="302" key="Vcs.Push.Dialog.v2/-1920.0.1536.832/0.0.1920.1160@0.0.1920.1160" timestamp="1579082312532" />
-    <state x="442" y="215" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1579093058078" />
+    <state x="442" y="215" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1579097957527" />
     <state x="74" y="65" width="1389" height="694" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1579092987808">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
