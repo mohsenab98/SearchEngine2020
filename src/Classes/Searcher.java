@@ -30,7 +30,6 @@ public class Searcher {
     private String postingPath; // includes stem/nostem folder
     //TODO: delete
 
-    private String narrative;
     private Ranker ranker;
     private boolean isStem;
     private boolean isSemantic;
@@ -46,17 +45,15 @@ public class Searcher {
      * @param postingPath
      * @param stem
      * @param semantic
-     * @param narrative ->
      * @param queryNumber
      * @param pathStopWords
      */
-    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String narrative, String queryNumber, String pathStopWords){
+    public Searcher(String query, String postingPath, boolean stem, boolean semantic, String queryNumber, String pathStopWords){
         this.listQueryTerms = Arrays.asList(query.split(" "));
         this.docAllEntities = new LinkedHashMap<>();
         this.map5DominatingEntities = new LinkedHashMap<>();
         this.mapDocIDTitle = new LinkedHashMap<>();
         this.postingPath = postingPath;
-        this.narrative = narrative;
         this.ranker = setRanker();
         this.isStem = stem;
         this.isSemantic = semantic;
@@ -87,7 +84,7 @@ public class Searcher {
                 info[i] = Integer.parseInt(line);
                 i++;
             }
-            return new Ranker(info[0], info[1], narrative);
+            return new Ranker(info[0], info[1]);
 
         } catch (IOException e) {
             e.printStackTrace();

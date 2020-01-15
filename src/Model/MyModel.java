@@ -39,14 +39,16 @@ public class MyModel extends Observable implements IModel {
         try {
             reader = new BufferedReader( new FileReader( file ));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            return;
         }
         String line = null;
         while(true){
             try {
                 if (!((line = reader.readLine()) != null)) break;
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();\
+                return;
             }
             String[] arr = line.split( "\\|" );
             mapDictionary.put( arr[0], arr[1] );
@@ -209,7 +211,7 @@ public class MyModel extends Observable implements IModel {
         if(textQuery.contains("<title>")){
             return findQueryData(textQuery, stem, semantic, posting, true);
         }
-        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "", "100", getPathOfStopWords(posting, stem));
+        Searcher searcher = new Searcher(textQuery, posting, stem, semantic, "100", getPathOfStopWords(posting, stem));
         result.put("100", searcher.search()); // <query Number, <DocName, Rank>>
         docEntities.putAll(searcher.getEntities()); // entities of all docs: <doc name, 5 dominating entities>
         return result; // return map <docId , rank >
@@ -230,7 +232,6 @@ public class MyModel extends Observable implements IModel {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         String num = ""; // query Num
         String title = ""; // query
-        String narrative = ""; // narrative
         Pattern patternTOP = Pattern.compile("<top>(.+?)</top>", Pattern.DOTALL);
         Matcher matcherTOP = patternTOP.matcher(textQuery);
         // foreach query
@@ -257,18 +258,8 @@ public class MyModel extends Observable implements IModel {
                 title = matcherTitle.group(1);
             }
 
-            /*
-            Pattern patternDesc = Pattern.compile("<desc>\\s*Description:\\s([^<]+?)\\s*<");
-            Matcher matcherDesc = patternDesc.matcher(query);
-             */
-            Pattern patternNarr = Pattern.compile("<narr>\\s*Narrative:\\s([^<]+)\\s*");
-            Matcher matcherNarr = patternNarr.matcher(query);
-            while (matcherNarr.find()){
-                narrative = matcherNarr.group(1).replaceAll("\n", " ").trim();
-            }
 
-
-            Searcher searcher = new Searcher(title, posting, stem, semantic, narrative, num, getPathOfStopWords(posting, stem));
+            Searcher searcher = new Searcher(title, posting, stem, semantic, num, getPathOfStopWords(posting, stem));
             // <query Number, <DocName, Rank>>
             result.put(num, searcher.search());
             // entities of all docs: <doc name, 5 dominating entities>

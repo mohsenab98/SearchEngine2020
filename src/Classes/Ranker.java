@@ -14,14 +14,12 @@ public class Ranker {
     private double avgdl;
     private double k1;
     private double b;
-    private String rawNarrative;
 
-    public Ranker(int n, int avgdl, String rawNarrative) {
+    public Ranker(int n, int avgdl) {
         N = n;
         this.avgdl = avgdl;
         this.k1 = 1.7;
         this.b = 0.7;
-        this.rawNarrative = rawNarrative;
     }
 
 
@@ -32,9 +30,6 @@ public class Ranker {
      * @return docID - score
      */
     public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities, Map<String, String> docTitles, Map<String, Double>synonyms) {
-        String[] narrative = getRelevantFromQuery();
-        Set<String> relevant = new HashSet<>(Arrays.asList(narrative[0].split(" ")));
-        Set<String> notRelevant = new HashSet<>(Arrays.asList(narrative[1].split(" ")));
         Map<String, String> bm25Result = new HashMap<>();
         for(String docId : docTermInfo.keySet()){
             // |Q|, |D|, maxTfTerm, df, tf, term
@@ -44,41 +39,32 @@ public class Ranker {
             double numerator;
             double denominator;
             double tfi =1;
-            int dfi =1;
-            int total =1; // |D|
-            int entitiesNum = 0;
+            int dfi;
+            int total; // |D|
+            int titleScore = 0;
+            int entitiesScore = 0;
             int maxTfScore = 0;
             for(int i = 3; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
-                int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
-                int relevantNum = 1;
-                int notRelevantNum = 1;
-                try {
-                    total = Integer.parseInt(termsInfo[1]);
-                    dfi = Integer.parseInt(termsInfo[i]);
-                    tfi = Integer.parseInt(termsInfo[i + 1]);
-                }catch (Exception e){
-                    System.out.println("kjds");
-                }
+                total = Integer.parseInt(termsInfo[1]);
+                dfi = Integer.parseInt(termsInfo[i]);
+                tfi = Integer.parseInt(termsInfo[i + 1]);
 
                 String maxTfTerm = termsInfo[2];
                 String term = termsInfo[i + 2].toLowerCase();
                 if(MyModel.mapDictionary.containsKey(term.toUpperCase())){
-                    entitiesNum = 100;
+                    entitiesScore = 100;
                 }
                 if(maxTfTerm.equals(term)){
                     maxTfScore = 10;
                 }
 
-                //TODO: Entities ????????????????
-//                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
-
-                //TODO: Title ????????????????
+                //Title
                 if(!docTitles.isEmpty()) {
                     String[] title = docTitles.get(docId).split(",");
                     for (String termT : title) {
                         if (termT.equalsIgnoreCase(term)) {
-
+                            titleScore += 10;
                         }
                     }
                 }
@@ -93,94 +79,13 @@ public class Ranker {
                     score = score + IDF * (numerator / denominator);
                 }
             }
-            bm25Result.put(docId, String.valueOf(score+entitiesNum+maxTfScore));
+            // 1.3 + 0.3 = 155
+            bm25Result.put(docId, String.valueOf(1.3*score + 0.3*(entitiesScore + titleScore + maxTfScore)));
 
         }
         return bm25Result;
     }
 
-
-    private int[] checkRelevantInDoc(Set<String> relevant, Set<String> notRelevant, int docId) {
-        int relevantNum = 1;
-        int notRelevantNum = 1;
-        relevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
-        notRelevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
-
-       /* Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingName), StandardCharsets.US_ASCII );
-        // get line [#postingLineNumber] in posting file
-        for( String line : (Iterable<String>) lines::iterator ){
-            if(lineCounter == postingLineNumber){
-                return line;
-            }
-            lineCounter++;
-        }
-
-        int[] result = {relevantNum, notRelevantNum};
-
-        */
-        return null;
-    }
-
-    /**
-     * if the term the appear in the query is one of the most popular entities in the doc the return vale depends on it position
-     * @param docId
-     * @param term
-     * @return value between [1 - 6]
-     */
-
-    public int valueUpBy(Map<String, String> docEntities, String docId, String term){
-        int value = 1;
-        if(docEntities.get(docId) == null){
-            return value;
-        }
-        String[] entities = docEntities.get(docId).split(",");
-        for(int i = 0 ; i < entities.length; i++){
-            if(entities[i].equalsIgnoreCase(term)){
-                value = value * 2;
-            }
-        }
-
-        return value;
-    }
-
-    private String[] getRelevantFromQuery() {
-        String relevant = "";
-        String notRelevant = "";
-        Pattern patternRelevant;
-        Matcher matcherRelevant;
-
-        patternRelevant = Pattern.compile("^Relevant (.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL |Pattern.MULTILINE);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            relevant += matcherRelevant.group(1);
-        }
-
-        patternRelevant = Pattern.compile("relevant:(.+)(?:not relevant:)?", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            relevant += matcherRelevant.group(1);
-        }
-
-        patternRelevant = Pattern.compile("not relevant:(.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            notRelevant += matcherRelevant.group(1);
-        }
-
-
-        patternRelevant = Pattern.compile("(.+?)(\\w{3}) relevant", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            if(!matcherRelevant.group(2).equalsIgnoreCase("not")){
-                relevant += matcherRelevant.group(1) + matcherRelevant.group(2);
-            }
-            else {
-                notRelevant += matcherRelevant.group(1);
-            }
-        }
-
-        return new String[]{relevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " "), notRelevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " ")};
-    }
 
     public Map<String, Double> semanticSearchFunction(String term){
 //        Set<String> synonyms = new HashSet<>();
