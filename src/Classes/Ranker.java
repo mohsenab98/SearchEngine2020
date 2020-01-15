@@ -46,7 +46,7 @@ public class Ranker {
             double tfi =1;
             int dfi;
             int total; // |D|
-
+            int entitiesNum = 0;
             for(int i = 2; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
@@ -61,9 +61,12 @@ public class Ranker {
                     System.out.println("xxxx");
                 }
                 String term = termsInfo[i + 2].toLowerCase();
+                if(MyModel.mapDictionary.containsKey(term.toUpperCase())){
+                    entitiesNum = 100;
+                }
 
                 //TODO: Entities ????????????????
-                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
+//                int entitiesNum =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
 
                 //TODO: Title ????????????????
                 if(!docTitles.isEmpty()) {
@@ -85,7 +88,7 @@ public class Ranker {
                     score = score + IDF * (numerator / denominator);
                 }
             }
-            bm25Result.put(docId, String.valueOf(score));
+            bm25Result.put(docId, String.valueOf(score+entitiesNum));
 
         }
         return bm25Result;

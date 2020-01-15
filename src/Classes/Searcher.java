@@ -146,6 +146,9 @@ public class Searcher {
                 String dfTermFromDictionary = termInfo[1];
                 if(docTermsInfo.containsKey(docId)){
                     //chain the info of the previous term in the doc
+                    if(docTermsInfo.get(docId).contains(term)){
+                        continue;
+                    }
                     termInfoInMap =  docTermsInfo.get(docId) + " ";
                 }
                 docTermsInfo.put(docId, termInfoInMap + dfTermFromDictionary + " " + tfTermPerDoc + " " + term);
