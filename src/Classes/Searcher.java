@@ -171,7 +171,7 @@ public class Searcher {
 
         Map<String, String> rankedDocs = sortDocsByRank(ranker.rankBM25(docTermsInfo, this.mapDocIDTitle, synonymsMap));
         docTermsInfo = removeNNotRelevantDocs(docTermsInfo, rankedDocs, 2000); // N = 1000 : 32 rel doc; N = 2000 : 36 rel doc; N = 3000 : 36 rel doc; N = 4000 : 39 rel doc;
-        addValuesToMapFromPosting("Titles", this.mapDocIDTitle);// add entities(value) to the map of entities
+    //    addValuesToMapFromPosting("Titles", this.mapDocIDTitle);// add entities(value) to the map of entities
 
         rankedDocs = ranker.rankBM25(docTermsInfo, this.mapDocIDTitle, synonymsMap);
         rankedDocs = sortDocsByRank(rankedDocs);
@@ -262,7 +262,7 @@ public class Searcher {
             int lastCommaIndex = fiveEntities.length() - 2;
             fiveEntities.delete(lastCommaIndex, lastCommaIndex + 1);
         }
-        return fiveEntities.toString();
+        return fiveEntities.toString().trim();
     }
 
     /**

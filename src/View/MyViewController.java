@@ -328,13 +328,18 @@ public class MyViewController extends Canvas implements Observer {
      * @param actionEvent
      */
     public void runQuery(ActionEvent actionEvent) {
+        double startTime = System.nanoTime();
         if(!query_text.getText().equals("")){
             if(new File(posting_text.getText()).exists()){
                 if(!MyModel.mapDictionary.isEmpty()){
+                    System.out.println("Start searching...");
                     resultQuery = new LinkedHashMap<>();
                     resultQuery = viewModel.runQuery(query_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
                     JTable table=new JTable(toTableModelQuery(resultQuery)); //receiving the table from toTbleModel function
                     showQueryTable(table);
+                    double endTime = System.nanoTime();
+                    double totalTime = (endTime - startTime) / 1000000000;
+                    System.out.println((totalTime) + " seconds. For query");
                     return;
                 }
             }
@@ -482,12 +487,17 @@ public class MyViewController extends Canvas implements Observer {
      * @param actionEvent
      */
     public void runQueries(ActionEvent actionEvent) {
+        double startTime = System.nanoTime();
         if(!chooseQuires_text.getText().equals("")) {
             if (new File(posting_text.getText()).exists()) {
                 if (!MyModel.mapDictionary.isEmpty()) {
+                    System.out.println("Start searching...");
                     resultQuery = viewModel.runQueryFile(chooseQuires_text.getText(), stem.isSelected(), semantic.isSelected(), posting_text.getText());
                     JTable table = new JTable(toTableModelQuery(resultQuery)); //receiving the table from toTbleModel function
                     showQueryTable(table);
+                    double endTime = System.nanoTime();
+                    double totalTime = (endTime - startTime) / 1000000000;
+                    System.out.println((totalTime) + " seconds. For queries");
                     return;
                 }
             }
