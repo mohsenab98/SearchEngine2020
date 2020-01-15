@@ -508,7 +508,7 @@ public class Indexer {
 
             // in the listDocInfo, the entities start from  listDocInfo[4]
             int counter = 4;
-            entities.append(key).append("|");
+            entities.append(listDocInfo.get(0)).append("|"); // append doc name
             while (counter < listDocInfo.size() - 1){
                 entities.append(listDocInfo.get(counter)).append(",");
                 counter++;

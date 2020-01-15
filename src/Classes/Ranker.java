@@ -5,36 +5,34 @@ import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import java.io.File;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * for each query rank the docs that has at least one term from the query
+ */
 public class Ranker {
 
     private double N;
     private double avgdl;
     private double k1;
     private double b;
-    private String rawNarrative;
 
-    public Ranker(int n, int avgdl, String rawNarrative) {
+    public Ranker(int n, int avgdl) {
         N = n;
         this.avgdl = avgdl;
         this.k1 = 1.7;
         this.b = 0.7;
-        this.rawNarrative = rawNarrative;
     }
 
 
 
     /**
-     * gets Doc(key) -- (qi - tfi - dfi)(value)
-     * @param docTermInfo
-     * @return docID - score
+     * map docTermInfo : <DocId , <|Q|, |D|, maxTfTerm, dfi, tfi, term>>
+     * map synonyms : <term , rank>
+     * map docTitles : <DocId, title>
+     * @param docTermInfo , docTitles , synonyms
+     * @return map that represent the score of each doc according to the terms in the query
      */
-    public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docEntities, Map<String, String> docTitles, Map<String, Double>synonyms) {
-        String[] narrative = getRelevantFromQuery();
-        Set<String> relevant = new HashSet<>(Arrays.asList(narrative[0].split(" ")));
-        Set<String> notRelevant = new HashSet<>(Arrays.asList(narrative[1].split(" ")));
+    public Map<String, String> rankBM25(Map<String, String> docTermInfo, Map<String, String> docTitles, Map<String, Double>synonyms) {
         Map<String, String> bm25Result = new HashMap<>();
         for(String docId : docTermInfo.keySet()){
             // |Q|, |D|, maxTfTerm, df, tf, term
@@ -45,22 +43,19 @@ public class Ranker {
             double denominator;
             double tfi =1;
             int dfi;
-            int total; // |D|
+            int D;
             int titleScore = 0;
             int entitiesScore = 0;
             int maxTfScore = 0;
-            int dominatingEntitiesScore = 0;
             for(int i = 3; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
-                int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
-                int relevantNum = 1;
-                int notRelevantNum = 1;
-                total = Integer.parseInt(termsInfo[1]);
+                D = Integer.parseInt(termsInfo[1]);
                 dfi = Integer.parseInt(termsInfo[i]);
                 tfi = Integer.parseInt(termsInfo[i + 1]);
 
                 String maxTfTerm = termsInfo[2];
                 String term = termsInfo[i + 2].toLowerCase();
+                // if term is entity
                 if(MyModel.mapDictionary.containsKey(term.toUpperCase())){
                     entitiesScore = 100;
                 }
@@ -68,23 +63,20 @@ public class Ranker {
                     maxTfScore = 10;
                 }
 
-                //Dominating Entities
-                dominatingEntitiesScore +=  dominatingEntitiesScore(docEntities, docId, term);
-
-                //Title
+                //if term is in the title of the article
                 if(!docTitles.isEmpty()) {
                     String[] title = docTitles.get(docId).split(",");
                     for (String termT : title) {
                         if (termT.equalsIgnoreCase(term)) {
-                            titleScore += 5;
+                            titleScore += 10;
                         }
                     }
                 }
 
                 IDF =  (Math.log((this.N / dfi)) / Math.log(2));
-
                 numerator =  tfi * (this.k1 + 1);
-                denominator = tfi + (this.k1) * (1 - this.b + (this.b * (total/this.avgdl)));
+                denominator = tfi + (this.k1) * (1 - this.b + (this.b * (D/this.avgdl)));
+                //if term is synonym
                 if(synonyms.containsKey(term)){
                     score = score + IDF * (numerator / denominator)*synonyms.get(term);
                 }else{
@@ -92,97 +84,21 @@ public class Ranker {
                 }
             }
             // 1.3 + 0.3 = 155
-            bm25Result.put(docId, String.valueOf(1.2347*score + 0.43*(entitiesScore + titleScore + maxTfScore + dominatingEntitiesScore)));
+            bm25Result.put(docId, String.valueOf(1.3*score + 0.3*(entitiesScore + titleScore + maxTfScore)));
 
         }
         return bm25Result;
     }
 
-
-    private int[] checkRelevantInDoc(Set<String> relevant, Set<String> notRelevant, int docId) {
-        int relevantNum = 1;
-        int notRelevantNum = 1;
-        relevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
-        notRelevant.removeIf(term -> !MyModel.mapDictionary.containsKey(term));
-
-       /* Stream<String> lines = Files.lines(Paths.get(this.postingPath + "/" + stem + "/" + postingName), StandardCharsets.US_ASCII );
-        // get line [#postingLineNumber] in posting file
-        for( String line : (Iterable<String>) lines::iterator ){
-            if(lineCounter == postingLineNumber){
-                return line;
-            }
-            lineCounter++;
-        }
-
-        int[] result = {relevantNum, notRelevantNum};
-
-        */
-        return null;
-    }
-
     /**
-     * if the term the appear in the query is one of the most popular entities in the doc the return vale depends on it position
-     * @param docId
+     * for semantic search : use the corpusVector150K.bin file that has the relation between words of the corpus
+     * and return a map of synonyms for each term
+     * if the term in the map is original term of the query -> rank = 1
+     * if the term in the map is synonym -> rank = 0.5
      * @param term
-     * @return value between [1 - 6]
+     * @return map <term/synonym , rank>
      */
-
-    public int dominatingEntitiesScore(Map<String, String> docEntities, String docId, String term){
-        int value = 1;
-        if(docEntities.get(docId) == null){
-            return value;
-        }
-        String[] entities = docEntities.get(docId).split(",");
-        for(int i = 0 ; i < entities.length; i++){
-            if(entities[i].equalsIgnoreCase(term)){
-                value += i;
-            }
-        }
-
-        return value;
-    }
-
-    private String[] getRelevantFromQuery() {
-        String relevant = "";
-        String notRelevant = "";
-        Pattern patternRelevant;
-        Matcher matcherRelevant;
-
-        patternRelevant = Pattern.compile("^Relevant (.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL |Pattern.MULTILINE);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            relevant += matcherRelevant.group(1);
-        }
-
-        patternRelevant = Pattern.compile("relevant:(.+)(?:not relevant:)?", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            relevant += matcherRelevant.group(1);
-        }
-
-        patternRelevant = Pattern.compile("not relevant:(.+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            notRelevant += matcherRelevant.group(1);
-        }
-
-
-        patternRelevant = Pattern.compile("(.+?)(\\w{3}) relevant", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        matcherRelevant = patternRelevant.matcher(rawNarrative);
-        while (matcherRelevant.find()){
-            if(!matcherRelevant.group(2).equalsIgnoreCase("not")){
-                relevant += matcherRelevant.group(1) + matcherRelevant.group(2);
-            }
-            else {
-                notRelevant += matcherRelevant.group(1);
-            }
-        }
-
-        return new String[]{relevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " "), notRelevant.toLowerCase().replaceAll("[!.,?/'\";:-]", " ")};
-    }
-
     public Map<String, Double> semanticSearchFunction(String term){
-//        Set<String> synonyms = new HashSet<>();
         Map<String, Double> synonyms = new HashMap<>();
         try {
             Word2VecModel vecModel = Word2VecModel.fromBinFile(new File("resources/corpusVector150K.bin"));
@@ -192,16 +108,14 @@ public class Ranker {
             int synonymCounter = 0;
             for (Searcher.Match match : matches){
                 if(synonymCounter < 3){
-//                    synonyms.add(match.match());
                     if(match.match().equalsIgnoreCase(term)){
                         synonyms.put(match.match(), 1.0);
                     }else{
-                        synonyms.put(match.match(), 0.3);
+                        synonyms.put(match.match(), 0.5);
                     }
                 }
                 synonymCounter++;
             }
-
         }
         catch (Exception e){
             synonyms.put(term, 1.0);
