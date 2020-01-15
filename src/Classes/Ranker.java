@@ -49,7 +49,7 @@ public class Ranker {
             int titleScore = 0;
             int entitiesScore = 0;
             int maxTfScore = 0;
-            int entitiesFreqScore = 0;
+            int dominatingEntitiesScore = 0;
             for(int i = 3; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
@@ -68,10 +68,10 @@ public class Ranker {
                     maxTfScore = 10;
                 }
 
-                //TODO: Entities ????????????????
-                entitiesFreqScore +=  valueUpBy(docEntities, docId, term);
+                //Dominating Entities
+                dominatingEntitiesScore +=  dominatingEntitiesScore(docEntities, docId, term);
 
-                //TODO: Title ????????????????
+                //Title
                 if(!docTitles.isEmpty()) {
                     String[] title = docTitles.get(docId).split(",");
                     for (String termT : title) {
@@ -92,7 +92,7 @@ public class Ranker {
                 }
             }
             // 1.3 + 0.3 = 155
-            bm25Result.put(docId, String.valueOf(1.2347*score + 0.43*(entitiesScore + titleScore + maxTfScore + entitiesFreqScore)));
+            bm25Result.put(docId, String.valueOf(1.2347*score + 0.43*(entitiesScore + titleScore + maxTfScore + dominatingEntitiesScore)));
 
         }
         return bm25Result;
@@ -127,7 +127,7 @@ public class Ranker {
      * @return value between [1 - 6]
      */
 
-    public int valueUpBy(Map<String, String> docEntities, String docId, String term){
+    public int dominatingEntitiesScore(Map<String, String> docEntities, String docId, String term){
         int value = 1;
         if(docEntities.get(docId) == null){
             return value;
