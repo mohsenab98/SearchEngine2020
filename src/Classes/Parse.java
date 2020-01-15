@@ -296,6 +296,13 @@ public class Parse {
         // create term in the map
         if(!this.mapTerms.containsKey(term)) {
             this.mapTerms.put(term, "1"); // term counter = 1
+            if(Character.isUpperCase(term.charAt(0))){
+                this.mapDocEntities.put(term, 1);
+            }
+            if(this.counterMaxTf <= Integer.parseInt(this.mapTerms.get(term))){
+                this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
+                this.termMaxTf = term;
+            }
             return;
         }
 
@@ -303,7 +310,7 @@ public class Parse {
         this.mapTerms.put(term, String.valueOf(counter + 1)); // term counter = 1
 
         // check for max TF
-        if(this.counterMaxTf < Integer.parseInt(this.mapTerms.get(term))){
+        if(this.counterMaxTf <= Integer.parseInt(this.mapTerms.get(term))){
             this.counterMaxTf = Integer.parseInt(this.mapTerms.get(term)); // Max Tf
             this.termMaxTf = term;
         }
