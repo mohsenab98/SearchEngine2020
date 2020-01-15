@@ -49,6 +49,7 @@ public class Ranker {
             int titleScore = 0;
             int entitiesScore = 0;
             int maxTfScore = 0;
+            int entitiesFreqScore = 0;
             for(int i = 3; i <termsInfo.length - 2; i = i + 3){
                 // Score(D,Q) -- BM25
                 int[] relevantOrNot = checkRelevantInDoc(relevant, notRelevant, Integer.parseInt(docId));
@@ -68,7 +69,7 @@ public class Ranker {
                 }
 
                 //TODO: Entities ????????????????
-//                int entitiesScore =  valueUpBy(docEntities, docId, termsInfo[i + 2]);
+                entitiesFreqScore +=  valueUpBy(docEntities, docId, term);
 
                 //TODO: Title ????????????????
                 if(!docTitles.isEmpty()) {
@@ -90,7 +91,8 @@ public class Ranker {
                     score = score + IDF * (numerator / denominator);
                 }
             }
-            bm25Result.put(docId, String.valueOf(0.7*score + 0.3*(entitiesScore + titleScore + maxTfScore)));
+            // 1.3 + 0.3 = 155
+            bm25Result.put(docId, String.valueOf(1.2347*score + 0.43*(entitiesScore + titleScore + maxTfScore + entitiesFreqScore)));
 
         }
         return bm25Result;
@@ -133,7 +135,7 @@ public class Ranker {
         String[] entities = docEntities.get(docId).split(",");
         for(int i = 0 ; i < entities.length; i++){
             if(entities[i].equalsIgnoreCase(term)){
-                value = value * 2;
+                value += i;
             }
         }
 
@@ -194,7 +196,7 @@ public class Ranker {
                     if(match.match().equalsIgnoreCase(term)){
                         synonyms.put(match.match(), 1.0);
                     }else{
-                        synonyms.put(match.match(), 0.5);
+                        synonyms.put(match.match(), 0.3);
                     }
                 }
                 synonymCounter++;
