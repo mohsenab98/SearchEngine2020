@@ -149,9 +149,9 @@ public class Searcher {
                     if(docTermsInfo.get(docId).contains(term)){
                         continue;
                     }
-                    termInfoInMap =  docTermsInfo.get(docId) + " ";
+                    termInfoInMap =  docTermsInfo.get(docId) + "!";
                 }
-                docTermsInfo.put(docId, termInfoInMap + dfTermFromDictionary + " " + tfTermPerDoc + " " + term);
+                docTermsInfo.put(docId, termInfoInMap + dfTermFromDictionary + "!" + tfTermPerDoc + "!" + term);
             }
         }
         return docTermsInfo;
@@ -195,7 +195,7 @@ public class Searcher {
      * info = |Q| and |D|
      * @param docTermsInfo
      * @param queryLength
-     * @return map of <DocId , <|Q|, |D|, dfi, tfi, term>>
+     * @return map of <DocId , <|Q|, |D|, maxTfTerm, dfi, tfi, term>>
      */
     private Map<String, String> readDocFromPostingAndAddInfo(Map<String, String> docTermsInfo, int queryLength) {
         String stem;
@@ -214,12 +214,13 @@ public class Searcher {
         for( String line : (Iterable<String>) lines::iterator ) {
             String doc = line.substring(0, line.indexOf("|"));
             String D = line.substring(line.lastIndexOf(",")+1, line.indexOf(";"));
+            String maxTfTerm = line.substring(line.lastIndexOf("?")+1, line.indexOf(":"));
             // check if doc from the posting in map of entities: not => see next doc
             if (!docTermsInfo.containsKey(doc)) {
                 continue;
             }
             // add to each <DocId , <dfi, tfi, term>> query length and doc length -> <DocId , <|Q|, |D|, dfi, tfi, term>>
-            docTermsInfo.put(doc,  queryLength + " " + D + " " + docTermsInfo.get(doc));
+            docTermsInfo.put(doc,  queryLength + "!" + D + "!" + maxTfTerm + "!"+ docTermsInfo.get(doc));
         }
 
         return docTermsInfo;
